@@ -45,4 +45,28 @@ public class FlowerMinerDfg {
 		
 		return new EfficientTree(tree, activity2int, int2activity);
 	}
+	
+	public static EfficientTree mine(String[] activities) {
+		//construct activity structures
+		String[] int2activity = new String[activities.length];
+		TObjectIntMap<String> activity2int = EfficientTree.getEmptyActivity2int();
+		for (int i = 0; i < activities.length; i++) {
+			int2activity[i] = activities[i];
+			activity2int.put(activities[i], i);
+		}
+
+		//construct the tree
+		int[] tree = new int[int2activity.length + 4];
+		tree[0] = EfficientTree.loop - 3 * EfficientTree.childrenFactor;
+		assert(tree[0] < 0);
+		tree[1] = EfficientTree.xor - int2activity.length * EfficientTree.childrenFactor;
+		assert(tree[1] < 0);
+		for (int i = 0; i < int2activity.length; i++) {
+			tree[2 + i] = i;
+		}
+		tree[2 + int2activity.length] = EfficientTree.tau;
+		tree[3 + int2activity.length] = EfficientTree.tau;
+		
+		return new EfficientTree(tree, activity2int, int2activity);
+	}
 }

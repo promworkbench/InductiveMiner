@@ -9,7 +9,7 @@ import org.processmining.plugins.InductiveMiner.dfgOnly.dfgCutFinder.DfgCutFinde
 import org.processmining.plugins.InductiveMiner.dfgOnly.dfgCutFinder.DfgCutFinderSimple;
 import org.processmining.plugins.InductiveMiner.dfgOnly.dfgFallThrough.DfgFallThroughCombination;
 import org.processmining.plugins.InductiveMiner.dfgOnly.dfgSplitter.SimpleDfgSplitter;
-import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.CutFinderIMin;
+import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.CutFinderIMc;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.ProbabilitiesEstimatedZ;
 
 public class DfgMiningParametersIMcd extends DfgMiningParameters {
@@ -20,7 +20,7 @@ public class DfgMiningParametersIMcd extends DfgMiningParameters {
 
 		setDfgCutFinder(new DfgCutFinderCombination(
 				new DfgCutFinderSimple(),
-				new CutFinderIMin()
+				new CutFinderIMc()
 				));
 
 		setDfgFallThroughs(new DfgFallThroughCombination());

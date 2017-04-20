@@ -22,7 +22,8 @@ import org.processmining.processtree.ProcessTree;
 
 public class IM {
 
-	@Plugin(name = "Mine process tree with Inductive Miner", level = PluginLevel.PeerReviewed, returnLabels = { "Process Tree" }, returnTypes = { ProcessTree.class }, parameterLabels = { "Log" }, userAccessible = true)
+	@Plugin(name = "Mine process tree with Inductive Miner", level = PluginLevel.PeerReviewed, returnLabels = {
+			"Process Tree" }, returnTypes = { ProcessTree.class }, parameterLabels = { "Log" }, userAccessible = true)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
 	public ProcessTree mineGuiProcessTree(final UIPluginContext context, XLog log) {
@@ -44,7 +45,7 @@ public class IM {
 
 	@Plugin(name = "Mine Petri net with Inductive Miner", level = PluginLevel.PeerReviewed, returnLabels = {
 			"Petri net", "initial marking", "final marking" }, returnTypes = { Petrinet.class, Marking.class,
-			Marking.class }, parameterLabels = { "Log" }, userAccessible = true)
+					Marking.class }, parameterLabels = { "Log" }, userAccessible = true)
 	@UITopiaVariant(affiliation = UITopiaVariant.EHV, author = "S.J.J. Leemans", email = "s.j.j.leemans@tue.nl")
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
 	public Object[] mineGuiPetrinet(UIPluginContext context, XLog log) {
@@ -60,8 +61,9 @@ public class IM {
 		return IMPetriNet.minePetriNet(context, log, dialog.getMiningParameters());
 	}
 
-	@Plugin(name = "Mine Process tree with Inductive Miner, with parameters", returnLabels = { "Process tree" }, returnTypes = { ProcessTree.class }, parameterLabels = {
-			"Log", "IM Parameters" }, userAccessible = false)
+	@Plugin(name = "Mine Process tree with Inductive Miner, with parameters", returnLabels = {
+			"Process tree" }, returnTypes = {
+					ProcessTree.class }, parameterLabels = { "Log", "IM Parameters" }, userAccessible = false)
 	@PluginVariant(variantLabel = "Mine a Process Tree, parameters", requiredParameterLabels = { 0, 1 })
 	public static ProcessTree mineProcessTree(PluginContext context, XLog log, MiningParameters parameters) {
 		context.log("Mining...");
@@ -69,8 +71,8 @@ public class IM {
 	}
 
 	@Plugin(name = "Mine Petri net with Inductive Miner, with parameters", returnLabels = { "Petri net",
-			"Initial marking", "final marking" }, returnTypes = { Petrinet.class, Marking.class, Marking.class }, parameterLabels = {
-			"Log", "IM Parameters" }, userAccessible = false)
+			"Initial marking", "final marking" }, returnTypes = { Petrinet.class, Marking.class,
+					Marking.class }, parameterLabels = { "Log", "IM Parameters" }, userAccessible = false)
 	@PluginVariant(variantLabel = "Mine a Process Tree, parameters", requiredParameterLabels = { 0, 1 })
 	public static Object[] minePetriNet(PluginContext context, XLog log, MiningParameters parameters) {
 		context.log("Mining...");
@@ -83,14 +85,11 @@ public class IM {
 			XLogInfo xLogInfo = XLogInfoFactory.createLogInfo(log, classifier);
 			int numberOfActivities = xLogInfo.getEventClasses().size();
 			if (numberOfActivities > dialog.getVariant().getWarningThreshold()) {
-				int cResult = JOptionPane
-						.showConfirmDialog(
-								null,
-								dialog.getVariant().toString()
-										+ " might take a long time, as the event log contains "
-										+ numberOfActivities
-										+ " activities.\nThe chosen variant of Inductive Miner is exponential in the number of activities.\nAre you sure you want to continue?",
-								"Inductive Miner might take a while", JOptionPane.YES_NO_OPTION);
+				int cResult = JOptionPane.showConfirmDialog(null,
+						dialog.getVariant().toString() + " might take a long time, as the event log contains "
+								+ numberOfActivities
+								+ " activities.\nThe chosen variant of Inductive Miner is exponential in the number of activities.\nAre you sure you want to continue?",
+						"Inductive Miner might take a while", JOptionPane.YES_NO_OPTION);
 
 				return cResult == JOptionPane.YES_OPTION;
 			}

@@ -1,9 +1,5 @@
 package org.processmining.plugins.InductiveMiner.efficienttree;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -24,6 +20,10 @@ import org.processmining.processtree.ProcessTree;
 import org.processmining.processtree.Task.Automatic;
 import org.processmining.processtree.Task.Manual;
 
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+
 /**
  * Class to store a process tree memory efficient and perform operations cpu
  * efficient.
@@ -34,7 +34,7 @@ import org.processmining.processtree.Task.Manual;
  * @author sleemans
  *
  */
-public class EfficientTree {
+public class EfficientTree implements Cloneable {
 
 	private int[] tree;
 	private final TObjectIntMap<String> activity2int;
@@ -600,4 +600,8 @@ public class EfficientTree {
 		return true;
 	}
 
+	@Override
+	public EfficientTree clone() {
+		return new EfficientTree(tree.clone(), new TObjectIntHashMap<String>(activity2int), int2activity.clone());
+	}
 }

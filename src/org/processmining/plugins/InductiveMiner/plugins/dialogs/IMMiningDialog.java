@@ -583,7 +583,7 @@ public class IMMiningDialog extends JPanel {
 		return p.variant;
 	}
 
-	public void openWebPage(String url) {
+	public static void openWebPage(String url) {
 		if (Desktop.isDesktopSupported()) {
 			Desktop desktop = Desktop.getDesktop();
 			try {

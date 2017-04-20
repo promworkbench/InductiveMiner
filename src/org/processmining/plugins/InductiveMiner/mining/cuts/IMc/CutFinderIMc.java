@@ -24,7 +24,7 @@ import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.solve.SATSolveSe
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.solve.SATSolveXor;
 import org.processmining.plugins.InductiveMiner.mining.logs.IMLog;
 
-public class CutFinderIMin implements CutFinder, DfgCutFinder {
+public class CutFinderIMc implements CutFinder, DfgCutFinder {
 
 	public Cut findCut(Dfg dfg, DfgMinerState minerState) {
 		float threshold = minerState.getParameters().getIncompleteThreshold();

@@ -8,7 +8,7 @@ import org.processmining.plugins.InductiveMiner.mining.baseCases.BaseCaseFinder;
 import org.processmining.plugins.InductiveMiner.mining.baseCases.BaseCaseFinderIM;
 import org.processmining.plugins.InductiveMiner.mining.cuts.CutFinder;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IM.CutFinderIM;
-import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.CutFinderIMin;
+import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.CutFinderIMc;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.ProbabilitiesEstimatedZ;
 import org.processmining.plugins.InductiveMiner.mining.fallthrough.FallThrough;
 import org.processmining.plugins.InductiveMiner.mining.fallthrough.FallThroughIM;
@@ -26,7 +26,7 @@ public class MiningParametersIMcpt extends MiningParameters {
 
 		setCutFinder(new ArrayList<CutFinder>(Arrays.asList(
 				new CutFinderIM(),
-				new CutFinderIMin())));
+				new CutFinderIMc())));
 
 		setLogSplitter(new LogSplitterIMpt());
 
