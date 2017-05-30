@@ -33,6 +33,7 @@ import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMcpt;
 import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMf;
 import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMfa;
 import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMflc;
+import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMfpt;
 import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMlc;
 import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMpt;
 
@@ -48,7 +49,7 @@ public class IMMiningDialog extends JPanel {
 	private final JLabel noiseValue;
 	private final JLabel doiLabel;
 	private final JLabel doiValue;
-	
+
 	public static final String email = "s.leemans@qut.edu.au";
 	public static final String affiliation = "Queensland University of Technology";
 	public static final String author = "S.J.J. Leemans";
@@ -306,7 +307,33 @@ public class IMMiningDialog extends JPanel {
 			return 0;
 		}
 	}
-	
+
+	public class VariantIMfpt extends Variant {
+		public String toString() {
+			return "Inductive Miner - infrequent & partial traces (IMfpt)";
+		}
+
+		public boolean hasNoise() {
+			return true;
+		}
+
+		public MiningParameters getMiningParameters() {
+			return new MiningParametersIMfpt();
+		}
+
+		public boolean noNoiseImpliesFitness() {
+			return false;
+		}
+
+		public String getDoi() {
+			return null;
+		}
+
+		public int getWarningThreshold() {
+			return 0;
+		}
+	}
+
 	public class VariantIMcpt extends Variant {
 		public String toString() {
 			return "Inductive Miner - incomplete & partial traces (IMcpt)";
@@ -356,7 +383,7 @@ public class IMMiningDialog extends JPanel {
 
 		variantCombobox = factory.createComboBox(new Variant[] { new VariantIM(), new VariantIMf(), new VariantIMa(),
 				new VariantIMfa(), new VariantIMc(), new VariantIMEKS(), new VariantIMlc(), new VariantIMflc(),
-				new VariantIMpt(), new VariantIMcpt() });
+				new VariantIMpt(), new VariantIMfpt(), new VariantIMcpt() });
 		{
 			GridBagConstraints cVariantCombobox = new GridBagConstraints();
 			cVariantCombobox.gridx = 1;
