@@ -31,7 +31,7 @@ public class IMLogImpl implements IMLog {
 	protected final TIntArrayList addedTraces;
 	private final List<BitSet> addedTracesOutEvents;
 
-	protected final XEventClassifier activityClassifier;
+	protected XEventClassifier activityClassifier;
 
 	@Deprecated
 	public final static XEventClassifier lifeCycleClassifier = new LifeCycleClassifier();
@@ -60,7 +60,7 @@ public class IMLogImpl implements IMLog {
 	 * 
 	 * @param log
 	 */
-	protected IMLogImpl(IMLogImpl log) {
+	public IMLogImpl(IMLogImpl log, XEventClassifier activityClassifier) {
 		this.xLog = log.xLog;
 		outTraces = (BitSet) log.outTraces.clone();
 		outEvents = new BitSet[xLog.size()];
@@ -74,11 +74,11 @@ public class IMLogImpl implements IMLog {
 			addedTracesOutEvents.add((BitSet) log.addedTracesOutEvents.get(i).clone());
 		}
 
-		activityClassifier = log.activityClassifier;
+		this.activityClassifier = activityClassifier;
 	}
 
 	public IMLog clone() {
-		return new IMLogImpl(this);
+		return new IMLogImpl(this, this.activityClassifier);
 	}
 
 	/**
@@ -92,6 +92,10 @@ public class IMLogImpl implements IMLog {
 
 	public XEventClassifier getClassifier() {
 		return activityClassifier;
+	}
+
+	public void setClassifier(XEventClassifier classifier) {
+		this.activityClassifier = classifier;
 	}
 
 	public Transition getLifeCycle(XEvent event) {
@@ -111,18 +115,22 @@ public class IMLogImpl implements IMLog {
 		return (xLog.size() - outTraces.cardinality()) + addedTraces.size();
 	}
 
-	/**
-	 * Copy a trace and return the copy.
-	 * 
-	 * @param index
-	 * @return
-	 */
 	public IMTrace copyTrace(IMTrace trace, BitSet traceOutEvents) {
 		int index = trace.getXTraceIndex();
 		assert (index >= 0);
 
 		addedTraces.add(index);
 		BitSet newOutEvents = (BitSet) traceOutEvents.clone();
+		addedTracesOutEvents.add(newOutEvents);
+		return new IMTrace(index, -addedTraces.size(), newOutEvents, this);
+	}
+
+	public IMTrace copyTrace(IMTrace trace) {
+		int index = trace.getXTraceIndex();
+		assert (index >= 0);
+
+		addedTraces.add(index);
+		BitSet newOutEvents = (BitSet) trace.outEvents.clone();
 		addedTracesOutEvents.add(newOutEvents);
 		return new IMTrace(index, -addedTraces.size(), newOutEvents, this);
 	}

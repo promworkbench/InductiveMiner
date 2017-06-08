@@ -40,7 +40,7 @@ public class IMLogStartEndComplete extends IMLogImpl {
 	}
 
 	public IMLogStartEndComplete(IMLogStartEndComplete log) {
-		super(log);
+		super(log, log.activityClassifier);
 
 		startComplete = (BitSet) log.startComplete.clone();
 		endComplete = (BitSet) log.endComplete.clone();

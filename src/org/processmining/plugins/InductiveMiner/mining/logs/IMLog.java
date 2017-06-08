@@ -18,13 +18,14 @@ public interface IMLog extends Iterable<IMTrace> {
 	@Deprecated
 	public final static XEventClassifier lifeCycleClassifier = new LifeCycleClassifier();
 
-	
 	/**
-	 * Clone this IMLog. The new one might be based on the same XLog as the old one.
+	 * Clone this IMLog. The new one might be based on the same XLog as the old
+	 * one.
+	 * 
 	 * @return
 	 */
 	public IMLog clone();
-	
+
 	/**
 	 * Classify an event
 	 * 
@@ -33,6 +34,8 @@ public interface IMLog extends Iterable<IMTrace> {
 	public XEventClass classify(IMTrace IMTrace, XEvent event);
 
 	public XEventClassifier getClassifier();
+	
+	public void setClassifier(XEventClassifier classifier);
 
 	public Transition getLifeCycle(XEvent event);
 
@@ -48,10 +51,21 @@ public interface IMLog extends Iterable<IMTrace> {
 	/**
 	 * Copy a trace and return the copy.
 	 * 
-	 * @param index
+	 * @param trace
+	 * @param traceOutEvents
+	 *            A bitset showing for each event of the underlying XTrace
+	 *            whether this event is still included.
 	 * @return
 	 */
 	public IMTrace copyTrace(IMTrace trace, BitSet traceOutEvents);
+
+	/**
+	 * Copy a trace and return the copy.
+	 * 
+	 * @param trace
+	 * @return
+	 */
+	public IMTrace copyTrace(IMTrace trace);
 
 	public String toString();
 
