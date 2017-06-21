@@ -18,7 +18,7 @@
 
 	<property name="author" value="SJJ Leemans" />
 	<property name="organization" value="Eindhoven University of Technology" />
-	<property name="description" value="Discovers process models form event logs recursively" />
+	<property name="description" value="Discovers process models from event logs recursively" />
 	<property name="license" value="L-GPL" />
 	<property name="logo" value="http://leemans.ch/figures/logoInductiveMiner.png" />
 
