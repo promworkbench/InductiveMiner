@@ -22,13 +22,13 @@ public class IMProcessTree {
 
 	public static ProcessTree mineProcessTree(XLog xlog, MiningParameters parameters) {
 		//prepare the log
-		IMLog log = new IMLogImpl(xlog, parameters.getClassifier());
+		IMLog log = new IMLogImpl(xlog, parameters.getClassifier(), parameters.getLifeCycleClassifier());
 		return mineProcessTree(log, parameters);
 	}
-	
+
 	public static ProcessTree mineProcessTree(XLog xlog, MiningParameters parameters, Canceller canceller) {
 		//prepare the log
-		IMLog log = new IMLogImpl(xlog, parameters.getClassifier());
+		IMLog log = new IMLogImpl(xlog, parameters.getClassifier(), parameters.getLifeCycleClassifier());
 		return mineProcessTree(log, parameters, canceller);
 	}
 

@@ -14,7 +14,8 @@ import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeMapImpl;
 import org.deckfour.xes.model.impl.XLogImpl;
 import org.deckfour.xes.model.impl.XTraceImpl;
-import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycles.Transition;
+import org.processmining.plugins.InductiveMiner.mining.MiningParameters;
+import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
 
 import gnu.trove.list.array.TIntArrayList;
 
@@ -32,16 +33,19 @@ public class IMLogImpl implements IMLog {
 	private final List<BitSet> addedTracesOutEvents;
 
 	protected XEventClassifier activityClassifier;
+	protected XLifeCycleClassifier lifeCycleClassifier;
 
 	@Deprecated
-	public final static XEventClassifier lifeCycleClassifier = new LifeCycleClassifier();
+	public IMLogImpl(XLog xLog, XEventClassifier activityClassifier) {
+		this(xLog, activityClassifier, MiningParameters.getDefaultLifeCycleClassifier());
+	}
 
 	/**
 	 * Create an IMlog from an XLog.
 	 * 
 	 * @param xLog
 	 */
-	public IMLogImpl(XLog xLog, XEventClassifier activityClassifier) {
+	public IMLogImpl(XLog xLog, XEventClassifier activityClassifier, XLifeCycleClassifier lifeCycleClassifier) {
 		this.xLog = xLog;
 		outTraces = new BitSet(xLog.size());
 		outEvents = new BitSet[xLog.size()];
@@ -53,6 +57,7 @@ public class IMLogImpl implements IMLog {
 		addedTracesOutEvents = new ArrayList<>();
 
 		this.activityClassifier = activityClassifier;
+		this.lifeCycleClassifier = lifeCycleClassifier;
 	}
 
 	/**
@@ -60,7 +65,7 @@ public class IMLogImpl implements IMLog {
 	 * 
 	 * @param log
 	 */
-	public IMLogImpl(IMLogImpl log, XEventClassifier activityClassifier) {
+	public IMLogImpl(IMLogImpl log) {
 		this.xLog = log.xLog;
 		outTraces = (BitSet) log.outTraces.clone();
 		outEvents = new BitSet[xLog.size()];
@@ -74,11 +79,12 @@ public class IMLogImpl implements IMLog {
 			addedTracesOutEvents.add((BitSet) log.addedTracesOutEvents.get(i).clone());
 		}
 
-		this.activityClassifier = activityClassifier;
+		this.activityClassifier = log.activityClassifier;
+		this.lifeCycleClassifier = log.lifeCycleClassifier;
 	}
 
 	public IMLog clone() {
-		return new IMLogImpl(this, this.activityClassifier);
+		return new IMLogImpl(this);
 	}
 
 	/**
@@ -99,7 +105,15 @@ public class IMLogImpl implements IMLog {
 	}
 
 	public Transition getLifeCycle(XEvent event) {
-		return LifeCycles.getLifeCycleTransition(event);
+		return lifeCycleClassifier.getLifeCycleTransition(event);
+	}
+
+	public XLifeCycleClassifier getLifeCycleClassifier() {
+		return lifeCycleClassifier;
+	}
+
+	public void setLifeCycleClassifier(XLifeCycleClassifier classifier) {
+		this.lifeCycleClassifier = classifier;
 	}
 
 	public XTrace getTraceWithIndex(int traceIndex) {
@@ -225,6 +239,6 @@ public class IMLogImpl implements IMLog {
 	 */
 	public IMLogImpl decoupleFromXLog() {
 		XLog xLog = toXLog();
-		return new IMLogImpl(xLog, activityClassifier);
+		return new IMLogImpl(xLog, activityClassifier, lifeCycleClassifier);
 	}
 }

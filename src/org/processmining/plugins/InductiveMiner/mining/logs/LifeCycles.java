@@ -12,17 +12,12 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XEventImpl;
 import org.deckfour.xes.model.impl.XTraceImpl;
+import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
 
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.hash.THashMap;
 
 public class LifeCycles {
-
-	public final static XEventClassifier lifeCycleClassifier = new LifeCycleClassifier();
-
-	public static enum Transition {
-		start, complete, other
-	}
 
 	private int eventsRemoved = 0;
 	private int eventsAdded = 0;
@@ -32,40 +27,27 @@ public class LifeCycles {
 		this.debug = debug;
 	}
 
-	public static Transition getLifeCycleTransition(XEvent event) {
-		return getLifeCycleTransition(lifeCycleClassifier.getClassIdentity(event));
-	}
-
-	public static Transition getLifeCycleTransition(String lifeCycleTransition) {
-		switch (lifeCycleTransition) {
-			case "complete" :
-				return Transition.complete;
-			case "start" :
-				return Transition.start;
-			default :
-				return Transition.other;
-		}
-	}
-
 	public IMLog preProcessLog(IMLog log) {
-		return new IMLogImpl(preProcessLog(log.toXLog(), log.getClassifier()), log.getClassifier());
+		return new IMLogImpl(preProcessLog(log.toXLog(), log.getClassifier(), log.getLifeCycleClassifier()),
+				log.getClassifier(), log.getLifeCycleClassifier());
 	}
 
-	public XLog preProcessLog(XLog log, XEventClassifier classifier) {
+	public XLog preProcessLog(XLog log, XEventClassifier classifier, XLifeCycleClassifier lifeCycleClassifier) {
 		XLog result = XFactoryRegistry.instance().currentDefault().createLog(log.getAttributes());
 
 		eventsRemoved = 0;
 		eventsAdded = 0;
 
 		for (XTrace trace : log) {
-			XTrace newTrace = preProcessTraceByAddingCompleteEvents(trace, classifier);
+			XTrace newTrace = preProcessTraceByAddingCompleteEvents(trace, classifier, lifeCycleClassifier);
 			if (newTrace != null) {
 				result.add(newTrace);
 			}
 		}
 
 		if (debug) {
-			System.out.println("events added:   " + eventsAdded + " (unmatched start events after which a completion was inserted)");
+			System.out.println("events added:   " + eventsAdded
+					+ " (unmatched start events after which a completion was inserted)");
 			System.out.println("events removed: " + eventsRemoved + " (other life cycles)");
 		}
 
@@ -77,18 +59,20 @@ public class LifeCycles {
 	 * @param trace
 	 * @return a copy of the input trace, such that it is consistent.
 	 */
-	public XTrace preProcessTraceByAddingCompleteEvents(XTrace trace, XEventClassifier classifier) {
-		Map<String, TIntArrayList> unmatchedStartEvents = getUnmatchedStartEvents(trace, classifier);
+	public XTrace preProcessTraceByAddingCompleteEvents(XTrace trace, XEventClassifier classifier,
+			XLifeCycleClassifier lifeCycleClassifier) {
+		Map<String, TIntArrayList> unmatchedStartEvents = getUnmatchedStartEvents(trace, classifier,
+				lifeCycleClassifier);
 
 		//repair the trace
 		XTrace result = new XTraceImpl(trace.getAttributes());
 		int i = 0;
 		for (XEvent event : trace) {
 
-			if (isComplete(event)) {
+			if (lifeCycleClassifier.getLifeCycleTransition(event) == Transition.complete) {
 				//copy to the new trace
 				result.add(event);
-			} else if (isStart(event)) {
+			} else if (lifeCycleClassifier.getLifeCycleTransition(event) == Transition.start) {
 				//copy to the new trace
 				result.add(event);
 
@@ -128,14 +112,14 @@ public class LifeCycles {
 	 * @return the unmatched start event indices
 	 */
 	public static Map<String, TIntArrayList> getUnmatchedStartEvents(Iterable<XEvent> trace,
-			XEventClassifier classifier) {
+			XEventClassifier classifier, XLifeCycleClassifier lifeCycleClassifier) {
 		Map<String, TIntArrayList> unmatchedStartEvents = new THashMap<>();
 
 		int i = 0;
 		for (XEvent event : trace) {
 			String activity = classifier.getClassIdentity(event);
 
-			if (isComplete(event)) {
+			if (lifeCycleClassifier.getLifeCycleTransition(event) == Transition.complete) {
 				//this is a completion event; check whether there's an open activity instance
 				if (unmatchedStartEvents.containsKey(activity)) {
 					//there was an open activity instance; close it
@@ -147,7 +131,7 @@ public class LifeCycles {
 				} else {
 					//there was no open activity; skip
 				}
-			} else if (isStart(event)) {
+			} else if (lifeCycleClassifier.getLifeCycleTransition(event) == Transition.start) {
 				//this is a start event; open an activity instance
 
 				if (!unmatchedStartEvents.containsKey(activity)) {
@@ -161,15 +145,5 @@ public class LifeCycles {
 			i++;
 		}
 		return unmatchedStartEvents;
-	}
-
-	@Deprecated
-	public static boolean isStart(XEvent event) {
-		return IMLog.lifeCycleClassifier.getClassIdentity(event).equals("start");
-	}
-
-	@Deprecated
-	public static boolean isComplete(XEvent event) {
-		return IMLog.lifeCycleClassifier.getClassIdentity(event).equals("complete");
 	}
 }

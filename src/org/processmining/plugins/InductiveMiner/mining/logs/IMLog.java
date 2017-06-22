@@ -7,16 +7,13 @@ import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
-import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycles.Transition;
+import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
 
 public interface IMLog extends Iterable<IMTrace> {
 
 	/*
 	 * Memory-lightweight implementation of a filtering system.
 	 */
-
-	@Deprecated
-	public final static XEventClassifier lifeCycleClassifier = new LifeCycleClassifier();
 
 	/**
 	 * Clone this IMLog. The new one might be based on the same XLog as the old
@@ -36,8 +33,12 @@ public interface IMLog extends Iterable<IMTrace> {
 	public XEventClassifier getClassifier();
 	
 	public void setClassifier(XEventClassifier classifier);
-
+	
 	public Transition getLifeCycle(XEvent event);
+	
+	public XLifeCycleClassifier getLifeCycleClassifier();
+	
+	public void setLifeCycleClassifier(XLifeCycleClassifier lifeCycleClassifier);
 
 	public XTrace getTraceWithIndex(int traceIndex);
 

@@ -1,13 +1,12 @@
 package org.processmining.plugins.InductiveMiner.mining.logs;
 
-import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.extension.std.XLifecycleExtension;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XVisitor;
 
-public class LifeCycleClassifier implements XEventClassifier {
+public class LifeCycleClassifier implements XLifeCycleClassifier {
 
 	public void accept(XVisitor visitor, XLog log) {
 		/*
@@ -43,5 +42,20 @@ public class LifeCycleClassifier implements XEventClassifier {
 	public void setName(String arg0) {
 
 	}
-	
+
+	public Transition getLifeCycleTransition(XEvent event) {
+		return getLifeCycleTransition(getClassIdentity(event));
+	}
+
+	public Transition getLifeCycleTransition(String transition) {
+		switch (transition) {
+			case "complete" :
+				return Transition.complete;
+			case "start" :
+				return Transition.start;
+			default :
+				return Transition.other;
+		}
+	}
+
 }

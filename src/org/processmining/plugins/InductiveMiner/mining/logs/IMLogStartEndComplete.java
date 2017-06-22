@@ -19,8 +19,9 @@ public class IMLogStartEndComplete extends IMLogImpl {
 	private final BitSet addedTracesStartComplete;
 	private final BitSet addedTracesEndComplete;
 
-	public IMLogStartEndComplete(XLog log, XEventClassifier activityClassifier) {
-		super(log, activityClassifier);
+	public IMLogStartEndComplete(XLog log, XEventClassifier activityClassifier,
+			XLifeCycleClassifier lifeCycleClassifier) {
+		super(log, activityClassifier, lifeCycleClassifier);
 
 		startComplete = new BitSet(log.size());
 		endComplete = new BitSet(log.size());
@@ -40,17 +41,18 @@ public class IMLogStartEndComplete extends IMLogImpl {
 	}
 
 	public IMLogStartEndComplete(IMLogStartEndComplete log) {
-		super(log, log.activityClassifier);
+		super(log);
 
 		startComplete = (BitSet) log.startComplete.clone();
 		endComplete = (BitSet) log.endComplete.clone();
 		addedTracesStartComplete = (BitSet) log.addedTracesStartComplete.clone();
 		addedTracesEndComplete = (BitSet) log.addedTracesEndComplete.clone();
 	}
-	
+
 	public static IMLog fromIMLog(IMLog log) {
 		if (log instanceof IMLogImpl) {
-			return new IMLogStartEndComplete(((IMLogImpl) log).xLog, ((IMLogImpl) log).activityClassifier);
+			return new IMLogStartEndComplete(((IMLogImpl) log).xLog, ((IMLogImpl) log).activityClassifier,
+					((IMLogImpl) log).getLifeCycleClassifier());
 		}
 		return log;
 	}
@@ -127,13 +129,13 @@ public class IMLogStartEndComplete extends IMLogImpl {
 
 		return result;
 	}
-	
+
 	@Override
 	public IMLogImpl decoupleFromXLog() {
 		XLog xLog = toXLog();
-		return new IMLogStartEndComplete(xLog, activityClassifier);
+		return new IMLogStartEndComplete(xLog, activityClassifier, lifeCycleClassifier);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();

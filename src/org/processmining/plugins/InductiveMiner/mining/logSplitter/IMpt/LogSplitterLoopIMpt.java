@@ -17,7 +17,7 @@ import org.processmining.plugins.InductiveMiner.mining.logs.IMLog;
 import org.processmining.plugins.InductiveMiner.mining.logs.IMLogStartEndComplete;
 import org.processmining.plugins.InductiveMiner.mining.logs.IMTrace;
 import org.processmining.plugins.InductiveMiner.mining.logs.IMTrace.IMEventIterator;
-import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycles.Transition;
+import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
 
 public class LogSplitterLoopIMpt implements LogSplitter {
 

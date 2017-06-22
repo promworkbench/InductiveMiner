@@ -14,6 +14,6 @@ public class PreProcessLogForLifeCyclesPlugin {
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
 	public XLog preProcessLog(UIPluginContext context, XLog log) {
-		return new LifeCycles(true).preProcessLog(log, MiningParameters.getDefaultClassifier());
+		return new LifeCycles(true).preProcessLog(log, MiningParameters.getDefaultClassifier(), MiningParameters.getDefaultLifeCycleClassifier());
 	}
 }

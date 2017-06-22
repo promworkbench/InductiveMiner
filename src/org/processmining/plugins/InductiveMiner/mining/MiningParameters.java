@@ -11,10 +11,13 @@ import org.processmining.plugins.InductiveMiner.mining.cuts.CutFinder;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
 import org.processmining.plugins.InductiveMiner.mining.fallthrough.FallThrough;
 import org.processmining.plugins.InductiveMiner.mining.logSplitter.LogSplitter;
+import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
+import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.InductiveMiner.mining.postprocessor.PostProcessor;
 
 public abstract class MiningParameters {
 	private XEventClassifier classifier;
+	private XLifeCycleClassifier lifeCycleClassifier;
 	private float noiseThreshold;
 	private float incompleteThreshold;
 
@@ -35,6 +38,7 @@ public abstract class MiningParameters {
 
 	protected MiningParameters() {
 		classifier = getDefaultClassifier();
+		setLifeCycleClassifier(getDefaultLifeCycleClassifier());
 		debug = false;
 		repairLifeCycle = false;
 		processStartEndComplete = false;
@@ -43,8 +47,15 @@ public abstract class MiningParameters {
 		reduceParameters = new EfficientTreeReduceParameters(false);
 	}
 
+	private static final XEventClassifier defaultClassifier = new XEventNameClassifier();
+	private static final XLifeCycleClassifier defaultLifeCycleClassifier = new LifeCycleClassifier();
+
 	public static XEventClassifier getDefaultClassifier() {
-		return new XEventNameClassifier();
+		return defaultClassifier;
+	}
+
+	public static XLifeCycleClassifier getDefaultLifeCycleClassifier() {
+		return defaultLifeCycleClassifier;
 	}
 
 	public void setClassifier(XEventClassifier classifier) {
@@ -200,5 +211,13 @@ public abstract class MiningParameters {
 
 	public void setProcessStartEndComplete(boolean processStartEndComplete) {
 		this.processStartEndComplete = processStartEndComplete;
+	}
+
+	public XLifeCycleClassifier getLifeCycleClassifier() {
+		return lifeCycleClassifier;
+	}
+
+	public void setLifeCycleClassifier(XLifeCycleClassifier lifeCycleClassifier) {
+		this.lifeCycleClassifier = lifeCycleClassifier;
 	}
 }
