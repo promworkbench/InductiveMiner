@@ -12,9 +12,9 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeMapImpl;
+import org.deckfour.xes.model.impl.XEventImpl;
 import org.deckfour.xes.model.impl.XLogImpl;
 import org.deckfour.xes.model.impl.XTraceImpl;
-import org.processmining.plugins.InductiveMiner.mining.MiningParameters;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
 
 import gnu.trove.list.array.TIntArrayList;
@@ -34,11 +34,6 @@ public class IMLogImpl implements IMLog {
 
 	protected XEventClassifier activityClassifier;
 	protected XLifeCycleClassifier lifeCycleClassifier;
-
-	@Deprecated
-	public IMLogImpl(XLog xLog, XEventClassifier activityClassifier) {
-		this(xLog, activityClassifier, MiningParameters.getDefaultLifeCycleClassifier());
-	}
 
 	/**
 	 * Create an IMlog from an XLog.
@@ -221,7 +216,7 @@ public class IMLogImpl implements IMLog {
 			} else {
 				XTrace xTrace = new XTraceImpl(map);
 				for (XEvent e : trace) {
-					xTrace.add(e);
+					xTrace.add(new XEventImpl((XAttributeMap) e.getAttributes().clone()));
 				}
 				result.add(xTrace);
 			}
