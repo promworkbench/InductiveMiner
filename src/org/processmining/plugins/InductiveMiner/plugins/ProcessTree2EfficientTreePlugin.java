@@ -12,7 +12,7 @@ import org.processmining.processtree.ProcessTree;
 public class ProcessTree2EfficientTreePlugin {
 	@Plugin(name = "convert process tree to efficient tree", returnLabels = { "Efficient Tree" }, returnTypes = {
 			EfficientTree.class }, parameterLabels = {
-					"Process tree" }, userAccessible = true, help = "Convert a process into an efficient tree.", level = PluginLevel.BulletProof)
+					"Process tree" }, userAccessible = true, help = "Convert a process into an efficient tree.", level = PluginLevel.Regular)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
 	public EfficientTree convert(PluginContext context, ProcessTree tree) {

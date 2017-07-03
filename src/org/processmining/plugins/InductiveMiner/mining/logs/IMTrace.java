@@ -74,7 +74,8 @@ public class IMTrace implements Iterable<XEvent> {
 		StringBuilder result = new StringBuilder();
 		for (XEvent e : this) {
 			result.append(log.classify(this, e));
-			//result.append(log.getLifeCycle(e).toString());
+			result.append(" ");
+			result.append(log.getLifeCycle(e).toString());
 			result.append(",");
 		}
 		return result.toString();
@@ -154,6 +155,10 @@ public class IMTrace implements Iterable<XEvent> {
 			progress();
 			return getXTrace().get(now);
 		}
+		
+		public XEvent get() {
+			return getXTrace().get(now);
+		}
 
 		private void progress() {
 			now = next;
@@ -222,6 +227,10 @@ public class IMTrace implements Iterable<XEvent> {
 			now = outEvents.previousClearBit(now - 1);
 			counter--;
 			return getXTrace().get(now);
+		}
+		
+		public boolean isAtSameEvent(IMEventIterator other) {
+			return other.now == now;
 		}
 	}
 
