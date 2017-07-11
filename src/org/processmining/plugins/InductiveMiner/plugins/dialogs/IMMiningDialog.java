@@ -336,7 +336,7 @@ public class IMMiningDialog extends JPanel {
 
 	public class VariantIMcpt extends Variant {
 		public String toString() {
-			return "Inductive Miner - incomplete & partial traces (IMcpt)";
+			return "Inductive Miner - incompleteness & partial traces (IMcpt)";
 		}
 
 		public boolean hasNoise() {
@@ -382,8 +382,8 @@ public class IMMiningDialog extends JPanel {
 		}
 
 		variantCombobox = factory.createComboBox(new Variant[] { new VariantIM(), new VariantIMf(), new VariantIMa(),
-				new VariantIMfa(), new VariantIMc(), new VariantIMEKS(), new VariantIMlc(), new VariantIMflc() });
-		//new VariantIMpt(), new VariantIMfpt(), new VariantIMcpt()
+				new VariantIMfa(), new VariantIMc(), new VariantIMEKS(), new VariantIMlc(), new VariantIMflc(),
+				new VariantIMpt(), new VariantIMfpt(), new VariantIMcpt() });
 		{
 			GridBagConstraints cVariantCombobox = new GridBagConstraints();
 			cVariantCombobox.gridx = 1;
