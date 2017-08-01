@@ -51,7 +51,7 @@ public class IMLogStartEndComplete extends IMLogImpl {
 
 	public static IMLog fromIMLog(IMLog log) {
 		if (log instanceof IMLogImpl) {
-			return new IMLogStartEndComplete(((IMLogImpl) log).xLog, ((IMLogImpl) log).activityClassifier,
+			return new IMLogStartEndComplete(((IMLogImpl) log).toXLog(), ((IMLogImpl) log).activityClassifier,
 					((IMLogImpl) log).getLifeCycleClassifier());
 		}
 		return log;

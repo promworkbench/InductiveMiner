@@ -1,16 +1,16 @@
 package org.processmining.plugins.InductiveMiner.graphs;
 
-import gnu.trove.map.TLongLongMap;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TLongLongHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.collections15.IteratorUtils;
+
+import gnu.trove.map.TLongLongMap;
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TLongLongHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 
 public class GraphImplLinearEdgeImportOptimised<V> implements Graph<V> {
 
@@ -177,5 +177,9 @@ public class GraphImplLinearEdgeImportOptimised<V> implements Graph<V> {
 		result.index2v.addAll(index2v);
 		result.edges.putAll(edges);
 		return result;
+	}
+	
+	public void addVertex(int vertexIndex) {
+		throw new RuntimeException("not available");
 	}
 }

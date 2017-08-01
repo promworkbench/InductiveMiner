@@ -1,12 +1,12 @@
 package org.processmining.plugins.InductiveMiner.graphs;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.list.array.TLongArrayList;
-import gnu.trove.map.hash.TObjectIntHashMap;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.list.array.TLongArrayList;
+import gnu.trove.map.hash.TObjectIntHashMap;
 
 public class GraphImplLinearEdge<V> implements Graph<V> {
 
@@ -94,14 +94,14 @@ public class GraphImplLinearEdge<V> implements Graph<V> {
 	}
 
 	public void addEdge(int source, int target, long weight) {
-		assert(source >= 0);
-		assert(target >= 0);
-		
+		assert (source >= 0);
+		assert (target >= 0);
+
 		//idea: keep the sources and targets sorted; first on source then on target
 		int from = binarySearch(source, target);
 		if (from >= 0) {
 			weights.set(from, weights.get(from) + weight);
-			
+
 			if (weights.get(from) == 0) {
 				removeEdge(from);
 			}
@@ -111,9 +111,9 @@ public class GraphImplLinearEdge<V> implements Graph<V> {
 			weights.insert(~from, weight);
 		}
 	}
-	
+
 	public void removeEdge(long edge) {
-		assert(edge <= Integer.MAX_VALUE);
+		assert (edge <= Integer.MAX_VALUE);
 		sources.remove((int) edge, 1);
 		targets.remove((int) edge, 1);
 		weights.remove((int) edge, 1);
@@ -237,7 +237,7 @@ public class GraphImplLinearEdge<V> implements Graph<V> {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < sources.size(); i++) {
-			result.append(sources.get(i) + "->" + targets.get(i) + "x" + weights.get(i));
+			result.append(index2v.get(sources.get(i)) + "->" + index2v.get(targets.get(i)) + "x" + weights.get(i));
 			result.append(", ");
 		}
 		return result.toString();
@@ -347,5 +347,9 @@ public class GraphImplLinearEdge<V> implements Graph<V> {
 			hasNext = false;
 			return value;
 		}
+	}
+
+	public void addVertex(int vertexIndex) {
+		throw new RuntimeException("not available");
 	}
 }

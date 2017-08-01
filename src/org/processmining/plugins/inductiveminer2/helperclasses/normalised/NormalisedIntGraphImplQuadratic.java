@@ -1,105 +1,42 @@
-package org.processmining.plugins.InductiveMiner.graphs;
+package org.processmining.plugins.inductiveminer2.helperclasses.normalised;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.collections15.IteratorUtils;
+import org.processmining.plugins.InductiveMiner.graphs.EdgeIterable;
 
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-
-public class GraphImplQuadratic<V> implements Graph<V> {
+public class NormalisedIntGraphImplQuadratic implements NormalisedIntGraph {
 	private int vertices; //number of vertices
 	private long[][] edges; //matrix of weights of edges
-	private TObjectIntMap<V> v2index; //map V to its vertex index
-	private V[] index2x; //map vertex index to V
-	private final Class<?> clazz;
 
-	public GraphImplQuadratic(Class<?> clazz) {
-		this(clazz, 1);
+	public NormalisedIntGraphImplQuadratic() {
+		this(1);
 	}
 
-	@SuppressWarnings("unchecked")
-	public GraphImplQuadratic(Class<?> clazz, int initialSize) {
-		vertices = 0;
+	public NormalisedIntGraphImplQuadratic(int initialSize) {
+		vertices = initialSize;
 		edges = new long[initialSize][initialSize];
-		v2index = new TObjectIntHashMap<V>(10, 0.5f, -1);
-
-		index2x = (V[]) Array.newInstance(clazz, 0);
-		this.clazz = clazz;
 	}
 
-	public int addVertex(V x) {
-		int newNumber = vertices;
-		int oldIndex = v2index.putIfAbsent(x, newNumber);
-		if (oldIndex == v2index.getNoEntryValue()) {
-			vertices++;
-			increaseSizeTo(vertices);
-			index2x[newNumber] = x;
-			return vertices - 1;
-		} else {
-			return oldIndex;
-		}
+	@Override
+	public void addEdge(int normalisedSource, int normalisedTarget, long weight) {
+		increaseSizeTo(normalisedSource);
+		increaseSizeTo(normalisedTarget);
+		edges[normalisedSource][normalisedTarget] += weight;
 	}
 
-	public void addVertices(Collection<V> xs) {
-		increaseSizeTo(vertices + xs.size());
-		for (V x : xs) {
-			addVertex(x);
-		}
-	}
-
-	public void addVertices(V[] xs) {
-		increaseSizeTo(vertices + xs.length);
-		for (V x : xs) {
-			addVertex(x);
-		}
-	}
-
-	public void addEdge(int source, int target, long weight) {
-		edges[source][target] += weight;
-	}
-
-	public void addEdge(V source, V target, long weight) {
-		edges[v2index.get(source)][v2index.get(target)] += weight;
-	}
-
+	@Override
 	public void removeEdge(long edge) {
 		edges[getEdgeSourceIndex(edge)][getEdgeTargetIndex(edge)] = 0;
 	}
 
-	public V getVertexOfIndex(int index) {
-		return index2x[index];
-	}
-
-	public int getIndexOfVertex(V v) {
-		return v2index.get(v);
-	}
-
-	public V[] getVertices() {
-		return index2x;
-	}
-
-	public int[] getVertexIndices() {
-		int[] result = new int[vertices];
-		for (int i = 0; i < vertices; i++) {
-			result[i] = i;
-		}
-		return result;
-	}
-
-	public int getNumberOfVertices() {
-		return vertices;
-	}
-
 	/**
 	 * Gives an iterable that iterates over all edges that have a weight > 0;
-	 * The edges that returns are indices.
+	 * The edges that are returned are indices.
 	 * 
 	 * @return
 	 */
+	@Override
 	public Iterable<Long> getEdges() {
 		return new Iterable<Long>() {
 			public Iterator<Long> iterator() {
@@ -113,43 +50,20 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 	 * 
 	 * @return
 	 */
-	public boolean containsEdge(V source, V target) {
-		return edges[v2index.get(source)][v2index.get(target)] > 0;
+	@Override
+	public boolean containsEdge(int normalisedSource, int normalisedTarget) {
+		if (normalisedSource > vertices - 1 || normalisedTarget > vertices - 1) {
+			return false;
+		}
+		return edges[normalisedSource][normalisedTarget] > 0;
 	}
 
-	/**
-	 * Returns whether the graph contains an edge between source and target.
-	 * 
-	 * @return
-	 */
-	public boolean containsEdge(int source, int target) {
-		return edges[source][target] > 0;
-	}
-
-	/**
-	 * Returns the vertex the edgeIndex comes from.
-	 * 
-	 * @param edgeIndex
-	 * @return
-	 */
-	public V getEdgeSource(long edgeIndex) {
-		return index2x[getEdgeSourceIndex(edgeIndex)];
-	}
-
+	@Override
 	public int getEdgeSourceIndex(long edgeIndex) {
 		return (int) (edgeIndex / vertices);
 	}
 
-	/**
-	 * Returns the vertex the edgeIndex points to.
-	 * 
-	 * @param edgeIndex
-	 * @return
-	 */
-	public V getEdgeTarget(long edgeIndex) {
-		return index2x[getEdgeTargetIndex(edgeIndex)];
-	}
-
+	@Override
 	public int getEdgeTargetIndex(long edgeIndex) {
 		return (int) (edgeIndex % vertices);
 	}
@@ -160,67 +74,45 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 	 * @param edgeIndex
 	 * @return
 	 */
+	@Override
 	public long getEdgeWeight(long edgeIndex) {
-		return edges[getEdgeSourceIndex(edgeIndex)][getEdgeTargetIndex(edgeIndex)];
+		int normalisedSource = getEdgeSourceIndex(edgeIndex);
+		int normalisedTarget = getEdgeTargetIndex(edgeIndex);
+		if (normalisedSource > vertices - 1 || normalisedTarget > vertices - 1) {
+			return 0;
+		}
+		return edges[normalisedSource][normalisedTarget];
 	}
 
-	public long getEdgeWeight(int source, int target) {
-		return edges[source][target];
+	@Override
+	public long getEdgeWeight(int normalisedSource, int normalisedTarget) {
+		if (normalisedSource > vertices - 1 || normalisedTarget > vertices - 1) {
+			return 0;
+		}
+		return edges[normalisedSource][normalisedTarget];
 	}
 
-	/**
-	 * Returns the weight of an edge.
-	 * 
-	 * @param source
-	 * @param target
-	 * @return
-	 */
-	public long getEdgeWeight(V source, V target) {
-		return edges[v2index.get(source)][v2index.get(target)];
+	@Override
+	public EdgeIterable getIncomingEdgesOf(int normalisedNode) {
+		if (normalisedNode > vertices - 1) {
+			return new EdgeIterableEmpty();
+		}
+		return new EdgeIterableIncoming(normalisedNode);
 	}
 
-	/**
-	 * Returns an array of edge index, containing all edges of which v is the
-	 * target.
-	 * 
-	 * @param v
-	 * @return
-	 */
-	public Iterable<Long> getIncomingEdgesOf(V v) {
-		return new EdgeIterableIncoming(v2index.get(v));
+	@Override
+	public EdgeIterable getOutgoingEdgesOf(int normalisedNode) {
+		if (normalisedNode > vertices - 1) {
+			return new EdgeIterableEmpty();
+		}
+		return new EdgeIterableOutgoing(normalisedNode);
 	}
 
-	public Iterable<Long> getIncomingEdgesOf(int v) {
-		return new EdgeIterableIncoming(v2index.get(v));
-	}
-
-	/**
-	 * Returns an array of edge index, containing all edges of which v is the
-	 * source.
-	 * 
-	 * @param v
-	 * @return
-	 */
-	public Iterable<Long> getOutgoingEdgesOf(V v) {
-		return new EdgeIterableOutgoing(v2index.get(v));
-	}
-
-	public Iterable<Long> getOutgoingEdgesOf(int v) {
-		return new EdgeIterableOutgoing(v);
-	}
-
-	/**
-	 * Return an array of edgeIndex containing all edges of which v is a source
-	 * or a target.
-	 * 
-	 * @param v
-	 * @return
-	 */
-	public Iterable<Long> getEdgesOf(V v) {
-		return getEdgesOf(v2index.get(v));
-	}
-
-	public Iterable<Long> getEdgesOf(final int indexOfV) {
+	@Override
+	public Iterable<Long> getEdgesOf(final int normalisedNode) {
+		if (normalisedNode > vertices - 1) {
+			return new EdgeIterableEmpty();
+		}
 		return new Iterable<Long>() {
 
 			public Iterator<Long> iterator() {
@@ -228,12 +120,12 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 				//first count every edge, count a self-edge only in the row-run
 				int count = 0;
 				for (int column = 0; column < vertices; column++) {
-					if (column != indexOfV && edges[indexOfV][column] > 0) {
+					if (column != normalisedNode && edges[normalisedNode][column] > 0) {
 						count++;
 					}
 				}
 				for (int row = 0; row < vertices; row++) {
-					if (edges[row][indexOfV] > 0) {
+					if (edges[row][normalisedNode] > 0) {
 						count++;
 					}
 				}
@@ -241,14 +133,14 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 				long[] result = new long[count];
 				count = 0;
 				for (int column = 0; column < vertices; column++) {
-					if (column != indexOfV && edges[indexOfV][column] > 0) {
-						result[count] = indexOfV * vertices + column;
+					if (column != normalisedNode && edges[normalisedNode][column] > 0) {
+						result[count] = normalisedNode * vertices + column;
 						count++;
 					}
 				}
 				for (int row = 0; row < vertices; row++) {
-					if (edges[row][indexOfV] > 0) {
-						result[count] = row * vertices + indexOfV;
+					if (edges[row][normalisedNode] > 0) {
+						result[count] = row * vertices + normalisedNode;
 						count++;
 					}
 				}
@@ -262,6 +154,7 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 	 * 
 	 * @return
 	 */
+	@Override
 	public long getWeightOfHeaviestEdge() {
 		long max = Long.MIN_VALUE;
 		for (long[] v : edges) {
@@ -291,7 +184,21 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 			}
 			edges = newEdges;
 		}
-		index2x = Arrays.copyOf(index2x, size);
+		if (vertices < size + 1) {
+			vertices = size + 1;
+		}
+	}
+
+	private final class EdgeIterableEmpty extends EdgeIterable {
+
+		protected boolean hasNext() {
+			return false;
+		}
+
+		protected long next() {
+			return 0;
+		}
+
 	}
 
 	private final class EdgeIterableOutgoing extends EdgeIterable {
@@ -396,18 +303,13 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 		}
 	}
 
-	public Graph<V> clone() {
-		GraphImplQuadratic<V> result = new GraphImplQuadratic<V>(clazz, edges.length);
+	@Override
+	public NormalisedIntGraphImplQuadratic clone() {
+		NormalisedIntGraphImplQuadratic result = new NormalisedIntGraphImplQuadratic(vertices);
 		result.vertices = vertices;
 		for (int i = 0; i < edges.length; i++) {
 			System.arraycopy(edges[i], 0, result.edges[i], 0, edges[i].length);
 		}
-		result.v2index.putAll(v2index);
-		System.arraycopy(index2x, 0, result.index2x, 0, index2x.length);
 		return result;
-	}
-	
-	public void addVertex(int vertexIndex) {
-		throw new RuntimeException("not available");
 	}
 }

@@ -79,7 +79,7 @@ public class IM {
 		return IMPetriNet.minePetriNet(context, log, parameters);
 	}
 
-	public boolean confirmLargeLogs(final UIPluginContext context, XLog log, IMMiningDialog dialog) {
+	public static boolean confirmLargeLogs(final UIPluginContext context, XLog log, IMMiningDialog dialog) {
 		if (dialog.getVariant().getWarningThreshold() > 0) {
 			XEventClassifier classifier = dialog.getMiningParameters().getClassifier();
 			XLogInfo xLogInfo = XLogInfoFactory.createLogInfo(log, classifier);

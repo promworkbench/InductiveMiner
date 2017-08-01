@@ -11,9 +11,9 @@ import org.processmining.plugins.InductiveMiner.mining.cuts.CutFinder;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
 import org.processmining.plugins.InductiveMiner.mining.fallthrough.FallThrough;
 import org.processmining.plugins.InductiveMiner.mining.logSplitter.LogSplitter;
-import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.InductiveMiner.mining.postprocessor.PostProcessor;
+import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
 
 public abstract class MiningParameters {
 	private XEventClassifier classifier;
@@ -48,7 +48,7 @@ public abstract class MiningParameters {
 	}
 
 	private static final XEventClassifier defaultClassifier = new XEventNameClassifier();
-	private static final XLifeCycleClassifier defaultLifeCycleClassifier = new LifeCycleClassifier();
+	private static final XLifeCycleClassifier defaultLifeCycleClassifier = new XLifeCycleClassifierIgnore();
 
 	public static XEventClassifier getDefaultClassifier() {
 		return defaultClassifier;

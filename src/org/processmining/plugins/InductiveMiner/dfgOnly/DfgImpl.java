@@ -118,19 +118,13 @@ public class DfgImpl implements Dfg {
 	@Override
 	public void addStartActivity(XEventClass activity, long cardinality) {
 		int activityIndex = addActivity(activity);
-		long newValue = startActivities.adjustOrPutValue(activityIndex, cardinality, cardinality);
-		if (newValue < 0) {
-			startActivities.remove(activityIndex);
-		}
+		addStartActivity(activityIndex, activityIndex);
 	}
 
 	@Override
 	public void addEndActivity(XEventClass activity, long cardinality) {
 		int activityIndex = addActivity(activity);
-		long newValue = endActivities.adjustOrPutValue(activityIndex, cardinality, cardinality);
-		if (newValue < 0) {
-			endActivities.remove(activityIndex);
-		}
+		addEndActivity(activityIndex, cardinality);
 	}
 
 	@Override
@@ -139,7 +133,7 @@ public class DfgImpl implements Dfg {
 		for (int activity : getActivityIndices()) {
 			result.append(activity + ": " + getActivityOfIndex(activity) + ", ");
 		}
-		
+
 		result.append("\n");
 		for (long edgeIndex : directlyFollowsGraph.getEdges()) {
 			result.append(directlyFollowsGraph.getEdgeSource(edgeIndex));
@@ -162,8 +156,8 @@ public class DfgImpl implements Dfg {
 
 	@Override
 	public Dfg clone() {
-		return new DfgImpl(directlyFollowsGraph.clone(), concurrencyGraph.clone(),
-				new TIntLongHashMap(startActivities), new TIntLongHashMap(endActivities), numberOfEmptyTraces);
+		return new DfgImpl(directlyFollowsGraph.clone(), concurrencyGraph.clone(), new TIntLongHashMap(startActivities),
+				new TIntLongHashMap(endActivities), numberOfEmptyTraces);
 	}
 
 	@Override
@@ -478,5 +472,35 @@ public class DfgImpl implements Dfg {
 			count += value;
 		}
 		return count;
+	}
+
+	@Override
+	public void addDirectlyFollowsEdge(int source, int target, long cardinality) {
+		directlyFollowsGraph.addEdge(source, target, cardinality);
+	}
+
+	@Override
+	public void addParallelEdge(int a, int b, long cardinality) {
+		concurrencyGraph.addEdge(a, b, cardinality);
+	}
+
+	@Override
+	public void addStartActivity(int activityIndex, long cardinality) {
+		long newValue = startActivities.adjustOrPutValue(activityIndex, cardinality, cardinality);
+		if (newValue < 0) {
+			startActivities.remove(activityIndex);
+		}
+	}
+
+	@Override
+	public void addEndActivity(int activityIndex, long cardinality) {
+		long newValue = endActivities.adjustOrPutValue(activityIndex, cardinality, cardinality);
+		if (newValue < 0) {
+			endActivities.remove(activityIndex);
+		}
+	}
+
+	public void addActivity(int index) {
+		throw new RuntimeException("Nope. Use the XEventClass variant.");
 	}
 }
