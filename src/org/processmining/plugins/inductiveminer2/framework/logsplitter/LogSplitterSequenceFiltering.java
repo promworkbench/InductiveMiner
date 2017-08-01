@@ -3,7 +3,7 @@ package org.processmining.plugins.inductiveminer2.framework.logsplitter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.Map.Entry;
 
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
@@ -111,12 +111,10 @@ public class LogSplitterSequenceFiltering implements LogSplitter {
 	 * @return
 	 */
 	public static Map<TIntSet, IMTrace> progress(Map<TIntSet, IMTraceIterator> mapSigma2TraceIterator) {
-		final Map<TIntSet, IMTrace> result = new THashMap<>();
-		mapSigma2TraceIterator.forEach(new BiConsumer<TIntSet, IMTraceIterator>() {
-			public void accept(TIntSet t, IMTraceIterator u) {
-				result.put(t, u.next());
-			}
-		});
+		Map<TIntSet, IMTrace> result = new THashMap<>();
+		for (Entry<TIntSet, IMTraceIterator> e : mapSigma2TraceIterator.entrySet()) {
+			result.put(e.getKey(), e.getValue().next());
+		}
 		return result;
 	}
 

@@ -2,7 +2,6 @@ package org.processmining.plugins.inductiveminer2.mining;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.processmining.framework.packages.PackageManager.Canceller;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
@@ -107,18 +106,16 @@ public class InductiveMiner {
 
 			//debug the cut
 			final List<List<String>> cutDebug = new ArrayList<>();
-			cut.getPartition().forEach(new Consumer<TIntSet>() {
-				public void accept(TIntSet t) {
-					final List<String> s = new ArrayList<>();
-					t.forEach(new TIntProcedure() {
-						public boolean execute(int value) {
-							s.add(log.getActivity(value));
-							return true;
-						}
-					});
-					cutDebug.add(s);
-				}
-			});
+			for (TIntSet part : cut.getPartition()) {
+				final List<String> s = new ArrayList<>();
+				part.forEach(new TIntProcedure() {
+					public boolean execute(int value) {
+						s.add(log.getActivity(value));
+						return true;
+					}
+				});
+				cutDebug.add(s);
+			}
 			debug(" chosen cut: " + cut + "; " + cutDebug, minerState);
 
 			//split logs
