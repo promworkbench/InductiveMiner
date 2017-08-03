@@ -8,7 +8,6 @@ import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinder;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinder;
 import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThrough;
-import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitter;
 import org.processmining.plugins.inductiveminer2.framework.postprocessor.PostProcessor;
 
 public abstract class MiningParametersAbstract implements MiningParameters {
@@ -21,7 +20,6 @@ public abstract class MiningParametersAbstract implements MiningParameters {
 
 	protected ArrayList<BaseCaseFinder> baseCaseFinders = new ArrayList<>();
 	protected ArrayList<CutFinder> cutFinders = new ArrayList<>();
-	protected LogSplitter logSplitter;
 	protected ArrayList<FallThrough> fallThroughs = new ArrayList<>();
 	protected ArrayList<PostProcessor> postProcessors = new ArrayList<>();
 	
@@ -80,11 +78,6 @@ public abstract class MiningParametersAbstract implements MiningParameters {
 	@Override
 	public ArrayList<CutFinder> getCutFinders() {
 		return cutFinders;
-	}
-
-	@Override
-	public LogSplitter getLogSplitter() {
-		return logSplitter;
 	}
 
 	@Override

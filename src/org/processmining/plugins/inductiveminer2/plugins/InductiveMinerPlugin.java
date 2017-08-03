@@ -18,10 +18,10 @@ import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
 public class InductiveMinerPlugin {
 	@Plugin(name = "Mine efficient tree with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
 			"Process Tree" }, returnTypes = { EfficientTree.class }, parameterLabels = { "Log" }, userAccessible = true)
-	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
+	@UITopiaVariant(affiliation = InductiveMinerMiningDialog.affiliation, author = InductiveMinerMiningDialog.author, email = InductiveMinerMiningDialog.email)
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
 	public EfficientTree mineGuiProcessTree(final UIPluginContext context, XLog xLog) {
-		IMMiningDialog dialog = new IMMiningDialog(xLog);
+		InductiveMinerMiningDialog dialog = new InductiveMinerMiningDialog(xLog);
 		InteractionResult result = context.showWizard("Mine using Inductive Miner", true, true, dialog);
 
 		if (result != InteractionResult.FINISHED) {
@@ -47,7 +47,7 @@ public class InductiveMinerPlugin {
 		});
 	}
 
-	public static boolean confirmLargeLogs(final UIPluginContext context, IMLog log, IMMiningDialog dialog) {
+	public static boolean confirmLargeLogs(final UIPluginContext context, IMLog log, InductiveMinerMiningDialog dialog) {
 		if (dialog.getVariant().getWarningThreshold() > 0) {
 			int numberOfActivities = log.getNumberOfActivities();
 			if (numberOfActivities > dialog.getVariant().getWarningThreshold()) {

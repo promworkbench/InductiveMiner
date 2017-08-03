@@ -115,27 +115,35 @@ public class IMLogImpl implements IMLog {
 			}
 
 			public void remove() {
-				long[][] copied = new long[events.length - 1][];
-				System.arraycopy(events, 0, copied, 0, now);
-				System.arraycopy(events, now + 1, copied, now, events.length - now - 1);
-				events = copied;
+				removeTrace(now);
 				now--;
 			}
 
 			public void itEventRemove() {
-				long[] copied = new long[events[now].length - 1];
-				System.arraycopy(events[now], 0, copied, 0, nowEvent);
-				System.arraycopy(events[now], nowEvent + 1, copied, nowEvent, events[now].length - nowEvent - 1);
-				events[now] = copied;
+				removeEvent(now, nowEvent);
 				nowEvent--;
+			}
+			
+			public int itEventSplit() {
+				int newTraceIndex = splitTrace(now, nowEvent);
+				now++;
+				nowEvent = 0;
+
+				return newTraceIndex;
 			}
 		};
 	}
 
 	@Override
 	public IMLogImpl clone() {
-		IMLogImpl result = new IMLogImpl(events.length);
+		IMLogImpl result;
+		try {
+			result = (IMLogImpl) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
 
+		result.events = new long[events.length][];
 		for (int i = 0; i < events.length; i++) {
 			result.events[i] = new long[events[i].length];
 			System.arraycopy(events[i], 0, result.events[i], 0, events[i].length);
@@ -224,29 +232,16 @@ public class IMLogImpl implements IMLog {
 				}
 
 				public void remove() {
-					long[] copied = new long[events[traceIndex].length - 1];
-					System.arraycopy(events[traceIndex], 0, copied, 0, now);
-					System.arraycopy(events[traceIndex], now + 1, copied, now, events[traceIndex].length - now - 1);
-					events[traceIndex] = copied;
+					removeEvent(traceIndex, now);
 					now--;
 				}
 
-				public void split() {
-					//create an extra trace
-					long[][] copied = new long[events.length + 1][];
-					System.arraycopy(events, 0, copied, 1, events.length);
-					events = copied;
+				public int split() {
+					int newTraceIndex = splitTrace(traceIndex, now);
 					traceIndex++;
-
-					//copy the part up till and excluding 'now' to the new trace
-					events[0] = new long[now];
-					System.arraycopy(events[traceIndex], 0, events[0], 0, now);
-
-					//remove the part up till and excluding 'now' from this trace
-					long[] newTrace = new long[events[traceIndex].length - now];
-					System.arraycopy(events[traceIndex], now, newTrace, 0, events[traceIndex].length - now);
-					events[traceIndex] = newTrace;
 					now = 0;
+
+					return newTraceIndex;
 				}
 			};
 		}
@@ -255,5 +250,51 @@ public class IMLogImpl implements IMLog {
 			return events[traceIndex].length;
 		}
 
+		public int getTraceIndex() {
+			return traceIndex;
+		}
+
+		public int getActivityIndex(int eventIndex) {
+			return IMLogImpl.getActivityIndex(events[traceIndex][eventIndex]);
+		}
+
+		public boolean isEmpty() {
+			return events[traceIndex].length == 0;
+		}
+
+	}
+
+	public void removeTrace(int traceIndex) {
+		long[][] copied = new long[events.length - 1][];
+		System.arraycopy(events, 0, copied, 0, traceIndex);
+		System.arraycopy(events, traceIndex + 1, copied, traceIndex, events.length - traceIndex - 1);
+		events = copied;
+	}
+
+	public void removeEvent(int traceIndex, int eventIndex) {
+		long[] copied = new long[events[traceIndex].length - 1];
+		System.arraycopy(events[traceIndex], 0, copied, 0, eventIndex);
+		System.arraycopy(events[traceIndex], eventIndex + 1, copied, eventIndex,
+				events[traceIndex].length - eventIndex - 1);
+		events[traceIndex] = copied;
+	}
+
+	public int splitTrace(int traceIndex, int eventIndex) {
+		//create an extra trace
+		long[][] copied = new long[events.length + 1][];
+		System.arraycopy(events, 0, copied, 1, events.length);
+		events = copied;
+		traceIndex++;
+
+		//copy the part up till and excluding 'now' to the new trace
+		events[0] = new long[eventIndex];
+		System.arraycopy(events[traceIndex], 0, events[0], 0, eventIndex);
+
+		//remove the part up till and excluding 'now' from this trace
+		long[] newTrace = new long[events[traceIndex].length - eventIndex];
+		System.arraycopy(events[traceIndex], eventIndex, newTrace, 0, events[traceIndex].length - eventIndex);
+		events[traceIndex] = newTrace;
+
+		return 0;
 	}
 }

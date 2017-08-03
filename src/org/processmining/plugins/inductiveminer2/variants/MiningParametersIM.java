@@ -1,5 +1,7 @@
 package org.processmining.plugins.inductiveminer2.variants;
 
+import java.util.List;
+
 import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
@@ -7,15 +9,15 @@ import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFin
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderIMEmptyTraces;
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderIMSemiFlowerModel;
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderIMSingleActivity;
-import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMConcurrent;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMConcurrentWithMinimumSelfDistance;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMExclusiveChoice;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMLoop;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMSequence;
-import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughFlowerModel;
-import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitter;
+import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughActivityOncePerTraceConcurrent;
+import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughFlowerWithoutEpsilon;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterConcurrent;
+import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterInterleavedFiltering;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterLoop;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterSequenceFiltering;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterXorFiltering;
@@ -28,7 +30,9 @@ import org.processmining.plugins.inductiveminer2.logs.IMLogImpl;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
 import org.processmining.plugins.inductiveminer2.mining.MiningParametersAbstract;
 
-public class MiningParametersIM extends MiningParametersAbstract {
+import gnu.trove.set.TIntSet;
+
+public class MiningParametersIM extends MiningParametersAbstract implements InductiveMinerVariant {
 
 	public MiningParametersIM() {
 		baseCaseFinders.add(new BaseCaseFinderIMSingleActivity());
@@ -42,31 +46,12 @@ public class MiningParametersIM extends MiningParametersAbstract {
 		cutFinders.add(new CutFinderIMConcurrent());
 		cutFinders.add(new CutFinderIMLoop());
 
-		logSplitter = new LogSplitter() {
-			public IMLog[] split(IMLog log, IMLogInfo logInfo, Cut cut, MinerState minerState) {
-				switch (cut.getOperator()) {
-					case concurrent :
-						return LogSplitterConcurrent.split(log, cut.getPartition(), minerState);
-					case interleaved :
-						break;
-					case loop :
-						return LogSplitterLoop.split(log, cut.getPartition(), minerState);
-					case maybeInterleaved :
-						break;
-					case or :
-						break;
-					case sequence :
-						return LogSplitterSequenceFiltering.split(log, cut.getPartition(), minerState);
-					case xor :
-						return LogSplitterXorFiltering.split(log, cut.getPartition(), minerState);
-					default :
-						break;
-				}
-				throw new RuntimeException("not available");
-			}
-		};
-
-		fallThroughs.add(new FallThroughFlowerModel());
+		
+		fallThroughs.add(new FallThroughActivityOncePerTraceConcurrent(true));
+		//fallThroughs.add(new FallThroughActivityConcurrent());
+		//fallThroughs.add(new FallThroughTauLoopStrict(false));
+		//fallThroughs.add(new FallThroughTauLoop(false));
+		fallThroughs.add(new FallThroughFlowerWithoutEpsilon());
 
 		getReduceParameters().setReduceToOr(false);
 	}
@@ -101,4 +86,57 @@ public class MiningParametersIM extends MiningParametersAbstract {
 		return new IMLogImpl(xLog, getClassifier(), getLifeCycleClassifier());
 	}
 
+	public IMLog[] splitLogConcurrent(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState) {
+		return LogSplitterConcurrent.split(log, partition, minerState);
+	}
+
+	public IMLog[] splitLogInterleaved(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState) {
+		return LogSplitterInterleavedFiltering.split(log, partition, minerState);
+	}
+
+	public IMLog[] splitLogLoop(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState) {
+		return LogSplitterLoop.split(log, partition, minerState);
+	}
+
+	public IMLog[] splitLogOr(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState) {
+		return LogSplitterConcurrent.split(log, partition, minerState);
+	}
+
+	public IMLog[] splitLogSequence(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState) {
+		return LogSplitterSequenceFiltering.split(log, partition, minerState);
+	}
+
+	public IMLog[] splitLogXor(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState) {
+		return LogSplitterXorFiltering.split(log, partition, minerState);
+	}
+
+	@Override
+	public String toString() {
+		return "Inductive Miner";
+	}
+
+	@Override
+	public boolean hasNoise() {
+		return false;
+	}
+
+	@Override
+	public boolean noNoiseImpliesFitness() {
+		return false;
+	}
+
+	@Override
+	public MiningParametersAbstract getMiningParameters() {
+		return this;
+	}
+
+	@Override
+	public int getWarningThreshold() {
+		return -1;
+	}
+
+	@Override
+	public String getDoi() {
+		return "http://dx.doi.org/10.1007/978-3-642-38697-8_17";
+	}
 }

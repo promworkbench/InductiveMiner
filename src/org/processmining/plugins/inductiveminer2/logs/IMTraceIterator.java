@@ -65,4 +65,10 @@ public interface IMTraceIterator extends Iterator<IMTrace> {
 	 */
 	public void itEventRemove();
 
+	/**
+	 * @see IMLog.splitTrace()
+	 * @return the index of the inserted trace.
+	 */
+	public int itEventSplit();
+
 }

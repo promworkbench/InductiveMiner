@@ -12,10 +12,12 @@ import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinder;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinder;
 import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThrough;
-import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitter;
 import org.processmining.plugins.inductiveminer2.framework.postprocessor.PostProcessor;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfo;
+import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
+
+import gnu.trove.set.TIntSet;
 
 public interface MiningParameters {
 
@@ -47,8 +49,6 @@ public interface MiningParameters {
 
 	public List<CutFinder> getCutFinders();
 
-	public LogSplitter getLogSplitter();
-
 	public List<FallThrough> getFallThroughs();
 
 	public boolean isRepairLifeCycle();
@@ -57,6 +57,16 @@ public interface MiningParameters {
 
 	public EfficientTreeReduceParameters getReduceParameters();
 
-	public boolean isProcessStartEndComplete();
+	public IMLog[] splitLogConcurrent(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState);
+
+	public IMLog[] splitLogInterleaved(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState);
+
+	public IMLog[] splitLogLoop(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState);
+
+	public IMLog[] splitLogOr(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState);
+
+	public IMLog[] splitLogSequence(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState);
+
+	public IMLog[] splitLogXor(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState);
 
 }

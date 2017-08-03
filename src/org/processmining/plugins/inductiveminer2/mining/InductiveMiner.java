@@ -31,11 +31,6 @@ public class InductiveMiner {
 			System.out.println("life cycle repair not yet implemented");
 		}
 
-		if (parameters.isProcessStartEndComplete()) {
-			//log = IMLogStartEndComplete.fromIMLog(log);
-			System.out.println("incomplete trace handling not yet implemented");
-		}
-
 		MinerState minerState = new MinerState(parameters, canceller);
 
 		if (canceller.isCancelled()) {
@@ -245,13 +240,28 @@ public class InductiveMiner {
 	}
 
 	public static IMLog[] splitLog(IMLog log, IMLogInfo logInfo, Cut cut, MinerState minerState) {
-		IMLog[] result = minerState.parameters.getLogSplitter().split(log, logInfo, cut, minerState);
 
 		if (minerState.isCancelled()) {
 			return null;
 		}
 
-		return result;
+		switch (cut.getOperator()) {
+			case concurrent :
+				return minerState.parameters.splitLogConcurrent(log, logInfo, cut.getPartition(), minerState);
+			case interleaved :
+				return minerState.parameters.splitLogInterleaved(log, logInfo, cut.getPartition(), minerState);
+			case loop :
+				return minerState.parameters.splitLogLoop(log, logInfo, cut.getPartition(), minerState);
+			case or :
+				return minerState.parameters.splitLogOr(log, logInfo, cut.getPartition(), minerState);
+			case sequence :
+				return minerState.parameters.splitLogSequence(log, logInfo, cut.getPartition(), minerState);
+			case xor :
+				return minerState.parameters.splitLogXor(log, logInfo, cut.getPartition(), minerState);
+			default :
+				break;
+		}
+		throw new RuntimeException("not available");
 	}
 
 	public static EfficientTree findFallThrough(IMLog log, IMLogInfo logInfo, MinerState minerState) {

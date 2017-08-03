@@ -1,6 +1,6 @@
 package org.processmining.plugins.inductiveminer2.logs;
 
-public interface IMLog extends Iterable<IMTrace> {
+public interface IMLog extends Iterable<IMTrace>, Cloneable {
 
 	/**
 	 * 
@@ -25,5 +25,20 @@ public interface IMLog extends Iterable<IMTrace> {
 	 *         be preserved by the log implementation.
 	 */
 	public IMLog clone();
+
+	public void removeTrace(int traceIndex);
+
+	public void removeEvent(int traceIndex, int eventIndex);
+
+	/**
+	 * Split a trace: add a new trace at the start of the log, containing all
+	 * events up till (excluding) eventIndex. Furthermore, remove all events up
+	 * to (excluding) eventIndex from the trace at traceIndex.
+	 * 
+	 * @param traceIndex
+	 * @param eventIndex
+	 * @return the index of the inserted trace
+	 */
+	public int splitTrace(int traceIndex, int eventIndex);
 
 }

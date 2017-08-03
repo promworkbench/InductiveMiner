@@ -21,20 +21,19 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.InductiveMiner.ClassifierChooser;
 import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
-import org.processmining.plugins.inductiveminer2.mining.MiningParametersAbstract;
+import org.processmining.plugins.inductiveminer2.variants.InductiveMinerVariant;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIM;
+import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMPartialTraces;
 
 import com.fluxicon.slickerbox.factory.SlickerFactory;
 
-public class IMMiningDialog extends JPanel {
+public class InductiveMinerMiningDialog extends JPanel {
 
 	private static final long serialVersionUID = 7693870370139578439L;
-	private final ParametersWrapper p = new ParametersWrapper();
-	private final JComboBox<Variant> variantCombobox;
+	private final JComboBox<InductiveMinerVariant> variantCombobox;
 	private final JLabel noiseLabel;
 	private final JSlider noiseSlider;
 	private final JLabel noiseValue;
@@ -45,206 +44,11 @@ public class IMMiningDialog extends JPanel {
 	public static final String affiliation = "Queensland University of Technology";
 	public static final String author = "S.J.J. Leemans";
 
-	public class ParametersWrapper {
-		public MiningParametersAbstract parameters;
-		public Variant variant;
-	}
-
-	public abstract class Variant {
-		@Override
-		public abstract String toString();
-
-		public abstract boolean hasNoise();
-
-		public abstract boolean noNoiseImpliesFitness();
-
-		public abstract MiningParametersAbstract getMiningParameters();
-
-		public abstract int getWarningThreshold();
-
-		public String getDoi() {
-			return null;
-		}
-	}
-
-	public class VariantIM extends Variant {
-		public String toString() {
-			return "Inductive Miner (IM)";
-		}
-
-		public boolean hasNoise() {
-			return false;
-		}
-
-		public MiningParametersAbstract getMiningParameters() {
-			return new MiningParametersIM();
-		}
-
-		public boolean noNoiseImpliesFitness() {
-			return false;
-		}
-
-		public String getDoi() {
-			return "http://dx.doi.org/10.1007/978-3-642-38697-8_17";
-		}
-
-		public int getWarningThreshold() {
-			return 0;
-		}
-	}
-
-	/*
-	 * public class VariantIMf extends Variant { public String toString() {
-	 * return "Inductive Miner - infrequent (IMf)"; }
-	 * 
-	 * public boolean hasNoise() { return true; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersIMf(); }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return true; }
-	 * 
-	 * public String getDoi() { return
-	 * "http://dx.doi.org/10.1007/978-3-319-06257-0_6"; }
-	 * 
-	 * public int getWarningThreshold() { return 0; } }
-	 * 
-	 * public class VariantIMa extends Variant { public String toString() {
-	 * return "Inductive Miner - all operators (IMa)"; }
-	 * 
-	 * public boolean hasNoise() { return false; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersIMa(); }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return false; }
-	 * 
-	 * public String getDoi() { return null; }
-	 * 
-	 * public int getWarningThreshold() { return 0; } }
-	 * 
-	 * public class VariantIMfa extends Variant { public String toString() {
-	 * return "Inductive Miner - infrequent & all operators (IMfa)"; }
-	 * 
-	 * public boolean hasNoise() { return true; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersIMfa(); }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return true; }
-	 * 
-	 * public String getDoi() { return null; }
-	 * 
-	 * public int getWarningThreshold() { return 0; } }
-	 * 
-	 * public class VariantIMc extends Variant { public String toString() {
-	 * return "Inductive Miner - incompleteness (IMc)"; }
-	 * 
-	 * public boolean hasNoise() { return false; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersIMc(); }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return false; }
-	 * 
-	 * public String getDoi() { return
-	 * "http://dx.doi.org/10.1007/978-3-319-07734-5_6"; }
-	 * 
-	 * public int getWarningThreshold() { return 30; } }
-	 * 
-	 * public class VariantIMEKS extends Variant { public String toString() {
-	 * return "Inductive Miner - exhaustive K-successor"; }
-	 * 
-	 * public boolean hasNoise() { return false; }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return false; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersEKS(); }
-	 * 
-	 * public int getWarningThreshold() { return 20; } }
-	 * 
-	 * public class VariantIMlc extends Variant {
-	 * 
-	 * public String toString() { return "Inductive Miner - life cycle (IMlc)";
-	 * }
-	 * 
-	 * public boolean hasNoise() { return false; }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return false; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersIMlc(); }
-	 * 
-	 * public String getDoi() { return
-	 * "http://dx.doi.org/10.1007/978-3-319-19237-6_6"; }
-	 * 
-	 * public int getWarningThreshold() { return 0; } }
-	 * 
-	 * public class VariantIMflc extends Variant {
-	 * 
-	 * public String toString() { return
-	 * "Inductive Miner - infrequent & life cycle (IMflc)"; }
-	 * 
-	 * public boolean hasNoise() { return true; }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return false; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersIMflc(); }
-	 * 
-	 * public String getDoi() { return
-	 * "http://dx.doi.org/10.1007/978-3-319-19237-6_6"; }
-	 * 
-	 * public int getWarningThreshold() { return 0; } }
-	 * 
-	 * public class VariantIMpt extends Variant { public String toString() {
-	 * return "Inductive Miner - partial traces (IMpt)"; }
-	 * 
-	 * public boolean hasNoise() { return false; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersIMpt(); }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return false; }
-	 * 
-	 * public String getDoi() { return null; }
-	 * 
-	 * public int getWarningThreshold() { return 0; } }
-	 * 
-	 * public class VariantIMfpt extends Variant { public String toString() {
-	 * return "Inductive Miner - infrequent & partial traces (IMfpt)"; }
-	 * 
-	 * public boolean hasNoise() { return true; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersIMfpt(); }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return false; }
-	 * 
-	 * public String getDoi() { return null; }
-	 * 
-	 * public int getWarningThreshold() { return 0; } }
-	 * 
-	 * public class VariantIMcpt extends Variant { public String toString() {
-	 * return "Inductive Miner - incompleteness & partial traces (IMcpt)"; }
-	 * 
-	 * public boolean hasNoise() { return false; }
-	 * 
-	 * public MiningParametersAbstract getMiningParameters() { return new
-	 * MiningParametersIMcpt(); }
-	 * 
-	 * public boolean noNoiseImpliesFitness() { return false; }
-	 * 
-	 * public String getDoi() { return null; }
-	 * 
-	 * public int getWarningThreshold() { return 0; } }
-	 */
+	private final InductiveMinerVariant[] variants = new InductiveMinerVariant[] { new MiningParametersIM(),
+			new MiningParametersIMPartialTraces() };
 
 	@SuppressWarnings("unchecked")
-	public IMMiningDialog(XLog log) {
-		p.variant = new VariantIM();
-		p.parameters = p.variant.getMiningParameters();
+	public InductiveMinerMiningDialog(XLog log) {
 		SlickerFactory factory = SlickerFactory.instance();
 
 		int gridy = 1;
@@ -265,7 +69,7 @@ public class IMMiningDialog extends JPanel {
 		//		variantCombobox = factory.createComboBox(new Variant[] { new VariantIM(), new VariantIMf(), new VariantIMa(),
 		//				new VariantIMfa(), new VariantIMc(), new VariantIMEKS(), new VariantIMlc(), new VariantIMflc(),
 		//				new VariantIMpt(), new VariantIMfpt(), new VariantIMcpt() });
-		variantCombobox = factory.createComboBox(new Variant[] { new VariantIM() });
+		variantCombobox = factory.createComboBox(variants);
 		{
 			GridBagConstraints cVariantCombobox = new GridBagConstraints();
 			cVariantCombobox.gridx = 1;
@@ -304,7 +108,6 @@ public class IMMiningDialog extends JPanel {
 		{
 			noiseSlider.setMinimum(0);
 			noiseSlider.setMaximum(1000);
-			noiseSlider.setValue((int) (p.parameters.getNoiseThreshold() * 1000));
 			GridBagConstraints cNoiseSlider = new GridBagConstraints();
 			cNoiseSlider.gridx = 1;
 			cNoiseSlider.gridy = gridy;
@@ -312,7 +115,7 @@ public class IMMiningDialog extends JPanel {
 			add(noiseSlider, cNoiseSlider);
 		}
 
-		noiseValue = factory.createLabel(String.format("%.2f", p.parameters.getNoiseThreshold()));
+		noiseValue = factory.createLabel(String.format("%.2f", getMiningParameters().getNoiseThreshold()));
 		{
 			GridBagConstraints cNoiseValue = new GridBagConstraints();
 			cNoiseValue.gridx = 2;
@@ -427,15 +230,9 @@ public class IMMiningDialog extends JPanel {
 
 		variantCombobox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Variant variant = (Variant) variantCombobox.getSelectedItem();
-				float noise = p.parameters.getNoiseThreshold();
-				XEventClassifier classifier = p.parameters.getClassifier();
-				p.parameters = variant.getMiningParameters();
-				p.parameters.setNoiseThreshold(noise);
-				p.parameters.setClassifier(classifier);
-				p.variant = variant;
+				InductiveMinerVariant variant = (InductiveMinerVariant) variantCombobox.getSelectedItem();
 				if (variant.hasNoise()) {
-					noiseValue.setText(String.format("%.2f", p.parameters.getNoiseThreshold()));
+					noiseValue.setText(String.format("%.2f", getMiningParameters().getNoiseThreshold()));
 				} else {
 					int width = noiseValue.getWidth();
 					int height = noiseValue.getHeight();
@@ -460,36 +257,39 @@ public class IMMiningDialog extends JPanel {
 
 		noiseSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				p.parameters.setNoiseThreshold((float) (noiseSlider.getValue() / 1000.0));
-				noiseValue.setText(String.format("%.2f", p.parameters.getNoiseThreshold()));
+				for (InductiveMinerVariant variant : variants) {
+					variant.getMiningParameters().setNoiseThreshold((float) (noiseSlider.getValue() / 1000.0));
+				}
+				noiseValue.setText(String.format("%.2f", getMiningParameters().getNoiseThreshold()));
 			}
 		});
+		noiseSlider.setValue((int) (getMiningParameters().getNoiseThreshold() * 1000));
 
 		classifiers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				p.parameters.setClassifier(classifiers.getSelectedClassifier());
+				for (InductiveMinerVariant variant : variants) {
+					variant.getMiningParameters().setClassifier(classifiers.getSelectedClassifier());
+				}
 			}
 		});
-		p.parameters.setClassifier(classifiers.getSelectedClassifier());
+		for (InductiveMinerVariant variant : variants) {
+			variant.getMiningParameters().setClassifier(classifiers.getSelectedClassifier());
+		}
 
 		doiValue.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				String doi = ((Variant) variantCombobox.getSelectedItem()).getDoi();
+				String doi = ((InductiveMinerVariant) variantCombobox.getSelectedItem()).getDoi();
 				if (doi != null) {
 					openWebPage(doi);
 				}
 			}
 		});
-		doiValue.setText(((Variant) variantCombobox.getSelectedItem()).getDoi());
+		doiValue.setText(((InductiveMinerVariant) variantCombobox.getSelectedItem()).getDoi());
 	}
 
 	public MiningParameters getMiningParameters() {
-		return p.parameters;
-	}
-
-	public Variant getVariant() {
-		return p.variant;
+		return ((InductiveMinerVariant) variantCombobox.getSelectedItem()).getMiningParameters();
 	}
 
 	public static void openWebPage(String url) {
@@ -510,6 +310,10 @@ public class IMMiningDialog extends JPanel {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public InductiveMinerVariant getVariant() {
+		return (InductiveMinerVariant) variantCombobox.getSelectedItem();
 	}
 
 }

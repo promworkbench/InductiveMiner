@@ -9,7 +9,7 @@ import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
 
-public class FallThroughFlowerModel implements FallThrough {
+public class FallThroughFlowerWithoutEpsilon implements FallThrough {
 
 	public EfficientTree fallThrough(IMLog log, IMLogInfo logInfo, MinerState minerState) {
 		String[] activities = logInfo.getActivityNames(log);

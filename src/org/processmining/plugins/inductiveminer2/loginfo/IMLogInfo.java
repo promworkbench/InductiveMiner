@@ -64,7 +64,7 @@ public class IMLogInfo {
 		this.numberOfActivityInstances = numberOfActivityInstances;
 		this.numberOfTraces = numberOfTraces;
 	}
-	
+
 	public NormaliserInt getNormaliser() {
 		return normaliser;
 	}
@@ -84,6 +84,14 @@ public class IMLogInfo {
 			result[i] = normaliser.deNormalise(it.next());
 		}
 		return result;
+	}
+	
+	public MultiIntSet getActivityMultiSet() {
+		return activities;
+	}
+
+	public int getNumberOfActivities() {
+		return activities.toSet().size();
 	}
 
 	public TIntObjectMap<MultiIntSet> getMinimumSelfDistancesBetween() {

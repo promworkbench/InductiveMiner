@@ -11,4 +11,10 @@ public interface IMTrace extends Iterable<IMEvent> {
 	 */
 	public int size();
 
+	public int getTraceIndex();
+
+	public int getActivityIndex(int eventIndex);
+
+	public boolean isEmpty();
+
 }

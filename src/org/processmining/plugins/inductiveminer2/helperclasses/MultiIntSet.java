@@ -1,7 +1,11 @@
 package org.processmining.plugins.inductiveminer2.helperclasses;
 
+import java.util.AbstractList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -229,5 +233,40 @@ public class MultiIntSet implements Iterable<Integer> {
 		MultiIntSet result = new MultiIntSet();
 		result.addAll(this);
 		return result;
+	}
+
+	/**
+	 * Returns a list of the elements, sorted by their cardinality.
+	 * 
+	 * @return
+	 */
+	public int[] sortByCardinality() {
+		final int[] elements = cardinalities.keys();
+		List<Integer> wrapper = new AbstractList<Integer>() {
+
+			@Override
+			public Integer get(int index) {
+				return elements[index];
+			}
+
+			@Override
+			public int size() {
+				return elements.length;
+			}
+
+			@Override
+			public Integer set(int index, Integer element) {
+				int v = elements[index];
+				elements[index] = element;
+				return v;
+			}
+		};
+
+		Collections.sort(wrapper, new Comparator<Integer>() {
+			public int compare(Integer o1, Integer o2) {
+				return Long.valueOf(getCardinalityOf(o1)).compareTo(Long.valueOf(getCardinalityOf(o2)));
+			}
+		});
+		return elements;
 	}
 }
