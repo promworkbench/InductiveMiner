@@ -14,8 +14,11 @@ import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderI
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMExclusiveChoice;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMLoop;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMSequence;
+import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughActivityConcurrent;
 import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughActivityOncePerTraceConcurrent;
 import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughFlowerWithoutEpsilon;
+import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughTauLoop;
+import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughTauLoopStrict;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterConcurrent;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterInterleavedFiltering;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterLoop;
@@ -46,11 +49,10 @@ public class MiningParametersIM extends MiningParametersAbstract implements Indu
 		cutFinders.add(new CutFinderIMConcurrent());
 		cutFinders.add(new CutFinderIMLoop());
 
-		
 		fallThroughs.add(new FallThroughActivityOncePerTraceConcurrent(true));
-		//fallThroughs.add(new FallThroughActivityConcurrent());
-		//fallThroughs.add(new FallThroughTauLoopStrict(false));
-		//fallThroughs.add(new FallThroughTauLoop(false));
+		fallThroughs.add(new FallThroughActivityConcurrent());
+		fallThroughs.add(new FallThroughTauLoopStrict());
+		fallThroughs.add(new FallThroughTauLoop());
 		fallThroughs.add(new FallThroughFlowerWithoutEpsilon());
 
 		getReduceParameters().setReduceToOr(false);

@@ -16,10 +16,10 @@ import gnu.trove.set.hash.TIntHashSet;
 public class CutFinderIMLoop implements CutFinder {
 
 	public Cut findCut(IMLog log, IMLogInfo logInfo, MinerState minerState) {
-		return findCut2(logInfo.getNormaliser(), logInfo.getDfg());
+		return findCut(logInfo.getDfg(), logInfo.getNormaliser());
 	}
 
-	public static Cut findCut2(NormaliserInt normaliser, NormalisedIntDfg dfg) {
+	public static Cut findCut(NormalisedIntDfg dfg, NormaliserInt normaliser) {
 		//initialise the components: each activity gets its own
 		NormalisedIntComponents components = new NormalisedIntComponents(dfg.getNumberOfActivities());
 

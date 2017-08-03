@@ -10,6 +10,7 @@ import org.processmining.plugins.InductiveMiner.mining.cuts.Cut.Operator;
 import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
 import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntComponents;
 import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
+import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserInt;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
@@ -19,23 +20,22 @@ import gnu.trove.set.hash.TIntHashSet;
 
 public class CutFinderIMConcurrent implements CutFinder {
 	public Cut findCut(IMLog log, IMLogInfo logInfo, MinerState minerState) {
-		return findCutImpl(logInfo, null);
+		return findCut(logInfo.getDfg(), logInfo.getNormaliser(), null);
 	}
 
-	public static Cut findCutImpl(IMLogInfo logInfo, Function<Integer, MultiIntSet> minimumSelfDistanceBetween) {
+	public static Cut findCut(NormalisedIntDfg dfg, NormaliserInt normaliser,
+			Function<Integer, MultiIntSet> minimumSelfDistanceBetween) {
 
-		NormalisedIntDfg dfg = logInfo.getDfg();
-		int numberOfActivities = logInfo.getNormaliser().getNumberOfActivities();
+		int numberOfActivities = normaliser.getNumberOfActivities();
 
 		//noise filtering can have removed all start and end activities.
 		//if that is the case, return
-		if (!logInfo.getDfg().hasStartActivities() || !logInfo.getDfg().hasEndActivities()) {
+		if (!dfg.hasStartActivities() || !dfg.hasEndActivities()) {
 			return null;
 		}
 
 		//initialise each activity as a component
-		NormalisedIntComponents components = new NormalisedIntComponents(
-				logInfo.getNormaliser().getNumberOfActivities());
+		NormalisedIntComponents components = new NormalisedIntComponents(normaliser.getNumberOfActivities());
 
 		//walk through all possible edges; if an edge is missing, then the source and target cannot be in different components.
 		for (int e1 = 0; e1 < numberOfActivities; e1++) {
@@ -72,7 +72,7 @@ public class CutFinderIMConcurrent implements CutFinder {
 		if (connectedComponents2 == null) {
 			return null;
 		} else {
-			return new Cut(Operator.concurrent, logInfo.getNormaliser().deNormalise(connectedComponents2));
+			return new Cut(Operator.concurrent, normaliser.deNormalise(connectedComponents2));
 		}
 	}
 

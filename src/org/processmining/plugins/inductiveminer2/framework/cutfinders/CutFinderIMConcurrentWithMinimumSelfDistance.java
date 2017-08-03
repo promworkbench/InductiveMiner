@@ -12,10 +12,11 @@ public class CutFinderIMConcurrentWithMinimumSelfDistance implements CutFinder {
 	}
 
 	public static Cut findCutImpl(IMLog log, final IMLogInfo logInfo, MinerState minerState) {
-		return CutFinderIMConcurrent.findCutImpl(logInfo, new Function<Integer, MultiIntSet>() {
-			public MultiIntSet call(Integer input) throws Exception {
-				return logInfo.getMinimumSelfDistanceBetween(input);
-			}
-		});
+		return CutFinderIMConcurrent.findCut(logInfo.getDfg(), logInfo.getNormaliser(),
+				new Function<Integer, MultiIntSet>() {
+					public MultiIntSet call(Integer input) throws Exception {
+						return logInfo.getMinimumSelfDistanceBetween(input);
+					}
+				});
 	}
 }

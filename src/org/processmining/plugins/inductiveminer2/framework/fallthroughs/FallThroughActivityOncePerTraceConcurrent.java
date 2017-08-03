@@ -69,6 +69,7 @@ public class FallThroughActivityOncePerTraceConcurrent implements FallThrough {
 					List<TIntSet> partition = new ArrayList<>();
 					partition.add(sigma0);
 					partition.add(sigma1);
+					partition = logInfo.getNormaliser().deNormalise(partition);
 
 					//split log
 					IMLog[] logSplitResult = minerState.parameters.splitLogConcurrent(log, logInfo, partition,

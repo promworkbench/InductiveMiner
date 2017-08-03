@@ -17,6 +17,7 @@ import org.processmining.plugins.InductiveMiner.mining.cuts.Cut.Operator;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IM.CutFinderIMSequenceReachability;
 import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
 import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntStronglyConnectedComponents;
+import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserInt;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
@@ -29,11 +30,14 @@ import gnu.trove.set.TIntSet;
 public class CutFinderIMSequence implements CutFinder {
 
 	public Cut findCut(IMLog log, IMLogInfo logInfo, MinerState minerState) {
-		NormalisedIntDfg dfg = logInfo.getDfg();
+		return findCut(logInfo.getDfg(), logInfo.getNormaliser(), minerState);
+	}
+
+	public static Cut findCut(NormalisedIntDfg dfg, NormaliserInt normaliser, MinerState minerState) {
 
 		//compute the strongly connected components of the directly follows graph
 		Set<TIntSet> SCCs = NormalisedIntStronglyConnectedComponents.compute(dfg.getDirectlyFollowsGraph(),
-				logInfo.getNormaliser().getNumberOfActivities());
+				normaliser.getNumberOfActivities());
 
 		//condense the strongly connected components
 		Graph<TIntSet> condensedGraph1 = GraphFactory.create(TIntSet.class, SCCs.size());
@@ -159,14 +163,14 @@ public class CutFinderIMSequence implements CutFinder {
 		 * 
 		 * Correction 11-7-2016: identify optional sub sequences and merge them.
 		 */
-		Cut newCut = new Cut(Operator.sequence, CutFinderIMSequenceStrict.merge(logInfo.getDfg(), result, minerState));
+		Cut newCut = new Cut(Operator.sequence, CutFinderIMSequenceStrict.merge(dfg, result, minerState));
 
 		//InductiveMiner.debug("  sccs after pivot merge " + newCut.getPartition().toString(), minerState);
 
 		if (newCut.isValid()) {
-			return logInfo.getNormaliser().deNormalise(newCut);
+			return normaliser.deNormalise(newCut);
 		} else {
-			return new Cut(Operator.sequence, logInfo.getNormaliser().deNormalise(result));
+			return new Cut(Operator.sequence, normaliser.deNormalise(result));
 		}
 	}
 }
