@@ -15,7 +15,7 @@ import org.processmining.plugins.inductiveminer2.mining.MiningParametersAbstract
 
 import gnu.trove.set.TIntSet;
 
-public class MiningParametersIMPartialTraces extends MiningParametersIM {
+public class MiningParametersIMInfrequentPartialTraces extends MiningParametersIMInfrequent {
 
 	@Override
 	public IMLog2IMLogInfo getLog2LogInfo() {
@@ -41,7 +41,7 @@ public class MiningParametersIMPartialTraces extends MiningParametersIM {
 
 	@Override
 	public String toString() {
-		return "Inductive Miner - partial traces   (IMpt)";
+		return "Inductive Miner - infrequent & partial traces   (IMfpt)";
 	}
 
 	public boolean hasFitness() {
@@ -49,7 +49,7 @@ public class MiningParametersIMPartialTraces extends MiningParametersIM {
 	}
 
 	public boolean hasNoise() {
-		return false;
+		return true;
 	}
 
 	public boolean noNoiseImpliesFitness() {

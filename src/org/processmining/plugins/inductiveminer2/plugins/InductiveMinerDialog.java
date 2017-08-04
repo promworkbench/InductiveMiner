@@ -22,6 +22,7 @@ import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
 import org.processmining.plugins.inductiveminer2.variants.InductiveMinerVariant;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIM;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequent;
+import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequentPartialTraces;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMPartialTraces;
 
 import com.fluxicon.slickerbox.factory.SlickerFactory;
@@ -29,8 +30,11 @@ import com.fluxicon.slickerbox.factory.SlickerFactory;
 public class InductiveMinerDialog extends JPanel {
 
 	private static final long serialVersionUID = 1441839136397807436L;
-	public static InductiveMinerVariant[] variants = new InductiveMinerVariant[] { new MiningParametersIM(),
-			new MiningParametersIMInfrequent(), new MiningParametersIMPartialTraces() };
+	public InductiveMinerVariant[] variants = new InductiveMinerVariant[] { //
+			new MiningParametersIM(), //
+			new MiningParametersIMInfrequent(), //
+			new MiningParametersIMPartialTraces(), //
+			new MiningParametersIMInfrequentPartialTraces() };
 	protected JComboBox<InductiveMinerVariant> variantCombobox;
 
 	@SuppressWarnings("unchecked")
