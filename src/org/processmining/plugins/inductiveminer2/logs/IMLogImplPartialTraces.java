@@ -26,10 +26,10 @@ public class IMLogImplPartialTraces extends IMLogImpl {
 
 		int traceNr = 0;
 		for (XTrace trace : xLog) {
-			Boolean startComplete = IMLogStartEndComplete.getBooleanAttrFromTrace(trace, "startcomplete");
+			Boolean startComplete = IMLogStartEndComplete.getBooleanAttrFromTrace(trace, "startReliable");
 			isStartReliable[traceNr] = startComplete == null || startComplete;
 
-			Boolean endComplete = IMLogStartEndComplete.getBooleanAttrFromTrace(trace, "endcomplete");
+			Boolean endComplete = IMLogStartEndComplete.getBooleanAttrFromTrace(trace, "endReliable");
 			isEndReliable[traceNr] = endComplete == null || endComplete;
 
 			traceNr++;

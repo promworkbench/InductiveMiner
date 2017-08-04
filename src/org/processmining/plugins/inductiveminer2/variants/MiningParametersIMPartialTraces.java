@@ -48,12 +48,16 @@ public class MiningParametersIMPartialTraces extends MiningParametersIM implemen
 		return "Inductive Miner - partial traces";
 	}
 
+	public boolean hasFitness() {
+		return false;
+	}
+
 	public boolean hasNoise() {
 		return false;
 	}
 
 	public boolean noNoiseImpliesFitness() {
-		return true;
+		return false;
 	}
 
 	public MiningParametersAbstract getMiningParameters() {

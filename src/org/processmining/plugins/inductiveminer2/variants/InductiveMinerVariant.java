@@ -12,6 +12,12 @@ public interface InductiveMinerVariant {
 
 	/**
 	 * 
+	 * @return whether this variant guarantees fitness.
+	 */
+	public boolean hasFitness();
+
+	/**
+	 * 
 	 * @return whether the noise threshold is relevant.
 	 */
 	public boolean hasNoise();

@@ -124,7 +124,7 @@ public class MiningParametersIM extends MiningParametersAbstract implements Indu
 
 	@Override
 	public boolean noNoiseImpliesFitness() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -140,5 +140,9 @@ public class MiningParametersIM extends MiningParametersAbstract implements Indu
 	@Override
 	public String getDoi() {
 		return "http://dx.doi.org/10.1007/978-3-642-38697-8_17";
+	}
+
+	public boolean hasFitness() {
+		return true;
 	}
 }
