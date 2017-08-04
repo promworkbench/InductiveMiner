@@ -6,7 +6,7 @@ import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
 
 import gnu.trove.set.TIntSet;
 
-public interface NormaliserInt {
+public interface NormaliserInt extends Cloneable {
 
 	public int toNormal(int node);
 
@@ -17,5 +17,7 @@ public interface NormaliserInt {
 	public int deNormalise(int normalisedIndex);
 
 	public Cut deNormalise(Cut newCut);
+
+	public NormaliserInt clone();
 
 }

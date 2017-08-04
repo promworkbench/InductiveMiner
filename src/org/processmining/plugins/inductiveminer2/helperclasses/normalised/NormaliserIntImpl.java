@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
 
-import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.procedure.TIntProcedure;
 import gnu.trove.set.TIntSet;
@@ -15,8 +13,8 @@ import gnu.trove.set.hash.TIntHashSet;
 
 public class NormaliserIntImpl implements NormaliserInt {
 
-	private TIntIntMap vertex2normalIndex = new TIntIntHashMap(10, 0.5f, Integer.MIN_VALUE, Integer.MIN_VALUE);
-	private TIntList normalIndex2vertex = new TIntArrayList();
+	private TIntIntHashMap vertex2normalIndex = new TIntIntHashMap(10, 0.5f, Integer.MIN_VALUE, Integer.MIN_VALUE);
+	private TIntArrayList normalIndex2vertex = new TIntArrayList();
 
 	public int add(int node) {
 		int oldNormalised = vertex2normalIndex.putIfAbsent(node, normalIndex2vertex.size());
@@ -59,4 +57,17 @@ public class NormaliserIntImpl implements NormaliserInt {
 		return new Cut(newCut.getOperator(), deNormalise(newCut.getPartition()));
 	}
 
+	public NormaliserIntImpl clone() {
+		NormaliserIntImpl result;
+		try {
+			result = (NormaliserIntImpl) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+
+		result.vertex2normalIndex = new TIntIntHashMap(vertex2normalIndex);
+		result.normalIndex2vertex = new TIntArrayList(normalIndex2vertex);
+
+		return result;
+	}
 }

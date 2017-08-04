@@ -6,10 +6,10 @@ public class NormalisedIntDfgImpl implements NormalisedIntDfg {
 
 	private int numberOfActivities = 0;
 	private long numberOfEmptyTraces = 0;
-	private final NormalisedIntGraph directlyFollowsGraph = new NormalisedIntGraphImplQuadratic();
-	private final NormalisedIntGraph concurrencyGraph = new NormalisedIntGraphImplQuadratic();
-	private final MultiIntSet startActivities = new MultiIntSet();
-	private final MultiIntSet endActivities = new MultiIntSet();
+	private NormalisedIntGraph directlyFollowsGraph = new NormalisedIntGraphImplQuadratic();
+	private NormalisedIntGraph concurrencyGraph = new NormalisedIntGraphImplQuadratic();
+	private MultiIntSet startActivities = new MultiIntSet();
+	private MultiIntSet endActivities = new MultiIntSet();
 
 	@Override
 	public void addActivity(int index) {
@@ -211,4 +211,27 @@ public class NormalisedIntDfgImpl implements NormalisedIntDfg {
 		return directlyFollowsGraph;
 	}
 
+	@Override
+	public NormalisedIntGraph getConcurrencyGraph() {
+		return concurrencyGraph;
+	}
+
+	@Override
+	public NormalisedIntDfgImpl clone() {
+		NormalisedIntDfgImpl result;
+		try {
+			result = (NormalisedIntDfgImpl) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+
+		result.numberOfActivities = numberOfActivities;
+		result.numberOfEmptyTraces = numberOfEmptyTraces;
+		result.directlyFollowsGraph = directlyFollowsGraph.clone();
+		result.concurrencyGraph = concurrencyGraph.clone();
+		result.startActivities = startActivities.clone();
+		result.endActivities = endActivities.clone();
+
+		return result;
+	}
 }

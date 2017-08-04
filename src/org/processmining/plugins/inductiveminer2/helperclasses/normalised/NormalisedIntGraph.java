@@ -6,7 +6,7 @@ package org.processmining.plugins.inductiveminer2.helperclasses.normalised;
  * @author sander
  *
  */
-public interface NormalisedIntGraph {
+public interface NormalisedIntGraph extends Cloneable {
 
 	/**
 	 * Adds an edge. If the weight becomes 0, the edge is removed.
@@ -107,4 +107,6 @@ public interface NormalisedIntGraph {
 	 * @return
 	 */
 	public long getEdgeWeight(long edgeIndex);
+
+	public NormalisedIntGraph clone();
 }

@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
 import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
 import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserInt;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserIntImpl;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 
 import gnu.trove.iterator.TIntIterator;
@@ -17,7 +16,7 @@ import gnu.trove.set.TIntSet;
 
 public class IMLogInfo {
 
-	private NormaliserIntImpl normaliser;
+	private NormaliserInt normaliser;
 
 	protected final NormalisedIntDfg dfg;
 
@@ -52,7 +51,7 @@ public class IMLogInfo {
 	 * @param numberOfActivityInstances
 	 * @param numberOfTraces
 	 */
-	public IMLogInfo(NormaliserIntImpl normaliser, NormalisedIntDfg directlyFollowsGraph, MultiIntSet activities,
+	public IMLogInfo(NormaliserInt normaliser, NormalisedIntDfg directlyFollowsGraph, MultiIntSet activities,
 			TIntObjectMap<MultiIntSet> minimumSelfDistancesBetween, TIntIntHashMap minimumSelfDistances,
 			long numberOfEvents, long numberOfActivityInstances, long numberOfTraces) {
 		this.normaliser = normaliser;

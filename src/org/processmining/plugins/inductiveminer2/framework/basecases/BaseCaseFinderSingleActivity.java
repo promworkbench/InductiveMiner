@@ -7,19 +7,20 @@ import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.InductiveMiner;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
 
-public class BaseCaseFinderIMSemiFlowerModel implements BaseCaseFinder {
+public class BaseCaseFinderSingleActivity implements BaseCaseFinder {
 
 	public EfficientTree findBaseCases(IMLog log, IMLogInfo logInfo, MinerState minerState) {
 
-		if (logInfo.getActivities().length == 1 && logInfo.getDfg().getNumberOfEmptyTraces() == 0) {
-			//single activity in semi-flower model
+		if (logInfo.getActivities().length == 1 && logInfo.getDfg().getNumberOfEmptyTraces() == 0
+				&& logInfo.getNumberOfActivityInstances() == logInfo.getNumberOfTraces()) {
+			//single activity
 
-			InductiveMiner.debug(" base case: IM single activity semi-flower model", minerState);
+			InductiveMiner.debug(" base case: IM single activity", minerState);
 
-			EfficientTree activity = InlineTree.leaf(log.getActivity(logInfo.getActivities()[0]));
-			return InlineTree.loop(activity, InlineTree.tau(), InlineTree.tau());
+			return InlineTree.leaf(log.getActivity(logInfo.getActivities()[0]));
 		}
-
+		
 		return null;
 	}
+
 }

@@ -7,7 +7,7 @@ package org.processmining.plugins.inductiveminer2.helperclasses.normalised;
  * @author sander
  *
  */
-public interface NormalisedIntDfg {
+public interface NormalisedIntDfg extends Cloneable {
 
 	/**
 	 * Add an activity. Notice that the index should be normalised.
@@ -200,4 +200,7 @@ public interface NormalisedIntDfg {
 
 	public NormalisedIntGraph getDirectlyFollowsGraph();
 
+	public NormalisedIntGraph getConcurrencyGraph();
+
+	public NormalisedIntDfg clone();
 }

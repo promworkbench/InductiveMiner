@@ -90,7 +90,7 @@ public class InductiveMiner {
 		}
 
 		//find cut
-		Cut cut = findCut(log, logInfo, minerState);
+		Cut cut = findCut(log, logInfo, minerState.parameters.getCutFinders(), minerState);
 
 		if (minerState.isCancelled()) {
 			return null;
@@ -224,8 +224,8 @@ public class InductiveMiner {
 		return null;
 	}
 
-	public static Cut findCut(IMLog log, IMLogInfo logInfo, MinerState minerState) {
-		for (CutFinder cutFinder : minerState.parameters.getCutFinders()) {
+	public static Cut findCut(IMLog log, IMLogInfo logInfo, Iterable<CutFinder> cutFinders, MinerState minerState) {
+		for (CutFinder cutFinder : cutFinders) {
 			Cut cut = cutFinder.findCut(log, logInfo, minerState);
 
 			if (cut != null && cut.isValid()) {

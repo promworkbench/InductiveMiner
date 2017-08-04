@@ -8,11 +8,11 @@ import org.processmining.plugins.inductiveminer2.logs.IMTraceIterator;
 import org.processmining.plugins.inductiveminer2.mining.InductiveMiner;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
 
-public class BaseCaseFinderIMEmptyTraces implements BaseCaseFinder {
+public class BaseCaseFinderEmptyTraces implements BaseCaseFinder {
 
 	public EfficientTree findBaseCases(IMLog log, IMLogInfo logInfo, MinerState minerState) {
 		if (logInfo.getDfg().getNumberOfEmptyTraces() != 0) {
-			InductiveMiner.debug(" base case: IM xor(tau, ..)", minerState);
+			InductiveMiner.debug(" base case: remove empty traces; xor(tau, ..)", minerState);
 
 			//filter empty traces
 			IMLog sublog = removeEpsilonTraces(log, minerState);

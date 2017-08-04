@@ -45,7 +45,7 @@ public class MiningParametersIMPartialTraces extends MiningParametersIM implemen
 
 	@Override
 	public String toString() {
-		return "Inductive Miner - partial traces";
+		return "Inductive Miner - partial traces   (IMpt)";
 	}
 
 	public boolean hasFitness() {

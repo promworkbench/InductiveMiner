@@ -12,17 +12,17 @@ import org.processmining.plugins.inductiveminer2.framework.postprocessor.PostPro
 
 public abstract class MiningParametersAbstract implements MiningParameters {
 
-	private XEventClassifier classifier = MiningParameters.defaultClassifier;
-	private XLifeCycleClassifier lifeCycleClassifier = MiningParameters.defaultLifeCycleClassifier;
-	private float noiseThreshold = MiningParameters.defaultNoiseThreshold;
-	private boolean isDebug = MiningParameters.defaultIsDebug;
-	private boolean isUseMultithreading = MiningParameters.defaultIsUseMultiThreading;
+	protected XEventClassifier classifier = MiningParameters.defaultClassifier;
+	protected XLifeCycleClassifier lifeCycleClassifier = MiningParameters.defaultLifeCycleClassifier;
+	protected float noiseThreshold = MiningParameters.defaultNoiseThreshold;
+	protected boolean isDebug = MiningParameters.defaultIsDebug;
+	protected boolean isUseMultithreading = MiningParameters.defaultIsUseMultiThreading;
 
 	protected ArrayList<BaseCaseFinder> baseCaseFinders = new ArrayList<>();
 	protected ArrayList<CutFinder> cutFinders = new ArrayList<>();
 	protected ArrayList<FallThrough> fallThroughs = new ArrayList<>();
 	protected ArrayList<PostProcessor> postProcessors = new ArrayList<>();
-	
+
 	protected EfficientTreeReduceParameters reduceParameters = MiningParameters.defaultReduceParameters;
 
 	@Override

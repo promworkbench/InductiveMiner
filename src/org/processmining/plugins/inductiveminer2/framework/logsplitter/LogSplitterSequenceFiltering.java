@@ -26,16 +26,16 @@ public class LogSplitterSequenceFiltering implements LogSplitter {
 		return split(log, cut.getPartition(), minerState);
 	}
 
-	public static IMLog[] split(IMLog log, List<TIntSet> list, MinerState minerState) {
+	public static IMLog[] split(IMLog log, List<TIntSet> partition, MinerState minerState) {
 
 		//initialise
-		IMLog[] result = new IMLog[list.size()];
+		IMLog[] result = new IMLog[partition.size()];
 		Map<TIntSet, IMLog> mapSigma2Sublog = new THashMap<>();
 
 		final TIntObjectMap<TIntSet> mapActivity2sigma = new TIntObjectHashMap<>(10, 0.5f, Integer.MIN_VALUE);
 		Map<TIntSet, IMTraceIterator> mapSigma2TraceIterator = new THashMap<>();
 		int i = 0;
-		for (final TIntSet sigma : list) {
+		for (final TIntSet sigma : partition) {
 			IMLog sublog = log.clone();
 			result[i] = sublog;
 			mapSigma2Sublog.put(sigma, sublog);
@@ -61,7 +61,7 @@ public class LogSplitterSequenceFiltering implements LogSplitter {
 
 			//for each trace, fit each sigma
 			int atPosition = 0; //we start before the first event
-			for (Iterator<TIntSet> itSigma = list.iterator(); itSigma.hasNext();) {
+			for (Iterator<TIntSet> itSigma = partition.iterator(); itSigma.hasNext();) {
 				TIntSet sigma = itSigma.next();
 				IMTrace subtrace = subtraces.get(sigma);
 				IMEventIterator it = subtrace.iterator();

@@ -1,19 +1,23 @@
 package org.processmining.plugins.inductiveminer2.variants;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
-import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderIMEmptyLog;
-import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderIMEmptyTraces;
-import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderIMSemiFlowerModel;
-import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderIMSingleActivity;
+import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinder;
+import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderEmptyLog;
+import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderEmptyTraces;
+import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderSemiFlowerModel;
+import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderSingleActivity;
+import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinder;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMConcurrent;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMConcurrentWithMinimumSelfDistance;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMExclusiveChoice;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMLoop;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinderIMSequence;
+import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThrough;
 import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughActivityConcurrent;
 import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughActivityOncePerTraceConcurrent;
 import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThroughFlowerWithoutEpsilon;
@@ -22,6 +26,7 @@ import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThro
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterConcurrent;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterInterleavedFiltering;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterLoop;
+import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterOr;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterSequenceFiltering;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterXorFiltering;
 import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
@@ -37,23 +42,34 @@ import gnu.trove.set.TIntSet;
 
 public class MiningParametersIM extends MiningParametersAbstract implements InductiveMinerVariant {
 
+	public static final List<BaseCaseFinder> basicBaseCaseFinders = Arrays.asList(new BaseCaseFinder[] { //
+			new BaseCaseFinderSingleActivity(), //
+			new BaseCaseFinderSemiFlowerModel(), //
+			new BaseCaseFinderEmptyLog(), //
+			new BaseCaseFinderEmptyTraces(), //
+	});
+
+	public static final List<CutFinder> basicCutFinders = Arrays.asList(new CutFinder[] { //
+			new CutFinderIMExclusiveChoice(), //
+			new CutFinderIMSequence(), //
+			new CutFinderIMConcurrentWithMinimumSelfDistance(), // 
+			new CutFinderIMConcurrent(), //
+			new CutFinderIMLoop() });
+
+	public static final List<FallThrough> basicFallThroughs = Arrays.asList(new FallThrough[] { //
+			new FallThroughActivityOncePerTraceConcurrent(true), //
+			new FallThroughActivityConcurrent(), //
+			new FallThroughTauLoopStrict(), //
+			new FallThroughTauLoop(), //
+			new FallThroughFlowerWithoutEpsilon(), //
+	});
+
 	public MiningParametersIM() {
-		baseCaseFinders.add(new BaseCaseFinderIMSingleActivity());
-		baseCaseFinders.add(new BaseCaseFinderIMSemiFlowerModel());
-		baseCaseFinders.add(new BaseCaseFinderIMEmptyLog());
-		baseCaseFinders.add(new BaseCaseFinderIMEmptyTraces());
+		baseCaseFinders.addAll(basicBaseCaseFinders);
 
-		cutFinders.add(new CutFinderIMExclusiveChoice());
-		cutFinders.add(new CutFinderIMSequence());
-		cutFinders.add(new CutFinderIMConcurrentWithMinimumSelfDistance());
-		cutFinders.add(new CutFinderIMConcurrent());
-		cutFinders.add(new CutFinderIMLoop());
+		cutFinders.addAll(basicCutFinders);
 
-		fallThroughs.add(new FallThroughActivityOncePerTraceConcurrent(true));
-		fallThroughs.add(new FallThroughActivityConcurrent());
-		fallThroughs.add(new FallThroughTauLoopStrict());
-		fallThroughs.add(new FallThroughTauLoop());
-		fallThroughs.add(new FallThroughFlowerWithoutEpsilon());
+		fallThroughs.addAll(basicFallThroughs);
 
 		getReduceParameters().setReduceToOr(false);
 	}
@@ -72,6 +88,11 @@ public class MiningParametersIM extends MiningParametersAbstract implements Indu
 
 	public boolean isProcessStartEndComplete() {
 		return false;
+	}
+
+	@Override
+	public float getNoiseThreshold() {
+		return 0;
 	}
 
 	@Override
@@ -101,7 +122,7 @@ public class MiningParametersIM extends MiningParametersAbstract implements Indu
 	}
 
 	public IMLog[] splitLogOr(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState) {
-		return LogSplitterConcurrent.split(log, partition, minerState);
+		return LogSplitterOr.split(log, partition, minerState);
 	}
 
 	public IMLog[] splitLogSequence(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState) {
@@ -114,7 +135,7 @@ public class MiningParametersIM extends MiningParametersAbstract implements Indu
 
 	@Override
 	public String toString() {
-		return "Inductive Miner";
+		return "Inductive Miner   (IM)";
 	}
 
 	@Override
