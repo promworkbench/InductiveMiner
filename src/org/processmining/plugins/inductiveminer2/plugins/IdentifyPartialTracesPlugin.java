@@ -51,6 +51,11 @@ public class IdentifyPartialTracesPlugin {
 					xTrace.getAttributes().put("endReliable", new XAttributeBooleanImpl("endReliable",
 							endAttribute != null && endValues.contains(endAttribute.toString())));
 				}
+			} else {
+				xTrace.getAttributes().put("startReliable",
+						new XAttributeBooleanImpl("startReliable", dialog.emptyTracesAreReliable()));
+				xTrace.getAttributes().put("endReliable",
+						new XAttributeBooleanImpl("endReliable", dialog.emptyTracesAreReliable()));
 			}
 		}
 

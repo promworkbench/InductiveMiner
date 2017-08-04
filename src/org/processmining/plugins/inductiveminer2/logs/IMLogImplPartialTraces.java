@@ -105,4 +105,11 @@ public class IMLogImplPartialTraces extends IMLogImpl {
 		result.isEndReliable = isEndReliable.clone();
 		return result;
 	}
+
+	@Override
+	protected void toString(StringBuilder result, int traceIndex) {
+		result.append(isStartReliable(traceIndex));
+		super.toString(result, traceIndex);
+		result.append(isEndReliable(traceIndex));
+	}
 }

@@ -16,6 +16,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -39,6 +40,7 @@ public class IdentifyPartialTracesDialog extends JPanel {
 	private final JComboBox<String> attributes;
 	private final Triple<JScrollPane, JList<String>, DefaultListModel<String>> startList;
 	private final Triple<JScrollPane, JList<String>, DefaultListModel<String>> endList;
+	private final JCheckBox emptyTraces;
 
 	@SuppressWarnings("unchecked")
 	public IdentifyPartialTracesDialog(final XLog log) {
@@ -86,6 +88,9 @@ public class IdentifyPartialTracesDialog extends JPanel {
 			endPanel.add(endList.getA(), BorderLayout.CENTER);
 		}
 
+		emptyTraces = SlickerFactory.instance().createCheckBox("Empty traces have a reliable start and end", true);
+		add(emptyTraces, BorderLayout.PAGE_END);
+
 		//put initialisation messages
 		attributes.addItem("Initialising...");
 		attributes.setEnabled(false);
@@ -121,18 +126,22 @@ public class IdentifyPartialTracesDialog extends JPanel {
 
 		fill(startList, info.getEventAttributesMap().get(attributes.getSelectedItem()));
 		startList.getB().setEnabled(true);
+		startList.getB().setSelectionInterval(0, startList.getB().getModel().getSize() - 1);
 
 		fill(endList, info.getEventAttributesMap().get(attributes.getSelectedItem()));
 		endList.getB().setEnabled(true);
+		endList.getB().setSelectionInterval(0, endList.getB().getModel().getSize() - 1);
 
 		//update the lists on change of the attributes
 		attributes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				fill(startList, info.getEventAttributesMap().get(attributes.getSelectedItem()));
 				startList.getB().setEnabled(true);
+				startList.getB().setSelectionInterval(0, startList.getB().getModel().getSize() - 1);
 
 				fill(endList, info.getEventAttributesMap().get(attributes.getSelectedItem()));
 				endList.getB().setEnabled(true);
+				endList.getB().setSelectionInterval(0, endList.getB().getModel().getSize() - 1);
 			}
 		});
 	}
@@ -147,6 +156,10 @@ public class IdentifyPartialTracesDialog extends JPanel {
 
 	public Set<String> getEndValues() {
 		return new THashSet<>(endList.getB().getSelectedValuesList());
+	}
+
+	public boolean emptyTracesAreReliable() {
+		return emptyTraces.isSelected();
 	}
 
 	public static void fill(Triple<JScrollPane, JList<String>, DefaultListModel<String>> list,

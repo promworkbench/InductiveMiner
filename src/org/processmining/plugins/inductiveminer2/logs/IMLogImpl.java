@@ -123,7 +123,7 @@ public class IMLogImpl implements IMLog {
 				removeEvent(now, nowEvent);
 				nowEvent--;
 			}
-			
+
 			public int itEventSplit() {
 				int newTraceIndex = splitTrace(now, nowEvent);
 				now++;
@@ -182,20 +182,25 @@ public class IMLogImpl implements IMLog {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		for (int trace = 0; trace < events.length && trace < 5; trace++) {
-			result.append(" <");
-			for (int event = 0; event < events[trace].length; event++) {
-				//result.append(events[trace][event]);
-				//result.append(" ");
-				result.append(getActivityIndex(events[trace][event]));
-				result.append(" ");
-				result.append(getActivity(getActivityIndex(events[trace][event])));
-				if (event < events[trace].length - 1) {
-					result.append(", ");
-				}
-			}
-			result.append(">\n");
+			toString(result, trace);
+			result.append("\n");
 		}
 		return result.toString();
+	}
+
+	protected void toString(StringBuilder result, int traceIndex) {
+		result.append(" <");
+		for (int event = 0; event < events[traceIndex].length; event++) {
+			//result.append(events[trace][event]);
+			//result.append(" ");
+			result.append(getActivityIndex(events[traceIndex][event]));
+			result.append(" ");
+			result.append(getActivity(getActivityIndex(events[traceIndex][event])));
+			if (event < events[traceIndex].length - 1) {
+				result.append(", ");
+			}
+		}
+		result.append(">");
 	}
 
 	public class IMTraceImpl implements IMTrace {
