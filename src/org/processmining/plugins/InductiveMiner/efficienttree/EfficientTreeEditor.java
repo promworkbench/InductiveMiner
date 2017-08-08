@@ -27,8 +27,8 @@ public class EfficientTreeEditor extends JPanel {
 	private static final int spacesPerTab = 3;
 	private static final Color errorColour = Color.yellow;
 
-	private final RSyntaxTextArea text;
-	private final JLabel errorMessage;
+	protected final RSyntaxTextArea text;
+	protected final JLabel errorMessage;
 	private ActionListener actionListener;
 	private boolean contentChangedFromController = false;
 
@@ -43,6 +43,7 @@ public class EfficientTreeEditor extends JPanel {
 	 */
 	public EfficientTreeEditor(EfficientTree tree, String message) {
 		setLayout(new BorderLayout());
+		setOpaque(false);
 
 		//text area
 		text = new RSyntaxTextArea();
@@ -55,6 +56,7 @@ public class EfficientTreeEditor extends JPanel {
 		//error message
 		errorMessage = new JLabel(" ");
 		errorMessage.setBackground(errorColour);
+		errorMessage.setOpaque(false);
 		add(errorMessage, BorderLayout.PAGE_END);
 
 		if (tree != null) {
