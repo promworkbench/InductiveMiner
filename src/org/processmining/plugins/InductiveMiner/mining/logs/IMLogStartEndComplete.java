@@ -30,10 +30,10 @@ public class IMLogStartEndComplete extends IMLogImpl {
 
 		int traceNr = 0;
 		for (XTrace trace : log) {
-			Boolean startComplete = getBooleanAttrFromTrace(trace, "startcomplete");
+			Boolean startComplete = getBooleanAttrFromTrace(trace, "startReliable");
 			this.startComplete.set(traceNr, startComplete == null || startComplete);
 
-			Boolean endComplete = getBooleanAttrFromTrace(trace, "endcomplete");
+			Boolean endComplete = getBooleanAttrFromTrace(trace, "endReliable");
 			this.endComplete.set(traceNr, endComplete == null || endComplete);
 
 			traceNr++;
@@ -108,17 +108,17 @@ public class IMLogStartEndComplete extends IMLogImpl {
 		for (IMTrace trace : this) {
 			if (trace.isEmpty()) {
 				XAttributeMap map2 = new XAttributeMapImpl();
-				map2.put("startcomplete",
-						new XAttributeBooleanImpl("startcomplete", isStartComplete(trace.getIMTraceIndex())));
-				map2.put("endcomplete",
-						new XAttributeBooleanImpl("endcomplete", isEndComplete(trace.getIMTraceIndex())));
+				map2.put("startReliable",
+						new XAttributeBooleanImpl("startReliable", isStartComplete(trace.getIMTraceIndex())));
+				map2.put("endReliable",
+						new XAttributeBooleanImpl("endReliable", isEndComplete(trace.getIMTraceIndex())));
 				result.add(new XTraceImpl(map2));
 			} else {
 				XAttributeMap map2 = new XAttributeMapImpl();
-				map2.put("startcomplete",
-						new XAttributeBooleanImpl("startcomplete", isStartComplete(trace.getIMTraceIndex())));
-				map2.put("endcomplete",
-						new XAttributeBooleanImpl("endcomplete", isEndComplete(trace.getIMTraceIndex())));
+				map2.put("startReliable",
+						new XAttributeBooleanImpl("startReliable", isStartComplete(trace.getIMTraceIndex())));
+				map2.put("endReliable",
+						new XAttributeBooleanImpl("endReliable", isEndComplete(trace.getIMTraceIndex())));
 				XTrace xTrace = new XTraceImpl(map2);
 				for (XEvent e : trace) {
 					xTrace.add(e);

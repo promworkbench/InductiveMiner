@@ -307,7 +307,9 @@ public class NormalisedIntGraphImplQuadratic implements NormalisedIntGraph {
 	public NormalisedIntGraphImplQuadratic clone() {
 		NormalisedIntGraphImplQuadratic result = new NormalisedIntGraphImplQuadratic(vertices);
 		result.vertices = vertices;
+		result.edges = new long[edges.length][];
 		for (int i = 0; i < edges.length; i++) {
+			result.edges[i] = new long[edges[i].length];
 			System.arraycopy(edges[i], 0, result.edges[i], 0, edges[i].length);
 		}
 		return result;
