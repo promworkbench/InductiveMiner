@@ -22,7 +22,7 @@ public class FallThroughTauLoop implements FallThrough {
 			IMLog sublog = log.clone();
 			filterTraces(sublog, logInfo.getDfg(), logInfo.getNormaliser());
 
-			if (sublog.size() > logInfo.getNumberOfTraces()) {
+			if (sublog.size() > log.size()) {
 				InductiveMiner.debug(" fall through: tau loop", minerState);
 				//making a tau loop split makes sense
 
