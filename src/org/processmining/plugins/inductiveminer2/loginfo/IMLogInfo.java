@@ -137,13 +137,13 @@ public class IMLogInfo {
 		return numberOfTraces;
 	}
 
-	public String[] getActivityNames(final IMLog log) {
+	public String[] getActivityNames(final IMLog log, final NormaliserInt normaliser) {
 		TIntSet set = activities.toSet();
 		final String[] result = new String[set.size()];
 		final AtomicInteger i = new AtomicInteger(0);
 		set.forEach(new TIntProcedure() {
 			public boolean execute(int value) {
-				result[i.getAndIncrement()] = log.getActivity(value);
+				result[i.getAndIncrement()] = log.getActivity(normaliser.deNormalise(value));
 				return true;
 			}
 		});
