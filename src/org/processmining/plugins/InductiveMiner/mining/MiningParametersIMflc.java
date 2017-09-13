@@ -14,6 +14,7 @@ import org.processmining.plugins.InductiveMiner.mining.cuts.IMlc.CutFinderIMlc;
 import org.processmining.plugins.InductiveMiner.mining.fallthrough.FallThrough;
 import org.processmining.plugins.InductiveMiner.mining.fallthrough.IMlc.FallThroughIMlc;
 import org.processmining.plugins.InductiveMiner.mining.logSplitter.LogSplitterIMlc;
+import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
 import org.processmining.plugins.InductiveMiner.mining.postprocessor.PostProcessor;
 
 public class MiningParametersIMflc extends MiningParameters {
@@ -44,6 +45,8 @@ public class MiningParametersIMflc extends MiningParameters {
 				)));
 		
 		setPostProcessors(new ArrayList<PostProcessor>());
+		
+		setLifeCycleClassifier(new LifeCycleClassifier());
 		
 		//set parameters
 		setNoiseThreshold((float) 0.2);

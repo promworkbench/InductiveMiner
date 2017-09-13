@@ -186,5 +186,9 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 			}
 		}
 	}
+	
+	public boolean useLifeCycle() {
+		return true;
+	}
 
 }

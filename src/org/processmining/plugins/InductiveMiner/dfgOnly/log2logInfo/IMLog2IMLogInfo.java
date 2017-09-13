@@ -12,5 +12,7 @@ public interface IMLog2IMLogInfo {
 	 * @return the IMLogInfo
 	 */
 	public IMLogInfo createLogInfo(IMLog log);
+	
+	public boolean useLifeCycle();
 
 }

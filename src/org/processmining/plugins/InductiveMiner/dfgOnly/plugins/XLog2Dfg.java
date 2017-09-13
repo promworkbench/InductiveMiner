@@ -11,6 +11,8 @@ import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.dfgOnly.plugins.dialogs.XLog2DfgDialog;
 import org.processmining.plugins.InductiveMiner.mining.MiningParameters;
 import org.processmining.plugins.InductiveMiner.mining.logs.IMLogImpl;
+import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
+import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
 
 public class XLog2Dfg {
@@ -28,10 +30,11 @@ public class XLog2Dfg {
 		if (result != InteractionResult.FINISHED) {
 			return null;
 		}
+
+		XLifeCycleClassifier lifeCycleClassifier = dialog.getIMLog2IMLogInfo().useLifeCycle()
+				? new LifeCycleClassifier() : MiningParameters.getDefaultLifeCycleClassifier();
 		return dialog.getIMLog2IMLogInfo()
-				.createLogInfo(
-						new IMLogImpl(log, dialog.getClassifier(), MiningParameters.getDefaultLifeCycleClassifier()))
-				.getDfg();
+				.createLogInfo(new IMLogImpl(log, dialog.getClassifier(), lifeCycleClassifier)).getDfg();
 	}
 
 }

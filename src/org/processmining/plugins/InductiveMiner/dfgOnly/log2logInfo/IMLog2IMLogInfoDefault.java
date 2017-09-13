@@ -110,4 +110,8 @@ public class IMLog2IMLogInfoDefault implements IMLog2IMLogInfo {
 		return new IMLogInfo(dfg, activities, minimumSelfDistancesBetween, minimumSelfDistances, numberOfEvents,
 				numberOfActivityInstances, log.size());
 	}
+
+	public boolean useLifeCycle() {
+		return false;
+	}
 }

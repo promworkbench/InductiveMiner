@@ -134,4 +134,7 @@ public class IMLog2IMLogInfoStartEndComplete implements IMLog2IMLogInfo {
 				numberOfActivityInstances, log.size() - removedEmptyTraces);
 	}
 
+	public boolean useLifeCycle() {
+		return false;
+	}
 }
