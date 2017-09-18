@@ -71,4 +71,9 @@ public interface IMTraceIterator extends Iterator<IMTrace> {
 	 */
 	public int itEventSplit();
 
+	/**
+	 * Reset the event iterator.
+	 */
+	public void itEventReset();
+
 }

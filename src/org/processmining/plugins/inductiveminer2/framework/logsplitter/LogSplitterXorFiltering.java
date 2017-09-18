@@ -64,6 +64,8 @@ public class LogSplitterXorFiltering implements LogSplitter {
 						maxSigma = sigmaIndex2sigma.get(sigmaIndex);
 					}
 				}
+				
+				it.itEventReset();
 
 				//determine whether this trace should go in this sublog
 				if (it.isEmpty()) {
