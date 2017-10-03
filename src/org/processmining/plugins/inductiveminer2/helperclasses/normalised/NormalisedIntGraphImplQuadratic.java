@@ -221,7 +221,7 @@ public class NormalisedIntGraphImplQuadratic implements NormalisedIntGraph {
 			current = next;
 			next++;
 			findNext();
-			return current;
+			return row * vertices + current;
 		}
 
 		protected boolean hasNext() {

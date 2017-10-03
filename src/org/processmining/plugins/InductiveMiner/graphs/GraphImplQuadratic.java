@@ -322,7 +322,7 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 			current = next;
 			next++;
 			findNext();
-			return current;
+			return row * vertices + current;
 		}
 
 		protected boolean hasNext() {
