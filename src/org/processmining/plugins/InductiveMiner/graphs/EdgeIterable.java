@@ -16,11 +16,12 @@ public abstract class EdgeIterable implements Iterable<Long> {
 			}
 
 			public void remove() {
-				
+				EdgeIterable.this.remove();
 			}
 		};
 	}
 	
+	protected abstract void remove();
 	protected abstract boolean hasNext();
 	protected abstract long next();
 }

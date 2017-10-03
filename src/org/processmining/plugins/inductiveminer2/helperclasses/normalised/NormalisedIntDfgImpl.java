@@ -107,11 +107,6 @@ public class NormalisedIntDfgImpl implements NormalisedIntDfg {
 	}
 
 	@Override
-	public void removeDirectlyFollowsEdge(long edgeIndex) {
-		directlyFollowsGraph.removeEdge(edgeIndex);
-	}
-
-	@Override
 	public Iterable<Long> getDirectlyFollowsEdges() {
 		return directlyFollowsGraph.getEdges();
 	}
@@ -139,11 +134,6 @@ public class NormalisedIntDfgImpl implements NormalisedIntDfg {
 	@Override
 	public long getMostOccuringDirectlyFollowsEdgeCardinality() {
 		return directlyFollowsGraph.getWeightOfHeaviestEdge();
-	}
-
-	@Override
-	public void removeConcurrencyEdge(long edgeIndex) {
-		concurrencyGraph.removeEdge(edgeIndex);
 	}
 
 	@Override

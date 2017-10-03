@@ -108,10 +108,6 @@ public interface NormalisedIntDfg extends Cloneable {
 	 */
 	public long getEndActivityCardinality(int activityIndex);
 
-	// ==== directly follows ====
-
-	public void removeDirectlyFollowsEdge(long edgeIndex);
-
 	/**
 	 * Returns an iterable that iterates over all edges; The edges that are
 	 * returned are indices. Edges of weight 0 are excluded.
@@ -129,10 +125,6 @@ public interface NormalisedIntDfg extends Cloneable {
 	public long getDirectlyFollowsEdgeCardinality(long edgeIndex);
 
 	public long getMostOccuringDirectlyFollowsEdgeCardinality();
-
-	// ========= concurrency graph ==========
-
-	public void removeConcurrencyEdge(long edgeIndex);
 
 	/**
 	 * Returns an iterable that iterates over all edges; The edges that are

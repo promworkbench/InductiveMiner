@@ -25,11 +25,6 @@ public class NormalisedIntGraphImplQuadratic implements NormalisedIntGraph {
 		edges[normalisedSource][normalisedTarget] += weight;
 	}
 
-	@Override
-	public void removeEdge(long edge) {
-		edges[getEdgeSourceIndex(edge)][getEdgeTargetIndex(edge)] = 0;
-	}
-
 	/**
 	 * Gives an iterable that iterates over all edges that have a weight > 0;
 	 * The edges that are returned are indices.
@@ -199,73 +194,75 @@ public class NormalisedIntGraphImplQuadratic implements NormalisedIntGraph {
 			return 0;
 		}
 
+		protected void remove() {
+
+		}
+
 	}
 
 	private final class EdgeIterableOutgoing extends EdgeIterable {
 		private final int row;
-		int actual;
-		boolean hasNext;
+		int next;
+		int current;
 
 		private EdgeIterableOutgoing(int row) {
 			this.row = row;
-			for (int e = 0; e < vertices; e++) {
-				if (edges[row][e] > 0) {
-					actual = e;
-					hasNext = true;
-					return;
-				}
+			next = 0;
+			findNext();
+		}
+
+		private void findNext() {
+			while (next < vertices && edges[row][next] == 0) {
+				next++;
 			}
-			hasNext = false;
 		}
 
 		protected long next() {
-			int value = actual;
-			for (int e = actual + 1; e < vertices; e++) {
-				if (edges[row][e] > 0) {
-					actual = e;
-					return value;
-				}
-			}
-			hasNext = false;
-			return value;
+			current = next;
+			next++;
+			findNext();
+			return current;
 		}
 
 		protected boolean hasNext() {
-			return hasNext;
+			return next < vertices;
+		}
+
+		protected void remove() {
+			edges[row][current] = 0;
 		}
 	}
 
 	private final class EdgeIterableIncoming extends EdgeIterable {
 		private final int column;
-		int actual;
-		boolean hasNext;
+		int next;
+		int current;
 
 		private EdgeIterableIncoming(int column) {
 			this.column = column;
-			for (int e = 0; e < vertices; e++) {
-				if (edges[e][column] > 0) {
-					actual = e;
-					hasNext = true;
-					return;
-				}
+			next = 0;
+			findNext();
+		}
+
+		private void findNext() {
+			while (next < vertices && edges[next][column] == 0) {
+				next++;
 			}
-			hasNext = false;
 		}
 
 		protected long next() {
-			int value = actual;
-			for (int e = actual + 1; e < vertices; e++) {
-				if (edges[e][column] > 0) {
-					actual = e;
-					return value;
-				}
-			}
-			hasNext = false;
-			return value;
+			current = next;
+			next++;
+			findNext();
+			return current * vertices + column;
 		}
 
 		protected boolean hasNext() {
-			return hasNext;
+			return next < vertices;
+		}
+
+		protected void remove() {
+			edges[current][column] = 0;
 		}
 	}
 

@@ -18,15 +18,6 @@ public interface NormalisedIntGraph extends Cloneable {
 	public void addEdge(int normalisedSource, int normalisedTarget, long weight);
 
 	/**
-	 * Removes an edge.
-	 * 
-	 * @param source
-	 * @param target
-	 * @param weight
-	 */
-	public void removeEdge(long edge);
-
-	/**
 	 * Gives an iterable that iterates over all edges; The edges that are
 	 * returned are indices. Notice that the edge weight might NOT be 0.
 	 * 

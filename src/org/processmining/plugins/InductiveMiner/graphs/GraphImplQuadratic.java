@@ -63,6 +63,8 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 	}
 
 	public void addEdge(V source, V target, long weight) {
+		addVertex(source);
+		addVertex(target);
 		edges[v2index.get(source)][v2index.get(target)] += weight;
 	}
 
@@ -176,7 +178,12 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 	 * @return
 	 */
 	public long getEdgeWeight(V source, V target) {
-		return edges[v2index.get(source)][v2index.get(target)];
+		int sourceIndex = v2index.get(source);
+		int targetIndex = v2index.get(target);
+		if (sourceIndex == v2index.getNoEntryValue() || targetIndex == v2index.getNoEntryValue()) {
+			return 0;
+		}
+		return edges[sourceIndex][targetIndex];
 	}
 
 	/**
@@ -296,69 +303,67 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 
 	private final class EdgeIterableOutgoing extends EdgeIterable {
 		private final int row;
-		int actual;
-		boolean hasNext;
+		int next;
+		int current;
 
 		private EdgeIterableOutgoing(int row) {
 			this.row = row;
-			for (int e = 0; e < vertices; e++) {
-				if (edges[row][e] > 0) {
-					actual = e;
-					hasNext = true;
-					return;
-				}
+			next = 0;
+			findNext();
+		}
+
+		private void findNext() {
+			while (next < vertices && edges[row][next] == 0) {
+				next++;
 			}
-			hasNext = false;
 		}
 
 		protected long next() {
-			int value = actual;
-			for (int e = actual + 1; e < vertices; e++) {
-				if (edges[row][e] > 0) {
-					actual = e;
-					return value;
-				}
-			}
-			hasNext = false;
-			return value;
+			current = next;
+			next++;
+			findNext();
+			return current;
 		}
 
 		protected boolean hasNext() {
-			return hasNext;
+			return next < vertices;
+		}
+
+		protected void remove() {
+			edges[row][current] = 0;
 		}
 	}
 
 	private final class EdgeIterableIncoming extends EdgeIterable {
 		private final int column;
-		int actual;
-		boolean hasNext;
+		int next;
+		int current;
 
 		private EdgeIterableIncoming(int column) {
 			this.column = column;
-			for (int e = 0; e < vertices; e++) {
-				if (edges[e][column] > 0) {
-					actual = e;
-					hasNext = true;
-					return;
-				}
-			}
-			hasNext = false;
+			next = 0;
+			findNext();
 		}
 
 		protected long next() {
-			int value = actual;
-			for (int e = actual + 1; e < vertices; e++) {
-				if (edges[e][column] > 0) {
-					actual = e;
-					return value;
-				}
+			current = next;
+			next++;
+			findNext();
+			return current * vertices + column;
+		}
+
+		private void findNext() {
+			while (next < vertices && edges[next][column] == 0) {
+				next++;
 			}
-			hasNext = false;
-			return value;
 		}
 
 		protected boolean hasNext() {
-			return hasNext;
+			return next < vertices;
+		}
+
+		protected void remove() {
+			edges[current][column] = 0;
 		}
 	}
 
@@ -406,7 +411,7 @@ public class GraphImplQuadratic<V> implements Graph<V> {
 		System.arraycopy(index2x, 0, result.index2x, 0, index2x.length);
 		return result;
 	}
-	
+
 	public void addVertex(int vertexIndex) {
 		throw new RuntimeException("not available");
 	}

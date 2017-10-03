@@ -147,16 +147,25 @@ public class GraphImplLinearEdge<V> implements Graph<V> {
 
 	public Iterable<Long> getEdges() {
 		return new EdgeIterable() {
-			long actual = 0;
+			int next = 0;
+			int current = 0;
 
 			public boolean hasNext() {
-				return actual != sources.size();
+				return next != sources.size();
 			}
 
 			public long next() {
-				long value = actual;
-				actual++;
-				return value;
+				current = next;
+				next++;
+				return current;
+			}
+
+			protected void remove() {
+				targets.removeAt(current);
+				sources.removeAt(current);
+				weights.removeAt(current);
+				current--;
+				next--;
 			}
 		};
 	}
@@ -260,39 +269,46 @@ public class GraphImplLinearEdge<V> implements Graph<V> {
 
 	private final class EdgeIterableIncoming extends EdgeIterable {
 		private final int target;
-		int actual = 0;
-		boolean hasNext;
+		int next = 0;
+		int current = -1;
 
 		private EdgeIterableIncoming(int target) {
 			this.target = target;
-			int from = 0;
-			while (from < targets.size() && targets.get(from) != target) {
-				from++;
-			}
-			hasNext = from < targets.size();
-			actual = from;
+			next = 0;
+			findNext();
 		}
 
 		protected boolean hasNext() {
-			return hasNext;
+			return next < targets.size();
+		}
+
+		private void findNext() {
+			while (next < targets.size() && targets.get(next) != target) {
+				next++;
+			}
 		}
 
 		protected long next() {
-			int value = actual;
-			for (int e = actual + 1; e < targets.size(); e++) {
-				if (targets.get(e) == target) {
-					actual = e;
-					return value;
-				}
-			}
-			hasNext = false;
-			return value;
+			current = next;
+			next++;
+			findNext();
+			return current;
+		}
+
+		protected void remove() {
+			targets.removeAt(current);
+			sources.removeAt(current);
+			weights.removeAt(current);
+			current--;
+			next--;
+			findNext();
 		}
 	}
 
 	private final class EdgeIterableOutgoing extends EdgeIterable {
 		private final int source;
-		int actual = 0;
+		int next = 0;
+		int current = 0;
 
 		private EdgeIterableOutgoing(int source) {
 			this.source = source;
@@ -303,49 +319,64 @@ public class GraphImplLinearEdge<V> implements Graph<V> {
 			while (from >= 0 && sources.get(from) == source) {
 				from--;
 			}
-			actual = from + 1;
+			next = from + 1;
+			current = -1;
 		}
 
 		protected boolean hasNext() {
-			return actual < sources.size() && sources.get(actual) == source;
+			return next < sources.size() && sources.get(next) == source;
 		}
 
 		protected long next() {
-			int value = actual;
-			actual++;
-			return value;
+			current = next;
+			next++;
+			return current;
+		}
+
+		protected void remove() {
+			sources.removeAt(current);
+			targets.removeAt(current);
+			weights.removeAt(current);
+			next--;
+			current--;
 		}
 	}
 
 	private final class EdgeIterableBoth extends EdgeIterable {
 		private final int vertexIndex;
-		int actual = 0;
-		boolean hasNext;
+		int next = 0;
+		int current = 0;
 
 		private EdgeIterableBoth(int vertexIndex) {
 			this.vertexIndex = vertexIndex;
-			int from = 0;
-			while (from < targets.size() && targets.get(from) != vertexIndex && sources.get(from) != vertexIndex) {
-				from++;
-			}
-			hasNext = from < targets.size();
-			actual = from;
+			next = 0;
+			findNext();
 		}
 
 		protected boolean hasNext() {
-			return hasNext;
+			return next < targets.size();
+		}
+
+		private void findNext() {
+			while (next < targets.size() && targets.get(next) != vertexIndex && sources.get(next) != vertexIndex) {
+				next++;
+			}
 		}
 
 		protected long next() {
-			int value = actual;
-			for (int e = actual + 1; e < targets.size(); e++) {
-				if (targets.get(e) == vertexIndex || sources.get(e) == vertexIndex) {
-					actual = e;
-					return value;
-				}
-			}
-			hasNext = false;
-			return value;
+			current = next;
+			next++;
+			findNext();
+			return current;
+		}
+
+		protected void remove() {
+			targets.removeAt(current);
+			sources.removeAt(current);
+			weights.removeAt(current);
+			current--;
+			next--;
+			findNext();
 		}
 	}
 

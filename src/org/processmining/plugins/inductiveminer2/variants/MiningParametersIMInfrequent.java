@@ -1,6 +1,7 @@
 package org.processmining.plugins.inductiveminer2.variants;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.deckfour.xes.model.XLog;
@@ -56,9 +57,9 @@ public class MiningParametersIMInfrequent extends MiningParametersAbstract imple
 
 		cutFinders.addAll(MiningParametersIM.basicCutFinders);
 		cutFinders.add(filteringCutFinders);
-		
+
 		fallThroughs.addAll(MiningParametersIM.basicFallThroughs);
-		
+
 		getReduceParameters().setReduceToOr(false);
 	}
 
@@ -101,7 +102,7 @@ public class MiningParametersIMInfrequent extends MiningParametersAbstract imple
 	public IMLog[] splitLogXor(IMLog log, IMLogInfo logInfo, List<TIntSet> partition, MinerState minerState) {
 		return LogSplitterXorFiltering.split(log, partition, minerState);
 	}
-	
+
 	public String toString() {
 		return "Inductive Miner - infrequent   (IMf)";
 	}
@@ -165,10 +166,12 @@ public class MiningParametersIMInfrequent extends MiningParametersAbstract imple
 				maxWeightOut = Math.max(maxWeightOut, (int) graph.getEdgeWeight(edge));
 			}
 
-			//add all edges that are strong enough
-			for (long edge : graph.getOutgoingEdgesOf(activity)) {
+			//remove all edges that are not strong enough
+			Iterator<Long> it = graph.getOutgoingEdgesOf(activity).iterator();
+			while (it.hasNext()) {
+				long edge = it.next();
 				if (graph.getEdgeWeight(edge) < maxWeightOut * threshold) {
-					dfg.removeDirectlyFollowsEdge(edge);
+					it.remove();
 				}
 			}
 		}
@@ -192,10 +195,12 @@ public class MiningParametersIMInfrequent extends MiningParametersAbstract imple
 				maxWeightOut = Math.max(maxWeightOut, (int) graph.getEdgeWeight(edge));
 			}
 
-			//add all edges that are strong enough
-			for (long edge : graph.getOutgoingEdgesOf(activity)) {
+			//remove all edges that are not strong enough
+			Iterator<Long> it = graph.getOutgoingEdgesOf(activity).iterator();
+			while (it.hasNext()) {
+				long edge = it.next();
 				if (graph.getEdgeWeight(edge) < maxWeightOut * threshold) {
-					dfg.removeConcurrencyEdge(edge);
+					it.remove();
 				}
 			}
 		}

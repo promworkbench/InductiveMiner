@@ -31,7 +31,7 @@ public class CutFinderIMaConcurrentOptionalOr implements CutFinder {
 
 		while (components.getNumberOfComponents() > 1) {
 			ConcurrentOptionalOrLogInfo cooLogInfo = new ConcurrentOptionalOrLogInfo(cooLog);
-			debug(minerState, " " + cooLog);
+			debug(minerState, " presence abstraction " + cooLog);
 
 			Pair<Integer, Integer> biImplication = cooLogInfo.findBiImplication();
 			if (biImplication != null) {

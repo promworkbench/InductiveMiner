@@ -1,5 +1,7 @@
 package org.processmining.plugins.InductiveMiner.mining.cuts.IMfa;
 
+import java.util.Iterator;
+
 import org.deckfour.xes.classification.XEventClass;
 import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.graphs.Graph;
@@ -60,10 +62,12 @@ public class CutFinderIMfa implements CutFinder {
 				maxWeightOut = Math.max(maxWeightOut, (int) graph.getEdgeWeight(edge));
 			}
 
-			//add all edges that are strong enough
-			for (long edge : graph.getOutgoingEdgesOf(activity)) {
+			//remove all edges that are not strong enough
+			Iterator<Long> it = graph.getOutgoingEdgesOf(activity).iterator();
+			while (it.hasNext()) {
+				long edge = it.next();
 				if (graph.getEdgeWeight(edge) < maxWeightOut * threshold) {
-					dfg.removeDirectlyFollowsEdge(edge);
+					it.remove();
 				}
 			}
 		}
@@ -87,10 +91,12 @@ public class CutFinderIMfa implements CutFinder {
 				maxWeightOut = Math.max(maxWeightOut, (int) graph.getEdgeWeight(edge));
 			}
 
-			//add all edges that are strong enough
-			for (long edge : graph.getOutgoingEdgesOf(activity)) {
+			//remove all edges that are not strong enough
+			Iterator<Long> it = graph.getOutgoingEdgesOf(activity).iterator();
+			while (it.hasNext()) {
+				long edge = it.next();
 				if (graph.getEdgeWeight(edge) < maxWeightOut * threshold) {
-					dfg.removeConcurrencyEdge(edge);
+					it.remove();
 				}
 			}
 		}

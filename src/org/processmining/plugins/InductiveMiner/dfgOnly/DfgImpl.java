@@ -256,14 +256,6 @@ public class DfgImpl implements Dfg {
 	// ========= directly follows graph ==========
 
 	@Override
-	public void removeDirectlyFollowsEdge(long edgeIndex) {
-		long cardinality = directlyFollowsGraph.getEdgeWeight(edgeIndex);
-		int source = directlyFollowsGraph.getEdgeSourceIndex(edgeIndex);
-		int target = directlyFollowsGraph.getEdgeTargetIndex(edgeIndex);
-		directlyFollowsGraph.addEdge(source, target, -cardinality);
-	}
-
-	@Override
 	public java.lang.Iterable<Long> getDirectlyFollowsEdges() {
 		return directlyFollowsGraph.getEdges();
 	};
@@ -301,14 +293,6 @@ public class DfgImpl implements Dfg {
 	}
 
 	// ========= concurrency graph ==========
-
-	@Override
-	public void removeConcurrencyEdge(long edgeIndex) {
-		long cardinality = concurrencyGraph.getEdgeWeight(edgeIndex);
-		int source = concurrencyGraph.getEdgeSourceIndex(edgeIndex);
-		int target = concurrencyGraph.getEdgeTargetIndex(edgeIndex);
-		concurrencyGraph.addEdge(source, target, -cardinality);
-	}
 
 	public java.lang.Iterable<Long> getConcurrencyEdges() {
 		return concurrencyGraph.getEdges();
