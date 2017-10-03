@@ -89,7 +89,7 @@ public class IMLogImpl implements IMLog {
 				now++;
 				nowEvent = -1;
 			}
-			
+
 			public void itEventReset() {
 				nowEvent = -1;
 			}
@@ -184,10 +184,14 @@ public class IMLogImpl implements IMLog {
 	}
 
 	public String toString() {
+		int numberOfTraces = 10;
 		StringBuilder result = new StringBuilder();
-		for (int trace = 0; trace < events.length && trace < 200; trace++) {
+		for (int trace = 0; trace < events.length && trace < numberOfTraces; trace++) {
 			toString(result, trace);
 			result.append("\n");
+		}
+		if (events.length > numberOfTraces) {
+			result.append(" ...\n");
 		}
 		return result.toString();
 	}
@@ -306,5 +310,5 @@ public class IMLogImpl implements IMLog {
 
 		return 0;
 	}
-	
+
 }
