@@ -224,4 +224,9 @@ public class NormalisedIntDfgImpl implements NormalisedIntDfg {
 
 		return result;
 	}
+	
+	@Override
+	public String toString() {
+		return directlyFollowsGraph.toString();
+	}
 }

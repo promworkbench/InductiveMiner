@@ -283,7 +283,7 @@ public class EfficientTree implements Cloneable {
 	 * @return whether the given node is a tau
 	 */
 	public boolean isTau(int node) {
-		return tree[node] == tau;
+		return tree[node] == tau || tree[node] == skip;
 	}
 
 	/**

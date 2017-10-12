@@ -1,5 +1,6 @@
 package org.processmining.plugins.inductiveminer2.helperclasses.normalised;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.apache.commons.collections15.IteratorUtils;
@@ -310,5 +311,15 @@ public class NormalisedIntGraphImplQuadratic implements NormalisedIntGraph {
 			System.arraycopy(edges[i], 0, result.edges[i], 0, edges[i].length);
 		}
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i < edges.length; i++) {
+			result.append(Arrays.toString(edges[i]));
+			result.append("\n");
+		}
+		return result.toString();
 	}
 }
