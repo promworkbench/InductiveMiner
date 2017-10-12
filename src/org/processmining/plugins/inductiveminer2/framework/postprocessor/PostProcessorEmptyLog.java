@@ -22,7 +22,6 @@ public class PostProcessorEmptyLog implements PostProcessor {
 		if (log.size() == 0) {
 			if (tree.isTau(tree.getRoot())) {
 				tree.getTree()[0] = EfficientTree.skip;
-				System.out.println("post process: introduce skip node " + tree.toString());
 			}
 		} else {
 			//part two: the tree is an xor and one child is a skip
@@ -33,7 +32,6 @@ public class PostProcessorEmptyLog implements PostProcessor {
 					int childIndex = tree.getChild(root, childNr);
 					if (tree.isSkip(childIndex)) {
 						tree.removeChild(root, childIndex);
-						System.out.println("post process: remove skip node " + tree.toString());
 					} else {
 						childNr++;
 					}
