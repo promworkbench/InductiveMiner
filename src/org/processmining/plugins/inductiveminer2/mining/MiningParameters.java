@@ -7,12 +7,12 @@ import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParameters;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
-import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinder;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinder;
 import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThrough;
 import org.processmining.plugins.inductiveminer2.framework.postprocessor.PostProcessor;
+import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfo;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
@@ -22,11 +22,16 @@ import gnu.trove.set.TIntSet;
 public interface MiningParameters {
 
 	public static final XEventClassifier defaultClassifier = new XEventNameClassifier();
-	public static final XLifeCycleClassifier defaultLifeCycleClassifier = new LifeCycleClassifier();
+	/**
+	 * The default life cycle classifier ignores life cycles completely and maps
+	 * every event to 'complete'.
+	 */
+	public static final XLifeCycleClassifier defaultLifeCycleClassifier = new XLifeCycleClassifierIgnore();
 	public static final float defaultNoiseThreshold = 0.2f;
 	public static final boolean defaultIsDebug = true;
 	public static final boolean defaultIsUseMultiThreading = true;
-	public static final EfficientTreeReduceParameters defaultReduceParameters = new EfficientTreeReduceParameters(
+	public static final boolean defaultIsRepairLifeCycles = false;
+	public static final EfficientTreeReduceParameters defaultReduceParameters = new EfficientTreeReduceParameters(false,
 			false);
 
 	public IMLog getIMLog(XLog xLog);
@@ -51,7 +56,7 @@ public interface MiningParameters {
 
 	public List<FallThrough> getFallThroughs();
 
-	public boolean isRepairLifeCycle();
+	public boolean isRepairLifeCycles();
 
 	List<PostProcessor> getPostProcessors();
 

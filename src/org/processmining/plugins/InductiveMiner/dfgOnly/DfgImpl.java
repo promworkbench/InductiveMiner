@@ -7,6 +7,7 @@ import org.processmining.plugins.InductiveMiner.IntegerMultiSet;
 import org.processmining.plugins.InductiveMiner.MultiSet;
 import org.processmining.plugins.InductiveMiner.graphs.Graph;
 import org.processmining.plugins.InductiveMiner.graphs.GraphFactory;
+import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
 
 import gnu.trove.iterator.TIntLongIterator;
 import gnu.trove.map.TIntLongMap;
@@ -486,5 +487,11 @@ public class DfgImpl implements Dfg {
 
 	public void addActivity(int index) {
 		throw new RuntimeException("Nope. Use the XEventClass variant.");
+	}
+
+	public void addEndActivities(MultiIntSet activities) {
+		for (int a : activities) {
+			addEndActivity(a, activities.getCardinalityOf(a));
+		}
 	}
 }

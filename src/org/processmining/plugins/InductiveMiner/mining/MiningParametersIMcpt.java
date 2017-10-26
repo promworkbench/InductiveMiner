@@ -37,6 +37,5 @@ public class MiningParametersIMcpt extends MiningParameters {
 
 		setIncompleteThreshold(0);
 		setSatProbabilities(new ProbabilitiesEstimatedZ());
-		getReduceParameters().setReduceToOr(false);
 	}
 }

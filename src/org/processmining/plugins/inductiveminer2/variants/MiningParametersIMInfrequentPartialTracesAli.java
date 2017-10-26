@@ -1,10 +1,14 @@
 package org.processmining.plugins.inductiveminer2.variants;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.deckfour.xes.model.XLog;
+import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinder;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterLoopPartialTraces;
 import org.processmining.plugins.inductiveminer2.framework.logsplitter.LogSplitterSequenceFilteringPartialTraces;
+import org.processmining.plugins.inductiveminer2.framework.postprocessor.PostProcessor;
 import org.processmining.plugins.inductiveminer2.framework.postprocessor.PostProcessorEmptyLog;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfo;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfoPartialTraces;
@@ -18,12 +22,30 @@ import gnu.trove.set.TIntSet;
 
 public class MiningParametersIMInfrequentPartialTracesAli extends MiningParametersIMInfrequent {
 
-	public MiningParametersIMInfrequentPartialTracesAli() {
-		cutFinders.clear();
-		cutFinders.add(filteringCutFinders);
-		cutFinders.addAll(MiningParametersIM.basicCutFinders);
+	private static final List<CutFinder> cutFinders;
+	static {
+		ArrayList<CutFinder> list = new ArrayList<>();
+		list.add(filteringCutFinders);
+		list.addAll(basicCutFinders);
+		cutFinders = Collections.unmodifiableList(list);
+	}
 
-		postProcessors.add(new PostProcessorEmptyLog());
+	private static final List<PostProcessor> postProcessors;
+	static {
+		List<PostProcessor> list = new ArrayList<>();
+		list.addAll(basicPostProcessors);
+		list.add(new PostProcessorEmptyLog());
+		postProcessors = Collections.unmodifiableList(list);
+	}
+
+	@Override
+	public List<CutFinder> getCutFinders() {
+		return cutFinders;
+	}
+
+	@Override
+	public List<PostProcessor> getPostProcessors() {
+		return postProcessors;
 	}
 
 	@Override

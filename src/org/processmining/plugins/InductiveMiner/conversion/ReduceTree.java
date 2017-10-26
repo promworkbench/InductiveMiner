@@ -17,20 +17,23 @@ import org.processmining.processtree.ProcessTree;
 
 public class ReduceTree {
 
-	@Plugin(name = "Reduce process tree language-equivalently", returnLabels = { "Process Tree" }, returnTypes = { ProcessTree.class }, parameterLabels = { "Process Tree" }, userAccessible = true)
+	@Plugin(name = "Reduce process tree language-equivalently", returnLabels = { "Process Tree" }, returnTypes = {
+			ProcessTree.class }, parameterLabels = { "Process Tree" }, userAccessible = true)
 	@UITopiaVariant(affiliation = UITopiaVariant.EHV, author = "S.J.J. Leemans", email = "s.j.j.leemans@tue.nl")
 	@PluginVariant(variantLabel = "Reduce Process Tree Language-equivalently, default", requiredParameterLabels = { 0 })
-	public ProcessTree reduceTree(PluginContext context, ProcessTree tree) throws UnknownTreeNodeException,
-			ReductionFailedException {
-		return reduceTree(tree, new EfficientTreeReduceParameters(false));
+	public ProcessTree reduceTree(PluginContext context, ProcessTree tree)
+			throws UnknownTreeNodeException, ReductionFailedException {
+		return reduceTree(tree, new EfficientTreeReduceParameters(false, false));
 	}
 
-	@Plugin(name = "Reduce collapsed process tree language-equivalently", returnLabels = { "Process Tree" }, returnTypes = { ProcessTree.class }, parameterLabels = { "Process Tree" }, userAccessible = true)
+	@Plugin(name = "Reduce collapsed process tree language-equivalently", returnLabels = {
+			"Process Tree" }, returnTypes = {
+					ProcessTree.class }, parameterLabels = { "Process Tree" }, userAccessible = true)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Reduce Process Tree Language-equivalently, default", requiredParameterLabels = { 0 })
-	public ProcessTree reduceCollapsedTree(PluginContext context, ProcessTree tree) throws UnknownTreeNodeException,
-			ReductionFailedException {
-		return reduceTree(tree, new EfficientTreeReduceParameters(true));
+	public ProcessTree reduceCollapsedTree(PluginContext context, ProcessTree tree)
+			throws UnknownTreeNodeException, ReductionFailedException {
+		return reduceTree(tree, new EfficientTreeReduceParameters(true, false));
 	}
 
 	public static void reduceChildrenOf(Block node, EfficientTreeReduceParameters reduceParameters)

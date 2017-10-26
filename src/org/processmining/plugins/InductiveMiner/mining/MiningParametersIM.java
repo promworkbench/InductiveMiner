@@ -38,8 +38,6 @@ public class MiningParametersIM extends MiningParameters {
 				)));
 		
 		setPostProcessors(new ArrayList<PostProcessor>());
-		
-		getReduceParameters().setReduceToOr(false);
 	}
 	
 }

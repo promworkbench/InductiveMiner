@@ -17,6 +17,8 @@ public interface IMLog extends Iterable<IMTrace>, Cloneable {
 	public int getNumberOfActivities();
 
 	public String getActivity(int index);
+	
+	public String[] getActivities();
 
 	/**
 	 * 

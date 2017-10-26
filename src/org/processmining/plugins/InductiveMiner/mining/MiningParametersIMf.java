@@ -57,7 +57,5 @@ public class MiningParametersIMf extends MiningParameters {
 		
 		//set parameters
 		setNoiseThreshold((float) 0.2);
-		
-		getReduceParameters().setReduceToOr(false);
 	}
 }

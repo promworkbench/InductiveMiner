@@ -1,9 +1,9 @@
 package org.processmining.plugins.InductiveMiner.efficienttree;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.collect.FluentIterable;
 
 import gnu.trove.map.TObjectIntMap;
 
@@ -60,7 +60,7 @@ public class InlineTree {
 	 * 
 	 * @param children
 	 */
-	public static EfficientTree xor(List<EfficientTree> children) {
+	public static EfficientTree xor(Collection<EfficientTree> children) {
 		return combineTrees(EfficientTree.xor, children);
 	}
 
@@ -102,7 +102,7 @@ public class InlineTree {
 	 * 
 	 * @param children
 	 */
-	public static EfficientTree concurrent(List<EfficientTree> children) {
+	public static EfficientTree concurrent(Collection<EfficientTree> children) {
 		return combineTrees(EfficientTree.concurrent, children);
 	}
 
@@ -173,11 +173,15 @@ public class InlineTree {
 		return combineTrees(EfficientTree.or, children);
 	}
 
-	private static EfficientTree combineTrees(int operator, List<EfficientTree> children) {
+	private static EfficientTree combineTrees(int operator, Collection<EfficientTree> children) {
 		assert (children.size() >= 1);
-		EfficientTree[] childrenArray = FluentIterable.from(children.subList(1, children.size())).toArray(
-				EfficientTree.class);
-		return combineTrees(operator, children.get(0), childrenArray);
+		Iterator<EfficientTree> it = children.iterator();
+		EfficientTree first = it.next();
+		EfficientTree[] childrenArray = new EfficientTree[children.size()];
+		for (int i = 0; i < children.size(); i++) {
+			childrenArray[i] = it.next();
+		}
+		return combineTrees(operator, first, childrenArray);
 	}
 
 	/**

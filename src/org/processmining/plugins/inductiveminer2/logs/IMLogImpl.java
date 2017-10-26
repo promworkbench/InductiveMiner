@@ -102,6 +102,14 @@ public class IMLogImpl implements IMLog {
 				return nowEvent < events[now].length - 1;
 			}
 
+			public void itEventPrevious() {
+				nowEvent--;
+			}
+
+			public boolean itEventHasPrevious() {
+				return nowEvent > 0;
+			}
+
 			public int getTraceIndex() {
 				return now;
 			}
@@ -135,6 +143,10 @@ public class IMLogImpl implements IMLog {
 
 				return newTraceIndex;
 			}
+
+			public IMTraceIterator clone() throws CloneNotSupportedException {
+				return (IMTraceIterator) super.clone();
+			}
 		};
 	}
 
@@ -165,6 +177,10 @@ public class IMLogImpl implements IMLog {
 
 	public String getActivity(int index) {
 		return index2activity[index];
+	}
+	
+	public String[] getActivities() {
+		return index2activity.clone();
 	}
 
 	public void setTrace(long[] trace, int index) {

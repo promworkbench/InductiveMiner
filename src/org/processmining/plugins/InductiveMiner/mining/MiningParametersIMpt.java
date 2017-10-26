@@ -28,7 +28,5 @@ public class MiningParametersIMpt extends MiningParameters {
 		setFallThroughs(new ArrayList<FallThrough>(Arrays.asList(new FallThroughIM())));
 
 		setPostProcessors(new ArrayList<PostProcessor>());
-
-		getReduceParameters().setReduceToOr(false);
 	}
 }

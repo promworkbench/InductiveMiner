@@ -41,13 +41,13 @@ public class IMLog2IMLogInfoDefault implements IMLog2IMLogInfo {
 
 			for (IMEventIterator it = trace.iterator(); it.hasNext();) {
 				it.nextFast();
-				int ec = normaliser.add(it.getActivityIndex());
+				int eventClass = normaliser.add(it.getActivityIndex());
 
-				activities.add(ec);
-				dfg.addActivity(ec);
+				activities.add(eventClass);
+				dfg.addActivity(eventClass);
 
 				fromEventClass = toEventClass;
-				toEventClass = ec;
+				toEventClass = eventClass;
 
 				readTrace.add(toEventClass);
 

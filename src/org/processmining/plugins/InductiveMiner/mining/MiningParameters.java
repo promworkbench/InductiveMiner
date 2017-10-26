@@ -44,7 +44,7 @@ public abstract class MiningParameters {
 		processStartEndComplete = false;
 		useMultiThreading = true;
 
-		reduceParameters = new EfficientTreeReduceParameters(false);
+		reduceParameters = new EfficientTreeReduceParameters(false, false);
 	}
 
 	private static final XEventClassifier defaultClassifier = new XEventNameClassifier();

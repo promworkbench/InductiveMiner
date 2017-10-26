@@ -24,9 +24,18 @@ import gnu.trove.set.TIntSet;
 
 public class InductiveMiner {
 
+	/**
+	 * External users: please do not use this method but use the one in
+	 * InductiveMinerPlugin. That one will be kept stable, this one will not.
+	 * 
+	 * @param log
+	 * @param parameters
+	 * @param canceller
+	 * @return
+	 */
 	public static EfficientTree mineEfficientTree(IMLog log, MiningParameters parameters, Canceller canceller) {
 		//repair life cycle if necessary
-		if (parameters.isRepairLifeCycle()) {
+		if (parameters.isRepairLifeCycles()) {
 			//log = new LifeCycles(parameters.isDebug()).preProcessLog(log);
 			System.out.println("life cycle repair not yet implemented");
 		}

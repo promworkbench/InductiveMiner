@@ -22,15 +22,20 @@ public class EfficientTreeReduceParameters {
 	 *            Denotes what a leaf A means: true = seq(xor(tau, A_start),
 	 *            A_complete), false = A.
 	 */
-	public EfficientTreeReduceParameters(boolean collapsed) {
+	public EfficientTreeReduceParameters(boolean collapsed, boolean reduceToOr) {
 		setCollapsed(collapsed);
+		setReduceToOr(reduceToOr);
+	}
+
+	public EfficientTreeReduceParameters(boolean collapsed) {
+		this(collapsed, false);
 	}
 
 	public boolean isCollapsed() {
 		return collapsed;
 	}
 
-	public void setCollapsed(boolean collapsed) {
+	private void setCollapsed(boolean collapsed) {
 		this.collapsed = collapsed;
 	}
 
@@ -38,7 +43,7 @@ public class EfficientTreeReduceParameters {
 		return reduceToOr;
 	}
 
-	public void setReduceToOr(boolean reduceToOr) {
+	private void setReduceToOr(boolean reduceToOr) {
 		this.reduceToOr = reduceToOr;
 	}
 

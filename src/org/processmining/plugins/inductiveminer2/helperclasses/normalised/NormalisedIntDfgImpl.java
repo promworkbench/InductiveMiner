@@ -57,6 +57,11 @@ public class NormalisedIntDfgImpl implements NormalisedIntDfg {
 	}
 
 	@Override
+	public void addEndActivities(MultiIntSet endActivities) {
+		endActivities.addAll(endActivities);
+	}
+
+	@Override
 	public boolean hasStartActivities() {
 		return !startActivities.isEmpty();
 	}
@@ -224,9 +229,20 @@ public class NormalisedIntDfgImpl implements NormalisedIntDfg {
 
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
 		return directlyFollowsGraph.toString();
 	}
+
+	@Override
+	public void collapseParallelIntoDirectly() {
+		for (long edgeIndex : concurrencyGraph.getEdges()) {
+			directlyFollowsGraph.addEdge(concurrencyGraph.getEdgeSourceIndex(edgeIndex),
+					concurrencyGraph.getEdgeTargetIndex(edgeIndex), concurrencyGraph.getEdgeWeight(edgeIndex));
+			directlyFollowsGraph.addEdge(concurrencyGraph.getEdgeTargetIndex(edgeIndex),
+					concurrencyGraph.getEdgeSourceIndex(edgeIndex), concurrencyGraph.getEdgeWeight(edgeIndex));
+		}
+	}
+
 }

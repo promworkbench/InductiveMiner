@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
 
-public interface IMTraceIterator extends Iterator<IMTrace> {
+public interface IMTraceIterator extends Iterator<IMTrace>, Cloneable {
 
 	/**
 	 * Get the current trace index.
@@ -31,6 +31,20 @@ public interface IMTraceIterator extends Iterator<IMTrace> {
 	 * the next trace.
 	 */
 	public void itEventNext();
+
+	/**
+	 * The within-trace iterator, which is automatically reset upon moving to
+	 * the next trace.
+	 * 
+	 * @return whether there is an event before this one.
+	 */
+	public boolean itEventHasPrevious();
+
+	/**
+	 * The within-trace iterator, which is automatically reset upon moving to
+	 * the next trace.
+	 */
+	public void itEventPrevious();
 
 	/**
 	 * The within-trace iterator, which is automatically reset upon moving to
@@ -75,5 +89,7 @@ public interface IMTraceIterator extends Iterator<IMTrace> {
 	 * Reset the event iterator.
 	 */
 	public void itEventReset();
+
+	public IMTraceIterator clone() throws CloneNotSupportedException;
 
 }

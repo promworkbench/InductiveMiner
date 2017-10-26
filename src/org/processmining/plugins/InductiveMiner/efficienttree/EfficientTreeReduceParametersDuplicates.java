@@ -6,7 +6,7 @@ import org.processmining.plugins.InductiveMiner.efficienttree.reductionrules.Xor
 public class EfficientTreeReduceParametersDuplicates extends EfficientTreeReduceParameters {
 
 	public EfficientTreeReduceParametersDuplicates(boolean collapsed) {
-		super(collapsed);
+		super(collapsed, false);
 
 		EfficientTreeReductionRule[] rulesXorNew = new EfficientTreeReductionRule[rulesXor.length + 1];
 		System.arraycopy(rulesXor, 0, rulesXorNew, 0, rulesXor.length);

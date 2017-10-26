@@ -8,7 +8,7 @@ public class EfficientTreeReduce {
 
 	public static void reduce(EfficientTree tree)
 			throws ReductionFailedException, UnknownTreeNodeException {
-		reduce(tree, new EfficientTreeReduceParameters(false));
+		reduce(tree, new EfficientTreeReduceParameters(false, false));
 	}
 	
 	public static void reduce(EfficientTree tree, EfficientTreeReduceParameters reduceParameters)

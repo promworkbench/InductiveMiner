@@ -27,6 +27,11 @@ public class MultiIntSet implements Iterable<Integer> {
 		size = 0;
 	}
 
+	public void clear() {
+		size = 0;
+		cardinalities.clear();
+	}
+
 	public boolean add(int element) {
 		return add(element, 1);
 	}

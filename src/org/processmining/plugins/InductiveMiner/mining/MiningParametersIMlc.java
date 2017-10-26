@@ -44,6 +44,6 @@ public class MiningParametersIMlc extends MiningParameters {
 		
 		setLifeCycleClassifier(new LifeCycleClassifier());
 		
-		setReduceParameters(new EfficientTreeReduceParameters(true));
+		setReduceParameters(new EfficientTreeReduceParameters(true, false));
 	}
 }

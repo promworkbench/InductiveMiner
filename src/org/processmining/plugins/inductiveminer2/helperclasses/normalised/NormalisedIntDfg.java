@@ -1,5 +1,7 @@
 package org.processmining.plugins.inductiveminer2.helperclasses.normalised;
 
+import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
+
 /**
  * All indices in this class should be normalised, i.e. in [0..number of
  * activities - 1]
@@ -49,6 +51,8 @@ public interface NormalisedIntDfg extends Cloneable {
 	public void addStartActivity(int activity, long cardinality);
 
 	public void addEndActivity(int activity, long cardinality);
+	
+	public void addEndActivities(MultiIntSet activities);
 
 	public boolean hasStartActivities();
 
@@ -195,4 +199,10 @@ public interface NormalisedIntDfg extends Cloneable {
 	public NormalisedIntGraph getConcurrencyGraph();
 
 	public NormalisedIntDfg clone();
+
+	/**
+	 * Adds a directly follows graph edge (in each direction) for each parallel
+	 * edge.
+	 */
+	public void collapseParallelIntoDirectly();
 }

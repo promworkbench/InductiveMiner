@@ -2,6 +2,12 @@ package org.processmining.plugins.inductiveminer2.variants;
 
 import org.processmining.plugins.inductiveminer2.mining.MiningParametersAbstract;
 
+/**
+ * Interface to ease the display of Inductive Miner variants.
+ * 
+ * @author sander
+ *
+ */
 public interface InductiveMinerVariant {
 
 	/**
