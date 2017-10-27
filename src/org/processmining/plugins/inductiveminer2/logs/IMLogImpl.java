@@ -81,6 +81,11 @@ public class IMLogImpl implements IMLog {
 				return new IMTraceImpl(now);
 			}
 
+			public void reset() {
+				now = -1;
+				nowEvent = -1;
+			}
+
 			public boolean hasNext() {
 				return now < events.length - 1;
 			}
@@ -92,6 +97,10 @@ public class IMLogImpl implements IMLog {
 
 			public void itEventReset() {
 				nowEvent = -1;
+			}
+
+			public void itEventResetEnd() {
+				nowEvent = events[now].length;
 			}
 
 			public void itEventNext() {
@@ -147,6 +156,18 @@ public class IMLogImpl implements IMLog {
 			public IMTraceIterator clone() throws CloneNotSupportedException {
 				return (IMTraceIterator) super.clone();
 			}
+
+			public void itEventSetActivityIndex(int activity) {
+				events[now][nowEvent] = getEvent(activity, getLifeCycleTransition(events[now][nowEvent]).ordinal());
+			}
+
+			public void itEventSetLifeCycleTransition(Transition transition) {
+				events[now][nowEvent] = getEvent(getActivityIndex(events[now][nowEvent]), transition.ordinal());
+			}
+
+			public int itEventGetEventIndex() {
+				return nowEvent;
+			}
 		};
 	}
 
@@ -178,13 +199,22 @@ public class IMLogImpl implements IMLog {
 	public String getActivity(int index) {
 		return index2activity[index];
 	}
-	
+
 	public String[] getActivities() {
 		return index2activity.clone();
 	}
 
 	public void setTrace(long[] trace, int index) {
 		events[index] = trace;
+	}
+
+	public int addActivity(String activityName) {
+		int activityIndex = activity2index.putIfAbsent(activityName, activity2index.size());
+		if (activityIndex == activity2index.getNoEntryValue()) {
+			//new activity
+			activityIndex = activity2index.size() - 1;
+		}
+		return activityIndex;
 	}
 
 	public static long getEvent(int activityIndex, int lifeCycleTransitionIndex) {

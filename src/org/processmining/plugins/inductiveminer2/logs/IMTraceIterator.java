@@ -56,6 +56,16 @@ public interface IMTraceIterator extends Iterator<IMTrace>, Cloneable {
 
 	/**
 	 * The within-trace iterator, which is automatically reset upon moving to
+	 * the next trace. Sets the activity of the current event to the given
+	 * value. The caller is responsible to also add the new value to the list of
+	 * activities.
+	 * 
+	 * @param replaceWith
+	 */
+	public void itEventSetActivityIndex(int activity);
+
+	/**
+	 * The within-trace iterator, which is automatically reset upon moving to
 	 * the next trace.
 	 * 
 	 * @return the current life cycle transition index.
@@ -80,6 +90,13 @@ public interface IMTraceIterator extends Iterator<IMTrace>, Cloneable {
 	public void itEventRemove();
 
 	/**
+	 * Set the transition of the current event.
+	 * 
+	 * @param transition
+	 */
+	public void itEventSetLifeCycleTransition(Transition transition);
+
+	/**
 	 * @see IMLog.splitTrace()
 	 * @return the index of the inserted trace.
 	 */
@@ -91,5 +108,11 @@ public interface IMTraceIterator extends Iterator<IMTrace>, Cloneable {
 	public void itEventReset();
 
 	public IMTraceIterator clone() throws CloneNotSupportedException;
+
+	public void reset();
+
+	public void itEventResetEnd();
+
+	public int itEventGetEventIndex();
 
 }
