@@ -39,8 +39,7 @@ public class MiningParametersIMLifeCycle extends MiningParametersIM {
 
 	@Override
 	public List<FallThrough> getFallThroughs() {
-		// TODO Auto-generated method stub
-		return super.getFallThroughs();
+		return lifeCycleFallthroughs;
 	}
 
 	@Override

@@ -214,6 +214,8 @@ public class IMLogImpl implements IMLog {
 			//new activity
 			activityIndex = activity2index.size() - 1;
 		}
+		index2activity = ArrayUtils.copyOf(index2activity, index2activity.length + 1);
+		index2activity[index2activity.length - 1] = activityName;
 		return activityIndex;
 	}
 

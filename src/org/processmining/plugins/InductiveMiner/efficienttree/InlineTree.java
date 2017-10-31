@@ -177,8 +177,8 @@ public class InlineTree {
 		assert (children.size() >= 1);
 		Iterator<EfficientTree> it = children.iterator();
 		EfficientTree first = it.next();
-		EfficientTree[] childrenArray = new EfficientTree[children.size()];
-		for (int i = 0; i < children.size(); i++) {
+		EfficientTree[] childrenArray = new EfficientTree[children.size() - 1];
+		for (int i = 0; i < children.size() - 1; i++) {
 			childrenArray[i] = it.next();
 		}
 		return combineTrees(operator, first, childrenArray);
