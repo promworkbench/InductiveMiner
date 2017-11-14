@@ -57,7 +57,7 @@ public class MiningParametersIMInfrequent extends MiningParametersIM implements 
 	public List<CutFinder> getCutFinders() {
 		return cutFinders;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Inductive Miner - infrequent   (IMf)";

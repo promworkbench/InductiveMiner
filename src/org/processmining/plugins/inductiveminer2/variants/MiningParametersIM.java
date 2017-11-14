@@ -83,11 +83,6 @@ public class MiningParametersIM extends MiningParametersAbstract implements Indu
 		return new IMLog2IMLogInfoDefault();
 	}
 
-	@Override
-	public float getNoiseThreshold() {
-		return 0;
-	}
-
 	public IMLog getIMLog(XLog xLog) {
 		return new IMLogImpl(xLog, getClassifier(), getLifeCycleClassifier());
 	}
