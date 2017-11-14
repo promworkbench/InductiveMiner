@@ -35,7 +35,6 @@ public class InductiveMinerDialog extends JPanel {
 			new MiningParametersIM(), //
 			new MiningParametersIMInfrequent(), //
 			new MiningParametersIMPartialTraces(), //
-			new MiningParametersIMPartialTraces(), //
 			new MiningParametersIMInfrequentPartialTraces(), //
 			new MiningParametersIMInfrequentPartialTracesAli() };
 	protected JComboBox<InductiveMinerVariant> variantCombobox;
