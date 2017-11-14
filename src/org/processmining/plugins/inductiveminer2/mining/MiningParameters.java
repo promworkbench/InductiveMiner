@@ -40,7 +40,17 @@ public interface MiningParameters {
 
 	public XLifeCycleClassifier getLifeCycleClassifier();
 
+	/**
+	 * 
+	 * @return The noise threshold, or 0 if hasNoise() returns false.
+	 */
 	public float getNoiseThreshold();
+
+	/**
+	 * 
+	 * @return Whether the noise threshold is relevant.
+	 */
+	public boolean hasNoise();
 
 	public boolean isDebug();
 

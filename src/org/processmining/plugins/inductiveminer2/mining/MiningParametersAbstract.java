@@ -28,7 +28,7 @@ public abstract class MiningParametersAbstract implements MiningParameters {
 
 	@Override
 	public float getNoiseThreshold() {
-		return noiseThreshold;
+		return hasNoise() ? noiseThreshold : 0;
 	}
 
 	public void setNoiseThreshold(float noiseTreshold) {
