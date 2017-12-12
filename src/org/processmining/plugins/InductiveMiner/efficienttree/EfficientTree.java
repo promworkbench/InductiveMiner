@@ -266,7 +266,7 @@ public class EfficientTree implements Cloneable {
 	/**
 	 * 
 	 * @param parent
-	 * @param numberOfChild
+	 * @param numberOfChild (the first child has number 0)
 	 * @return the position of the #nrOfChild child of parent.
 	 */
 	public int getChild(int parent, int numberOfChild) {

@@ -5,7 +5,6 @@ import javax.swing.JOptionPane;
 import org.deckfour.uitopia.api.event.TaskListener.InteractionResult;
 import org.deckfour.xes.model.XLog;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
-import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetFactory;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.framework.packages.PackageManager.Canceller;
@@ -13,16 +12,12 @@ import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginLevel;
 import org.processmining.framework.plugin.annotations.PluginVariant;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2processTree;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2AcceptingPetriNet;
 import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
+import org.processmining.plugins.InductiveMiner.reduceacceptingpetrinet.ReducePetriNetKeepLanguage;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.InductiveMiner;
 import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
-import org.processmining.processtree.ProcessTree;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet.InvalidProcessTreeException;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet.NotYetImplementedException;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet.PetrinetWithMarkings;
 
 public class InductiveMinerPlugin {
 	@Plugin(name = "Mine efficient tree with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
@@ -56,19 +51,37 @@ public class InductiveMinerPlugin {
 		});
 	}
 
+	@Plugin(name = "Mine accepting Petri net with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
+			"Accepting Petri net" }, returnTypes = {
+					AcceptingPetriNet.class }, parameterLabels = { "Log" }, userAccessible = true)
+	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
+	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
+	public AcceptingPetriNet mineGuiAcceptingPetriNet(final UIPluginContext context, XLog xLog) {
+		EfficientTree tree = mineGuiProcessTree(context, xLog);
+
+		if (tree != null && !context.getProgress().isCancelled()) {
+			AcceptingPetriNet net = EfficientTree2AcceptingPetriNet.convert(tree);
+			ReducePetriNetKeepLanguage.reduce(net, new Canceller() {
+				public boolean isCancelled() {
+					return context.getProgress().isCancelled();
+				}
+			});
+			return net;
+		}
+
+		return null;
+	}
+
 	public static EfficientTree mineTree(IMLog log, MiningParameters parameters, Canceller canceller) {
 		return InductiveMiner.mineEfficientTree(log, parameters, canceller);
 	}
 
-	public static AcceptingPetriNet minePetriNet(IMLog log, MiningParameters parameters, Canceller canceller)
-			throws NotYetImplementedException, InvalidProcessTreeException {
+	public static AcceptingPetriNet minePetriNet(IMLog log, MiningParameters parameters, Canceller canceller) {
 		EfficientTree tree = mineTree(log, parameters, canceller);
 
-		ProcessTree pTree = EfficientTree2processTree.convert(tree);
-
-		PetrinetWithMarkings net = ProcessTree2Petrinet.convert(pTree);
-
-		return AcceptingPetriNetFactory.createAcceptingPetriNet(net.petrinet, net.initialMarking, net.finalMarking);
+		AcceptingPetriNet net = EfficientTree2AcceptingPetriNet.convert(tree);
+		ReducePetriNetKeepLanguage.reduce(net, canceller);
+		return net;
 	}
 
 	public static boolean confirmLargeLogs(final UIPluginContext context, IMLog log, InductiveMinerDialog dialog) {
