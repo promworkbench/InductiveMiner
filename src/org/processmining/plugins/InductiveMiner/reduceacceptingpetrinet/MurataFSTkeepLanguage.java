@@ -32,7 +32,7 @@ public class MurataFSTkeepLanguage {
 		 * Iterate over all places.
 		 */
 		for (Place place : net.getPlaces()) {
-			
+
 			if (canceller.isCancelled()) {
 				return true;
 			}
@@ -124,9 +124,6 @@ public class MurataFSTkeepLanguage {
 				continue;
 			}
 
-			/*
-			 * This rule is only valid if the 
-			 */
 			if (outputTransition.isInvisible()) {
 
 				/*
@@ -141,11 +138,24 @@ public class MurataFSTkeepLanguage {
 					if (transferEdge instanceof Arc) {
 						Arc transferArc = (Arc) transferEdge;
 						MurataUtils.addArc(net, inputTransition, transferArc.getTarget(), transferArc.getWeight());
-						Place outputPlace = (Place) transferArc.getTarget();
 					}
 				}
 				net.removePlace(place);
 				net.removeTransition(outputTransition);
+				return true; // Removed a place and a transition.
+			} else if (inputTransition.isInvisible()) {
+				Collection<PetrinetEdge<? extends PetrinetNode, ? extends PetrinetNode>> preset = net
+						.getInEdges(inputTransition);
+				MurataUtils.resetPlace(anet.getInitialMarking(), place);
+				
+				for (PetrinetEdge<? extends PetrinetNode, ? extends PetrinetNode> transferEdge : preset) {
+					if (transferEdge instanceof Arc) {
+						Arc transferArc = (Arc) transferEdge;
+						MurataUtils.addArc(net, transferArc.getSource(), outputTransition, transferArc.getWeight());
+					}
+				}
+				net.removePlace(place);
+				net.removeTransition(inputTransition);
 				return true; // Removed a place and a transition.
 			}
 		}
