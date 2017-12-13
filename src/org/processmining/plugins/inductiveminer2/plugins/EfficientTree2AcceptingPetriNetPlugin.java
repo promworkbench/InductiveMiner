@@ -1,4 +1,4 @@
-package org.processmining.plugins.InductiveMiner.plugins;
+package org.processmining.plugins.inductiveminer2.plugins;
 
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;

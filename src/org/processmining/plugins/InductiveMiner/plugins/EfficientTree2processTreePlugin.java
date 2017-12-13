@@ -11,7 +11,7 @@ import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
 import org.processmining.processtree.ProcessTree;
 
 public class EfficientTree2processTreePlugin {
-	@Plugin(name = "convert efficient tree to process tree", returnLabels = { "Process Tree" }, returnTypes = {
+	@Plugin(name = "Convert efficient tree to process tree", returnLabels = { "Process Tree" }, returnTypes = {
 			ProcessTree.class }, parameterLabels = {
 					"Efficient tree" }, userAccessible = true, help = "Convert an efficient tree into a process tree.", level = PluginLevel.Regular)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)

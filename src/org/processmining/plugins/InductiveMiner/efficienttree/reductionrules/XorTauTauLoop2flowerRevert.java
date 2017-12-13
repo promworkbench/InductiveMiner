@@ -3,11 +3,10 @@ package org.processmining.plugins.InductiveMiner.efficienttree.reductionrules;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReductionRule;
 
-@Deprecated
-public class XorTauTauLoop2flower implements EfficientTreeReductionRule {
+public class XorTauTauLoop2flowerRevert implements EfficientTreeReductionRule {
 
 	public boolean apply(EfficientTree tree, int node) {
-		if (tree.isXor(node)) {
+		if (tree.isXor(node) && tree.getNumberOfChildren(node) == 2) {
 
 			//search for a tau
 			int tau = -1;
@@ -40,12 +39,12 @@ public class XorTauTauLoop2flower implements EfficientTreeReductionRule {
 						//before: xor tau loop A tau tau
 
 						//move A
-						System.arraycopy(tree.getTree(), tauLoop + 1, tree.getTree(), tauLoop + 2, tauLoopRedo
-								- (tauLoop + 1));
-						
+						System.arraycopy(tree.getTree(), tauLoop + 1, tree.getTree(), tauLoop + 2,
+								tauLoopRedo - (tauLoop + 1));
+
 						//set body tau
 						tree.getTree()[tauLoop + 1] = EfficientTree.tau;
-						
+
 						//remove xor tau
 						tree.removeChild(node, tau);
 
@@ -53,17 +52,17 @@ public class XorTauTauLoop2flower implements EfficientTreeReductionRule {
 						return true;
 					} else {
 						//before: xor loop A tau tau tau
-						
+
 						//remove xor tau
 						tree.removeChild(node, tau);
-						
+
 						//move A
-						System.arraycopy(tree.getTree(), tauLoop + 1, tree.getTree(), tauLoop + 2, tauLoopRedo
-								- (tauLoop + 1));
-						
+						System.arraycopy(tree.getTree(), tauLoop + 1, tree.getTree(), tauLoop + 2,
+								tauLoopRedo - (tauLoop + 1));
+
 						//set body tau
 						tree.getTree()[tauLoop + 1] = EfficientTree.tau;
-						
+
 						//after: xor loop tau A tau tau 
 						return true;
 					}

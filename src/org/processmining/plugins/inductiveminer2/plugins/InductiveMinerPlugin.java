@@ -13,6 +13,10 @@ import org.processmining.framework.plugin.annotations.PluginLevel;
 import org.processmining.framework.plugin.annotations.PluginVariant;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2AcceptingPetriNet;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduce;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduce.ReductionFailedException;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParametersForPetriNet;
+import org.processmining.plugins.InductiveMiner.efficienttree.UnknownTreeNodeException;
 import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
 import org.processmining.plugins.InductiveMiner.reduceacceptingpetrinet.ReducePetriNetKeepLanguage;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
@@ -54,32 +58,42 @@ public class InductiveMinerPlugin {
 	@Plugin(name = "Mine accepting Petri net with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
 			"Accepting Petri net" }, returnTypes = {
 					AcceptingPetriNet.class }, parameterLabels = { "Log" }, userAccessible = true)
-	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
+	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email, uiHelp = "Running this plug-in equals running:<br>1) \"Mine efficient tree with Inductive Miner\", <br>2) \"Reduce efficient tree language-equivalently for size\"<br>3) \"Convert efficient tree to Accepting Petri Net and reduce\" ")
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
-	public AcceptingPetriNet mineGuiAcceptingPetriNet(final UIPluginContext context, XLog xLog) {
+	public AcceptingPetriNet mineGuiAcceptingPetriNet(final UIPluginContext context, XLog xLog)
+			throws UnknownTreeNodeException, ReductionFailedException {
 		EfficientTree tree = mineGuiProcessTree(context, xLog);
-
-		if (tree != null && !context.getProgress().isCancelled()) {
-			AcceptingPetriNet net = EfficientTree2AcceptingPetriNet.convert(tree);
-			ReducePetriNetKeepLanguage.reduce(net, new Canceller() {
-				public boolean isCancelled() {
-					return context.getProgress().isCancelled();
-				}
-			});
-			return net;
-		}
-
-		return null;
+		return postProcessTree2PetriNet(tree, new Canceller() {
+			public boolean isCancelled() {
+				return context.getProgress().isCancelled();
+			}
+		});
 	}
 
 	public static EfficientTree mineTree(IMLog log, MiningParameters parameters, Canceller canceller) {
 		return InductiveMiner.mineEfficientTree(log, parameters, canceller);
 	}
 
-	public static AcceptingPetriNet minePetriNet(IMLog log, MiningParameters parameters, Canceller canceller) {
+	public static AcceptingPetriNet minePetriNet(IMLog log, MiningParameters parameters, Canceller canceller)
+			throws UnknownTreeNodeException, ReductionFailedException {
 		EfficientTree tree = mineTree(log, parameters, canceller);
+		return postProcessTree2PetriNet(tree, canceller);
+	}
+
+	private static AcceptingPetriNet postProcessTree2PetriNet(EfficientTree tree, Canceller canceller)
+			throws UnknownTreeNodeException, ReductionFailedException {
+		if (tree == null || canceller.isCancelled()) {
+			return null;
+		}
+
+		EfficientTreeReduce.reduce(tree, new EfficientTreeReduceParametersForPetriNet(false));
 
 		AcceptingPetriNet net = EfficientTree2AcceptingPetriNet.convert(tree);
+
+		if (net == null || canceller.isCancelled()) {
+			return null;
+		}
+
 		ReducePetriNetKeepLanguage.reduce(net, canceller);
 		return net;
 	}
