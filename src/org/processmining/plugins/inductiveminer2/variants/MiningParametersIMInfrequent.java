@@ -38,8 +38,8 @@ public class MiningParametersIMInfrequent extends MiningParametersIM implements 
 
 	private static final List<BaseCaseFinder> baseCaseFinders = new ArrayList<>();
 	static {
-		baseCaseFinders.addAll(basicBaseCaseFinders);
 		baseCaseFinders.addAll(filteringBaseCases);
+		baseCaseFinders.addAll(basicBaseCaseFinders);
 	}
 
 	private static final List<CutFinder> cutFinders = new ArrayList<>();
@@ -57,7 +57,7 @@ public class MiningParametersIMInfrequent extends MiningParametersIM implements 
 	public List<CutFinder> getCutFinders() {
 		return cutFinders;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Inductive Miner - infrequent   (IMf)";
