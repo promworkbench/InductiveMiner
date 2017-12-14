@@ -3,7 +3,7 @@ package org.processmining.plugins.InductiveMiner.reduceacceptingpetrinet;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.framework.packages.PackageManager.Canceller;
 
-public class ReducePetriNetKeepLanguage {
+public class ReduceAcceptingPetriNetKeepLanguage {
 
 	public static void reduce(AcceptingPetriNet petriNet, Canceller canceller) {
 
