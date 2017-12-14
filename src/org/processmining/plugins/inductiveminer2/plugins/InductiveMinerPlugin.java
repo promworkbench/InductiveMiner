@@ -18,7 +18,7 @@ import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduc
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParametersForPetriNet;
 import org.processmining.plugins.InductiveMiner.efficienttree.UnknownTreeNodeException;
 import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
-import org.processmining.plugins.InductiveMiner.reduceacceptingpetrinet.ReducePetriNetKeepLanguage;
+import org.processmining.plugins.InductiveMiner.reduceacceptingpetrinet.ReduceAcceptingPetriNetKeepLanguage;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.InductiveMiner;
 import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
@@ -94,7 +94,7 @@ public class InductiveMinerPlugin {
 			return null;
 		}
 
-		ReducePetriNetKeepLanguage.reduce(net, canceller);
+		ReduceAcceptingPetriNetKeepLanguage.reduce(net, canceller);
 		return net;
 	}
 
