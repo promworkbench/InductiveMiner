@@ -6,6 +6,7 @@ import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParameters;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParametersForPetriNet;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinder;
@@ -31,7 +32,9 @@ public interface MiningParameters {
 	public static final boolean defaultIsDebug = true;
 	public static final boolean defaultIsUseMultiThreading = true;
 	public static final boolean defaultIsRepairLifeCycles = false;
-	public static final EfficientTreeReduceParameters defaultReduceParameters = new EfficientTreeReduceParameters(false,
+	//public static final EfficientTreeReduceParameters defaultReduceParameters = new EfficientTreeReduceParameters(false,
+	//		false);
+	public static final EfficientTreeReduceParameters defaultReduceParameters = new EfficientTreeReduceParametersForPetriNet(
 			false);
 
 	public IMLog getIMLog(XLog xLog);
