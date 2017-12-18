@@ -51,6 +51,8 @@ public class MiningParametersIMflc extends MiningParameters {
 		//set parameters
 		setNoiseThreshold((float) 0.2);
 		
+		setLifeCycleClassifier(new LifeCycleClassifier());
+		
 		setReduceParameters(new EfficientTreeReduceParameters(true, false));
 	}
 }
