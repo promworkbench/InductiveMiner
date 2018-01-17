@@ -11,15 +11,15 @@ public class BaseCaseFinderSingleActivity implements BaseCaseFinder {
 
 	public EfficientTree findBaseCases(IMLog log, IMLogInfo logInfo, MinerState minerState) {
 
-		if (logInfo.getActivities().length == 1 && logInfo.getDfg().getNumberOfEmptyTraces() == 0
+		if (logInfo.getDfg().getNumberOfActivities() == 1 && logInfo.getDfg().getNumberOfEmptyTraces() == 0
 				&& logInfo.getNumberOfActivityInstances() == logInfo.getNumberOfTraces()) {
 			//single activity
 
 			InductiveMiner.debug(" base case: IM single activity", minerState);
 
-			return InlineTree.leaf(log.getActivity(logInfo.getActivities()[0]));
+			return InlineTree.leaf(log.getActivity(logInfo.getDfg().getActivities().iterator().next()));
 		}
-		
+
 		return null;
 	}
 

@@ -3,9 +3,8 @@ package org.processmining.plugins.inductiveminer2.framework.fallthroughs;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
 import org.processmining.plugins.InductiveMiner.efficienttree.InlineTree;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
 import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserInt;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.logs.IMTraceIterator;
@@ -16,11 +15,11 @@ public class FallThroughTauLoopStrict implements FallThrough {
 
 	public EfficientTree fallThrough(IMLog log, IMLogInfo logInfo, MinerState minerState) {
 
-		if (logInfo.getActivities().length > 1) {
+		if (logInfo.getDfg().getActivities().setSize() > 1) {
 
 			//try to find a tau loop
 			IMLog sublog = log.clone();
-			if (filterLog(sublog, logInfo.getDfg(), logInfo.getNormaliser())) {
+			if (filterLog(sublog, logInfo.getDfg())) {
 
 				InductiveMiner.debug(" fall through: tau loop strict", minerState);
 
@@ -45,7 +44,7 @@ public class FallThroughTauLoopStrict implements FallThrough {
 	 * @param dfg
 	 * @return
 	 */
-	public static boolean filterLog(IMLog log, NormalisedIntDfg dfg, NormaliserInt normaliser) {
+	public static boolean filterLog(IMLog log, IntDfg dfg) {
 		boolean somethingSplit = false;
 
 		for (IMTraceIterator it = log.iterator(); it.hasNext();) {
@@ -58,9 +57,8 @@ public class FallThroughTauLoopStrict implements FallThrough {
 				it.itEventNext();
 
 				int activity = it.itEventGetActivityIndex();
-				int normalisedActivity = normaliser.toNormal(activity);
 
-				if (lastEnd && dfg.isStartActivity(normalisedActivity) && openActivityInstances.size() == 0) {
+				if (lastEnd && dfg.getStartActivities().contains(activity) && openActivityInstances.size() == 0) {
 					it.itEventSplit();
 					somethingSplit = true;
 				}
@@ -73,7 +71,7 @@ public class FallThroughTauLoopStrict implements FallThrough {
 					openActivityInstances.add(activity);
 				}
 
-				lastEnd = dfg.isEndActivity(normalisedActivity);
+				lastEnd = dfg.getEndActivities().contains(activity);
 			}
 		}
 		return somethingSplit;

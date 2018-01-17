@@ -2,20 +2,19 @@ package org.processmining.plugins.inductiveminer2.framework.cutfinders;
 
 import java.util.Iterator;
 
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntGraph;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
+import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntGraph;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 
 public class Filter {
 	public static IMLogInfo filterNoise(IMLogInfo logInfo, float threshold) {
-		return new IMLogInfo(logInfo.getNormaliser().clone(), filterNoise(logInfo.getDfg(), threshold),
-				logInfo.getActivityMultiSet().clone(), logInfo.getMinimumSelfDistancesBetween(),
+		return new IMLogInfo(filterNoise(logInfo.getDfg(), threshold), logInfo.getMinimumSelfDistancesBetween(),
 				logInfo.getMinimumSelfDistances(), logInfo.getNumberOfEvents(), logInfo.getNumberOfActivityInstances(),
 				logInfo.getNumberOfTraces());
 	}
 
-	public static NormalisedIntDfg filterNoise(NormalisedIntDfg dfg, float threshold) {
-		NormalisedIntDfg newDfg = dfg.clone();
+	public static IntDfg filterNoise(IntDfg dfg, float threshold) {
+		IntDfg newDfg = dfg.clone();
 
 		filterStartActivities(newDfg, threshold);
 		filterEndActivities(newDfg, threshold);
@@ -32,12 +31,12 @@ public class Filter {
 	 * @param threshold
 	 * @return
 	 */
-	private static void filterDirectlyFollowsGraph(NormalisedIntDfg dfg, float threshold) {
-		NormalisedIntGraph graph = dfg.getDirectlyFollowsGraph();
+	private static void filterDirectlyFollowsGraph(IntDfg dfg, float threshold) {
+		IntGraph graph = dfg.getDirectlyFollowsGraph();
 
 		for (int activity = 0; activity < dfg.getNumberOfActivities(); activity++) {
 			//find the maximum outgoing weight of this node
-			long maxWeightOut = dfg.getEndActivityCardinality(activity);
+			long maxWeightOut = dfg.getEndActivities().getCardinalityOf(activity);
 			for (long edge : graph.getOutgoingEdgesOf(activity)) {
 				maxWeightOut = Math.max(maxWeightOut, (int) graph.getEdgeWeight(edge));
 			}
@@ -61,12 +60,12 @@ public class Filter {
 	 * @param threshold
 	 * @return
 	 */
-	private static void filterConcurrencyGraph(NormalisedIntDfg dfg, float threshold) {
-		NormalisedIntGraph graph = dfg.getConcurrencyGraph();
+	private static void filterConcurrencyGraph(IntDfg dfg, float threshold) {
+		IntGraph graph = dfg.getConcurrencyGraph();
 
 		for (int activity = 0; activity < dfg.getNumberOfActivities(); activity++) {
 			//find the maximum outgoing weight of this node
-			long maxWeightOut = dfg.getEndActivityCardinality(activity);
+			long maxWeightOut = dfg.getEndActivities().getCardinalityOf(activity);
 			for (long edge : graph.getOutgoingEdgesOf(activity)) {
 				maxWeightOut = Math.max(maxWeightOut, (int) graph.getEdgeWeight(edge));
 			}
@@ -90,11 +89,14 @@ public class Filter {
 	 * @param threshold
 	 * @return
 	 */
-	private static void filterStartActivities(NormalisedIntDfg dfg, float threshold) {
-		long max = dfg.getMostOccurringStartActivityCardinality();
-		for (int activity : dfg.getStartActivityIndices()) {
-			if (dfg.getStartActivityCardinality(activity) < threshold * max) {
-				dfg.removeStartActivity(activity);
+	private static void filterStartActivities(IntDfg dfg, float threshold) {
+		long max = dfg.getStartActivities()
+				.getCardinalityOf(dfg.getStartActivities().getElementWithHighestCardinality());
+
+		for (Iterator<Integer> it = dfg.getStartActivities().iterator(); it.hasNext();) {
+			int activity = it.next();
+			if (dfg.getStartActivities().getCardinalityOf(activity) < threshold * max) {
+				it.remove();
 			}
 		}
 	}
@@ -107,11 +109,12 @@ public class Filter {
 	 * @param threshold
 	 * @return
 	 */
-	private static void filterEndActivities(NormalisedIntDfg dfg, float threshold) {
-		long max = dfg.getMostOccurringEndActivityCardinality();
-		for (int activity : dfg.getEndActivityIndices()) {
-			if (dfg.getEndActivityCardinality(activity) < threshold * max) {
-				dfg.removeEndActivity(activity);
+	private static void filterEndActivities(IntDfg dfg, float threshold) {
+		long max = dfg.getEndActivities().getCardinalityOf(dfg.getEndActivities().getElementWithHighestCardinality());
+		for (Iterator<Integer> it = dfg.getEndActivities().iterator(); it.hasNext();) {
+			int activity = it.next();
+			if (dfg.getEndActivities().getCardinalityOf(activity) < threshold * max) {
+				it.remove();
 			}
 		}
 	}

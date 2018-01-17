@@ -10,14 +10,14 @@ import org.processmining.plugins.inductiveminer2.mining.MinerState;
 public class BaseCaseFinderEmptyLog implements BaseCaseFinder {
 
 	public EfficientTree findBaseCases(IMLog log, IMLogInfo logInfo, MinerState minerState) {
-		if (logInfo.getActivities().length == 0) {
+		if (logInfo.getDfg().getNumberOfActivities() == 0) {
 			//empty log
 
 			InductiveMiner.debug(" base case: empty log", minerState);
 
 			return InlineTree.tau();
 		}
-		
+
 		return null;
 	}
 

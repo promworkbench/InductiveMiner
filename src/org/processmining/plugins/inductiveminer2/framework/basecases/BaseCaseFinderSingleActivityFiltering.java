@@ -11,7 +11,7 @@ public class BaseCaseFinderSingleActivityFiltering implements BaseCaseFinder {
 
 	public EfficientTree findBaseCases(IMLog log, IMLogInfo logInfo, MinerState minerState) {
 
-		if (logInfo.getNumberOfActivities() == 1) {
+		if (logInfo.getDfg().getNumberOfActivities() == 1) {
 			//the log contains just one activity
 
 			//assuming application of the activity follows a geometric distribution, we estimate parameter ^p
@@ -26,7 +26,7 @@ public class BaseCaseFinderSingleActivityFiltering implements BaseCaseFinder {
 
 				InductiveMiner.debug(" base case: single activity filtering", minerState);
 
-				return InlineTree.leaf(log.getActivity(logInfo.getActivities()[0]));
+				return InlineTree.leaf(log.getActivity(logInfo.getDfg().getActivities().iterator().next()));
 			}
 			//else, the probability to stop is too low or too high, and we better output a flower model
 		}

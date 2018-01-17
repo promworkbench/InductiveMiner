@@ -12,7 +12,7 @@ import org.processmining.plugins.inductiveminer2.mining.MinerState;
 public class FallThroughFlowerWithoutEpsilon implements FallThrough {
 
 	public EfficientTree fallThrough(IMLog log, IMLogInfo logInfo, MinerState minerState) {
-		String[] activities = logInfo.getActivityNames(log, logInfo.getNormaliser());
+		String[] activities = logInfo.getActivityNames(log);
 		if (activities.length < 1) {
 			return null;
 		} else if (activities.length == 1) {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParameters;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParametersForPetriNet;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinder;
@@ -72,7 +73,7 @@ public class MiningParametersIM extends MiningParametersAbstract implements Indu
 			.unmodifiableList(Arrays.asList(new PostProcessor[] { //
 	}));
 
-	public static final EfficientTreeReduceParameters basicReduceParameters = new EfficientTreeReduceParameters(false,
+	public static final EfficientTreeReduceParameters basicReduceParameters = new EfficientTreeReduceParametersForPetriNet(
 			false);
 
 	public Probabilities getSatProbabilities() {

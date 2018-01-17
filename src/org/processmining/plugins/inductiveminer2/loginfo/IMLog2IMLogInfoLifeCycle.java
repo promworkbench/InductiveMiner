@@ -1,10 +1,9 @@
 package org.processmining.plugins.inductiveminer2.loginfo;
 
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfgImpl;
 import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfgImpl;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserIntImpl;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.logs.IMTrace;
 import org.processmining.plugins.inductiveminer2.logs.IMTraceIterator;
@@ -15,9 +14,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
 public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 
 	private static class Count {
-		NormaliserIntImpl normaliser = new NormaliserIntImpl();
-		NormalisedIntDfg dfg = new NormalisedIntDfgImpl();
-		MultiIntSet activities = new MultiIntSet();
+		IntDfg dfg = new IntDfgImpl();
 		TIntIntHashMap minimumSelfDistances = IMLogInfo.createEmptyMinimumSelfDistancesMap();
 		TIntObjectMap<MultiIntSet> minimumSelfDistancesBetween = IMLogInfo.createEmptyMinimumSelfDistancesBetweenMap();
 		long numberOfEvents = 0;
@@ -34,12 +31,12 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 
 		count.dfg.collapseParallelIntoDirectly();
 
-		return new IMLogInfo(count.normaliser, count.dfg, count.activities, count.minimumSelfDistancesBetween,
-				count.minimumSelfDistances, count.numberOfEvents, count.numberOfActivityInstances, log.size());
+		return new IMLogInfo(count.dfg, count.minimumSelfDistancesBetween, count.minimumSelfDistances,
+				count.numberOfEvents, count.numberOfActivityInstances, log.size());
 	}
 
 	private static void log2Dfg(IMLog log, Count count) {
-		count.dfg = new NormalisedIntDfgImpl();
+		count.dfg = new IntDfgImpl();
 		for (IMTraceIterator it = log.iterator(); it.hasNext();) {
 			IMTrace trace = it.next();
 
@@ -79,7 +76,7 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 		MultiIntSet openActivityOccurrences = new MultiIntSet();
 		for (it.itEventReset(); it.itEventHasNext();) {
 			it.itEventNext();
-			int activity = count.normaliser.add(it.itEventGetActivityIndex());
+			int activity = it.itEventGetActivityIndex();
 			Transition lifeCycle = it.itEventGetLifeCycleTransition();
 
 			if (lifeCycle == Transition.start) {
@@ -87,7 +84,7 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 				openActivityOccurrences.add(activity);
 				if (!activityOccurrenceCompleted) {
 					//no activity occurrence has been completed yet. Add to start events.
-					count.dfg.addStartActivity(activity, 1);
+					count.dfg.getStartActivities().add(activity, 1);
 				}
 				activityOccurrencesEndedSinceLastStart.clear();
 			} else if (lifeCycle == Transition.complete) {
@@ -101,7 +98,7 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 
 					if (!activityOccurrenceCompleted) {
 						//no activity occurrence has been completed yet. Add to start events.
-						count.dfg.addStartActivity(activity, 1);
+						count.dfg.getStartActivities().add(activity, 1);
 					}
 					activityOccurrenceCompleted = true;
 
@@ -112,7 +109,7 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 
 			activityOccurrenceCompleted = activityOccurrenceCompleted || lifeCycle == Transition.complete;
 		}
-		count.dfg.addEndActivities(activityOccurrencesEndedSinceLastStart);
+		count.dfg.getEndActivities().addAll(activityOccurrencesEndedSinceLastStart);
 	}
 
 	private static void processParallel(IMLog log, IMTraceIterator it, Count count) {
@@ -120,7 +117,7 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 
 		for (it.itEventReset(); it.itEventHasNext();) {
 			it.itEventNext();
-			int activity = count.normaliser.add(it.itEventGetActivityIndex());
+			int activity = it.itEventGetActivityIndex();
 			Transition lifeCycle = it.itEventGetLifeCycleTransition();
 
 			switch (lifeCycle) {
@@ -130,7 +127,7 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 
 					//this activity occurrence is parallel to all open activity occurrences
 					for (int eventClass2 : openActivityOccurrences) {
-						count.dfg.addParallelEdge(activity, eventClass2,
+						count.dfg.getConcurrencyGraph().addEdge(activity, eventClass2,
 								openActivityOccurrences.getCardinalityOf(eventClass2));
 					}
 					break;
@@ -153,8 +150,10 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 		int i = 0;
 		for (it.itEventReset(); it.itEventHasNext();) {
 			it.itEventNext();
-			int activity = count.normaliser.add(it.itEventGetActivityIndex());
+			int activity = it.itEventGetActivityIndex();
 			Transition lifeCycle = it.itEventGetLifeCycleTransition();
+			
+			count.dfg.touchActivity(activity);
 
 			//this is a start event if the log says so, or if we see a complete without corresponding preceding start event. 
 			boolean isStartEvent = lifeCycle == Transition.start || !openActivityInstances.contains(activity);
@@ -167,7 +166,7 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 			}
 			if (isCompleteEvent && count != null) {
 				//this is a complete event, add it to the activities
-				count.activities.add(activity);
+				count.dfg.addActivity(activity);
 			}
 
 			//update the open activity instances
@@ -195,12 +194,12 @@ public class IMLog2IMLogInfoLifeCycle implements IMLog2IMLogInfo {
 		while (it.itEventHasPrevious()) {
 			i--;
 			it.itEventPrevious();
-			int activity = count.normaliser.add(it.itEventGetActivityIndex());
+			int activity = it.itEventGetActivityIndex();
 			Transition lifeCycle = it.itEventGetLifeCycleTransition();
 
 			if (lifeCycle == Transition.complete) {
 				completes.add(activity);
-				count.dfg.addDirectlyFollowsEdge(activity, target, 1);
+				count.dfg.getDirectlyFollowsGraph().addEdge(activity, target, 1);
 			}
 			if (isStart[i] && completes.contains(activity)) {
 				return;

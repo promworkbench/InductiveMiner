@@ -36,9 +36,9 @@ public class FallThroughActivityOncePerTraceConcurrent implements FallThrough {
 	}
 
 	public EfficientTree fallThrough(IMLog log, IMLogInfo logInfo, MinerState minerState) {
-		if (logInfo.getNumberOfActivities() > 1) {
+		if (logInfo.getDfg().getNumberOfActivities() > 1) {
 
-			int[] activities = logInfo.getActivityMultiSet().sortByCardinality();
+			int[] activities = logInfo.getDfg().getActivities().sortByCardinality();
 			for (int activity : activities) {
 
 				/*
@@ -47,7 +47,7 @@ public class FallThroughActivityOncePerTraceConcurrent implements FallThrough {
 				 * occurs precisely once in each trace.
 				 */
 
-				long cardinality = logInfo.getActivityMultiSet().getCardinalityOf(activity);
+				long cardinality = logInfo.getDfg().getActivities().getCardinalityOf(activity);
 				long epsilon = logInfo.getDfg().getNumberOfEmptyTraces();
 				boolean x = epsilon == 0 && cardinality == logInfo.getNumberOfTraces();
 
@@ -69,7 +69,6 @@ public class FallThroughActivityOncePerTraceConcurrent implements FallThrough {
 					List<TIntSet> partition = new ArrayList<>();
 					partition.add(sigma0);
 					partition.add(sigma1);
-					partition = logInfo.getNormaliser().deNormalise(partition);
 
 					//split log
 					IMLog[] logSplitResult = minerState.parameters.splitLogConcurrent(log, logInfo, partition,

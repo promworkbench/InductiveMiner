@@ -3,9 +3,8 @@ package org.processmining.plugins.inductiveminer2.framework.fallthroughs;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
 import org.processmining.plugins.InductiveMiner.efficienttree.InlineTree;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier.Transition;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
 import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserInt;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.logs.IMTraceIterator;
@@ -16,11 +15,11 @@ public class FallThroughTauLoop implements FallThrough {
 
 	public EfficientTree fallThrough(IMLog log, IMLogInfo logInfo, MinerState minerState) {
 
-		if (logInfo.getActivities().length > 1) {
+		if (logInfo.getDfg().getActivities().setSize() > 1) {
 
 			//try to find a tau loop
 			IMLog sublog = log.clone();
-			filterTraces(sublog, logInfo.getDfg(), logInfo.getNormaliser());
+			filterTraces(sublog, logInfo.getDfg());
 
 			if (sublog.size() > log.size()) {
 				InductiveMiner.debug(" fall through: tau loop", minerState);
@@ -39,7 +38,7 @@ public class FallThroughTauLoop implements FallThrough {
 		return null;
 	}
 
-	public static void filterTraces(IMLog log, NormalisedIntDfg dfg, NormaliserInt normaliser) {
+	public static void filterTraces(IMLog log, IntDfg dfg) {
 		for (IMTraceIterator it = log.iterator(); it.hasNext();) {
 			it.nextFast();
 			boolean first = true;
@@ -50,7 +49,7 @@ public class FallThroughTauLoop implements FallThrough {
 				it.itEventNext();
 				int activity = it.itEventGetActivityIndex();
 
-				if (!first && dfg.isStartActivity(normaliser.toNormal(activity))) {
+				if (!first && dfg.getStartActivities().contains(activity)) {
 					//we discovered a transition body -> body
 					//check whether there are no open activity instances
 					if (openActivityInstances.size() == 0) {

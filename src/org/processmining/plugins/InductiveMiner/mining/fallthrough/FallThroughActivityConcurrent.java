@@ -84,7 +84,7 @@ public class FallThroughActivityConcurrent implements FallThrough {
 						partition.add(Sets.complement(leaveOutSet, logInfo.getActivities().toSet()));
 						Cut cut = new Cut(Operator.concurrent, partition);
 
-						Miner.debug("  try cut " + cut, minerState);
+						Miner.debug("  try concurrent cut " + cut, minerState);
 
 						//see if a cut applies
 						//for performance reasons, only on the directly follows graph

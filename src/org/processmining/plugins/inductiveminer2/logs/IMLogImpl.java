@@ -10,6 +10,7 @@ import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier
 
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 import gnu.trove.strategy.HashingStrategy;
 
 public class IMLogImpl implements IMLog {
@@ -187,6 +188,7 @@ public class IMLogImpl implements IMLog {
 		}
 
 		result.index2activity = ArrayUtils.copyOf(index2activity, index2activity.length);
+		result.activity2index = new TObjectIntHashMap<>(10, 0.5f, -1); 
 		result.activity2index.putAll(activity2index);
 
 		return result;
@@ -213,9 +215,10 @@ public class IMLogImpl implements IMLog {
 		if (activityIndex == activity2index.getNoEntryValue()) {
 			//new activity
 			activityIndex = activity2index.size() - 1;
+
+			index2activity = ArrayUtils.copyOf(index2activity, index2activity.length + 1);
+			index2activity[index2activity.length - 1] = activityName;
 		}
-		index2activity = ArrayUtils.copyOf(index2activity, index2activity.length + 1);
-		index2activity[index2activity.length - 1] = activityName;
 		return activityIndex;
 	}
 
@@ -252,6 +255,8 @@ public class IMLogImpl implements IMLog {
 			result.append(getActivityIndex(events[traceIndex][event]));
 			result.append(" ");
 			result.append(getActivity(getActivityIndex(events[traceIndex][event])));
+			result.append(" ");
+			result.append(getLifeCycleTransition(events[traceIndex][event]) == Transition.complete ? "co" : "st");
 			if (event < events[traceIndex].length - 1) {
 				result.append(", ");
 			}

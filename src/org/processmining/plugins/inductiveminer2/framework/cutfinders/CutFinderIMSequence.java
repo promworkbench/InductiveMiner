@@ -15,9 +15,8 @@ import org.processmining.plugins.InductiveMiner.graphs.Graph;
 import org.processmining.plugins.InductiveMiner.graphs.GraphFactory;
 import org.processmining.plugins.InductiveMiner.mining.cuts.Cut.Operator;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IM.CutFinderIMSequenceReachability;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntStronglyConnectedComponents;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserInt;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
+import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntStronglyConnectedComponents;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
@@ -30,80 +29,23 @@ import gnu.trove.set.TIntSet;
 public class CutFinderIMSequence implements CutFinder {
 
 	public Cut findCut(IMLog log, IMLogInfo logInfo, MinerState minerState) {
-		return findCut(logInfo.getDfg(), logInfo.getNormaliser(), minerState);
+		return findCut(logInfo.getDfg(), minerState);
 	}
 
-	public static Cut findCut(NormalisedIntDfg dfg, NormaliserInt normaliser, MinerState minerState) {
+	public static Cut findCut(IntDfg dfg, MinerState minerState) {
 
-		//compute the strongly connected components of the directly follows graph
-		Set<TIntSet> SCCs = NormalisedIntStronglyConnectedComponents.compute(dfg.getDirectlyFollowsGraph(),
-				normaliser.getNumberOfActivities());
-
-		//condense the strongly connected components
-		Graph<TIntSet> condensedGraph1 = GraphFactory.create(TIntSet.class, SCCs.size());
-		{
-
-			//15-3-2016: optimisation to look up strongly connected components faster
-			final TIntIntMap node2sccIndex = new TIntIntHashMap();
-			{
-				int i = 0;
-				for (TIntSet scc : SCCs) {
-					final int i2 = i;
-					scc.forEach(new TIntProcedure() {
-						public boolean execute(int value) {
-							node2sccIndex.put(value, i2);
-							return true;
-						}
-					});
-					i++;
-				}
-			}
-
-			//add vertices (= components)
-			for (TIntSet SCC : SCCs) {
-				condensedGraph1.addVertex(SCC);
-			}
-			//add edges
-			for (long edge : dfg.getDirectlyFollowsGraph().getEdges()) {
-				if (dfg.getDirectlyFollowsGraph().getEdgeWeight(edge) >= 0) {
-					//find the connected components belonging to these nodes
-					int u = dfg.getDirectlyFollowsGraph().getEdgeSourceIndex(edge);
-					int SCCu = node2sccIndex.get(u);
-					int v = dfg.getDirectlyFollowsGraph().getEdgeTargetIndex(edge);
-					int SCCv = node2sccIndex.get(v);
-
-					//add an edge if it is not internal
-					if (SCCv != SCCu) {
-						condensedGraph1.addEdge(SCCu, SCCv, 1); //this returns null if the edge was already present
-					}
-				}
-			}
+		//compute and merge the strongly connected components of the directly follows graph
+		Set<TIntSet> SCCs = IntStronglyConnectedComponents.compute(dfg.getDirectlyFollowsGraph());
+		Graph<TIntSet> condensedGraph1 = condenseGraph(dfg, SCCs);
+		
+		if (SCCs.size() == 1) {
+			return null;
 		}
 
 		//InductiveMiner.debug("  nodes in condensed graph 1 " + condensedGraph1.getVertices(), minerState);
 
 		//condense the pairwise unreachable nodes
-		Collection<Set<TIntSet>> xorCondensedNodes;
-		{
-			Components<TIntSet> components = new Components<>(condensedGraph1.getVertices());
-			CutFinderIMSequenceReachability scr1 = new CutFinderIMSequenceReachability(condensedGraph1);
-
-			for (int node : condensedGraph1.getVertexIndices()) {
-				TIntSet reachableFromTo = scr1.getReachableFromTo(node);
-
-				//InductiveMiner.debug("  nodes pairwise reachable from/to " + node + ": " + reachableFromTo.toString(),minerState);
-
-				for (int node2 : condensedGraph1.getVertexIndices()) {
-					if (node != node2 && !reachableFromTo.contains(node2)) {
-						components.mergeComponentsOf(node, node2);
-					}
-				}
-
-			}
-
-			//find the connected components to find the condensed xor nodes
-			xorCondensedNodes = components.getComponents();
-		}
+		Collection<Set<TIntSet>> xorCondensedNodes = condenseXor(condensedGraph1);
 
 		//InductiveMiner.debug("  sccs before xormerge " + xorCondensedNodes.toString(), minerState);
 
@@ -168,9 +110,77 @@ public class CutFinderIMSequence implements CutFinder {
 		//InductiveMiner.debug("  sccs after pivot merge " + newCut.getPartition().toString(), minerState);
 
 		if (newCut.isValid()) {
-			return normaliser.deNormalise(newCut);
+			return newCut;
 		} else {
-			return new Cut(Operator.sequence, normaliser.deNormalise(result));
+			return new Cut(Operator.sequence, result);
 		}
+	}
+
+	private static Collection<Set<TIntSet>> condenseXor(Graph<TIntSet> condensedGraph1) {
+		Collection<Set<TIntSet>> xorCondensedNodes;
+		{
+			Components<TIntSet> components = new Components<>(condensedGraph1.getVertices());
+			CutFinderIMSequenceReachability scr1 = new CutFinderIMSequenceReachability(condensedGraph1);
+
+			for (int node : condensedGraph1.getVertexIndices()) {
+				TIntSet reachableFromTo = scr1.getReachableFromTo(node);
+
+				//InductiveMiner.debug("  nodes pairwise reachable from/to " + node + ": " + reachableFromTo.toString(),minerState);
+
+				for (int node2 : condensedGraph1.getVertexIndices()) {
+					if (node != node2 && !reachableFromTo.contains(node2)) {
+						components.mergeComponentsOf(node, node2);
+					}
+				}
+
+			}
+
+			//find the connected components to find the condensed xor nodes
+			xorCondensedNodes = components.getComponents();
+		}
+		return xorCondensedNodes;
+	}
+
+	private static Graph<TIntSet> condenseGraph(IntDfg dfg, Set<TIntSet> SCCs) {
+		Graph<TIntSet> result = GraphFactory.create(TIntSet.class, SCCs.size());
+		{
+
+			//15-3-2016: optimisation to look up strongly connected components faster
+			final TIntIntMap node2sccIndex = new TIntIntHashMap();
+			{
+				int i = 0;
+				for (TIntSet scc : SCCs) {
+					final int i2 = i;
+					scc.forEach(new TIntProcedure() {
+						public boolean execute(int value) {
+							node2sccIndex.put(value, i2);
+							return true;
+						}
+					});
+					i++;
+				}
+			}
+
+			//add vertices (= components)
+			for (TIntSet SCC : SCCs) {
+				result.addVertex(SCC);
+			}
+			//add edges
+			for (long edge : dfg.getDirectlyFollowsGraph().getEdges()) {
+				if (dfg.getDirectlyFollowsGraph().getEdgeWeight(edge) >= 0) {
+					//find the connected components belonging to these nodes
+					int u = dfg.getDirectlyFollowsGraph().getEdgeSource(edge);
+					int SCCu = node2sccIndex.get(u);
+					int v = dfg.getDirectlyFollowsGraph().getEdgeTarget(edge);
+					int SCCv = node2sccIndex.get(v);
+
+					//add an edge if it is not internal
+					if (SCCv != SCCu) {
+						result.addEdge(SCCu, SCCv, 1); //this returns null if the edge was already present
+					}
+				}
+			}
+		}
+		return result;
 	}
 }

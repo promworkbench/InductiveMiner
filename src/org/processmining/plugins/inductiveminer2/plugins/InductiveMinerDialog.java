@@ -22,8 +22,10 @@ import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
 import org.processmining.plugins.inductiveminer2.variants.InductiveMinerVariant;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIM;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequent;
+import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequentLifeCycle;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequentPartialTraces;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMInfrequentPartialTracesAli;
+import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMLifeCycle;
 import org.processmining.plugins.inductiveminer2.variants.MiningParametersIMPartialTraces;
 
 import com.fluxicon.slickerbox.factory.SlickerFactory;
@@ -34,6 +36,8 @@ public class InductiveMinerDialog extends JPanel {
 	public InductiveMinerVariant[] variants = new InductiveMinerVariant[] { //
 			new MiningParametersIM(), //
 			new MiningParametersIMInfrequent(), //
+			new MiningParametersIMLifeCycle(), //
+			new MiningParametersIMInfrequentLifeCycle(), //
 			new MiningParametersIMPartialTraces(), //
 			new MiningParametersIMInfrequentPartialTraces(), //
 			new MiningParametersIMInfrequentPartialTracesAli() };

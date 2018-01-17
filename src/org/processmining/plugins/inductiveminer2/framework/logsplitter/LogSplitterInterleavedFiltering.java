@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntComponents;
+import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntComponents;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMEventIterator;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
@@ -21,7 +21,7 @@ public class LogSplitterInterleavedFiltering implements LogSplitter {
 	}
 
 	public static IMLog[] split(IMLog log, List<TIntSet> partition, MinerState minerState) {
-		NormalisedIntComponents components = new NormalisedIntComponents(partition);
+		IntComponents components = new IntComponents(partition);
 		IMLog[] sublogs = new IMLog[components.getNumberOfComponents()];
 		List<IMTraceIterator> iterators = new ArrayList<>(components.getNumberOfComponents());
 		for (int i = 0; i < components.getNumberOfComponents(); i++) {
@@ -62,8 +62,7 @@ public class LogSplitterInterleavedFiltering implements LogSplitter {
 	 * 
 	 * @param result
 	 */
-	private static void findChild(int[] result, int from, int to, NormalisedIntComponents components, IMTrace trace,
-			IMLog log) {
+	private static void findChild(int[] result, int from, int to, IntComponents components, IMTrace trace, IMLog log) {
 		//get the maximum sublist
 		int maxRunValue = 0;
 		int maxRunComponent = 0;

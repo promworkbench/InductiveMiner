@@ -3,8 +3,8 @@ package org.processmining.plugins.inductiveminer2.framework.cutfinders;
 import java.util.Arrays;
 import java.util.List;
 
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntComponents;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
+import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntComponents;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
 
 import gnu.trove.map.TIntObjectMap;
@@ -15,7 +15,7 @@ import gnu.trove.set.TIntSet;
 
 public class CutFinderIMSequenceStrict {
 
-	public static List<TIntSet> merge(NormalisedIntDfg dfg, List<TIntSet> partition, MinerState minerState) {
+	public static List<TIntSet> merge(IntDfg dfg, List<TIntSet> partition, MinerState minerState) {
 
 		if (partition.size() == 2) {
 			return partition;
@@ -26,7 +26,7 @@ public class CutFinderIMSequenceStrict {
 		 * be ignored).
 		 */
 
-		NormalisedIntComponents components = new NormalisedIntComponents(partition);
+		IntComponents components = new IntComponents(partition);
 
 		//make a mapping node -> subCut
 		//initialise counting of taus
@@ -47,23 +47,23 @@ public class CutFinderIMSequenceStrict {
 			Arrays.fill(edgeMinFrom, Integer.MAX_VALUE);
 			Arrays.fill(edgeMaxTo, Integer.MIN_VALUE);
 
-			for (int activity : dfg.getStartActivityIndices()) {
+			for (int activity : dfg.getStartActivities()) {
 				edgeMinFrom[components.getComponentOf(activity)] = Integer.MIN_VALUE;
 				for (int i = 0; i < components.getComponentOf(activity); i++) {
 					hasSkippingEdges[i] = true;
 				}
 			}
 
-			for (int activity : dfg.getEndActivityIndices()) {
+			for (int activity : dfg.getEndActivities()) {
 				edgeMaxTo[components.getComponentOf(activity)] = Integer.MAX_VALUE;
 				for (int i = components.getComponentOf(activity) + 1; i < partition.size(); i++) {
 					hasSkippingEdges[i] = true;
 				}
 			}
 
-			for (long edge : dfg.getDirectlyFollowsEdges()) {
-				int source = components.getComponentOf(dfg.getDirectlyFollowsEdgeSourceIndex(edge));
-				int target = components.getComponentOf(dfg.getDirectlyFollowsEdgeTargetIndex(edge));
+			for (long edge : dfg.getDirectlyFollowsGraph().getEdges()) {
+				int source = components.getComponentOf(dfg.getDirectlyFollowsGraph().getEdgeSource(edge));
+				int target = components.getComponentOf(dfg.getDirectlyFollowsGraph().getEdgeTarget(edge));
 
 				edgeMinFrom[target] = Math.min(edgeMinFrom[target], source);
 				edgeMaxTo[source] = Math.max(edgeMaxTo[source], target);

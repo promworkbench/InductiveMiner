@@ -1,13 +1,12 @@
 package org.processmining.plugins.inductiveminer2.framework.cutfinders;
 
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserInt;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
 
 public class DfgCutFinderSimple implements DfgCutFinder {
 
-	public Cut findCut(NormalisedIntDfg dfg, NormaliserInt normaliser, MinerState minerState) {
-		Cut cut = CutFinderIMExclusiveChoice.findCut(dfg, normaliser);
+	public Cut findCut(IntDfg dfg, MinerState minerState) {
+		Cut cut = CutFinderIMExclusiveChoice.findCut(dfg);
 
 		if (cut != null) {
 			return cut;
@@ -17,7 +16,7 @@ public class DfgCutFinderSimple implements DfgCutFinder {
 			return null;
 		}
 
-		cut = CutFinderIMSequence.findCut(dfg, normaliser, minerState);
+		cut = CutFinderIMSequence.findCut(dfg, minerState);
 
 		if (cut != null) {
 			return cut;
@@ -27,7 +26,7 @@ public class DfgCutFinderSimple implements DfgCutFinder {
 			return null;
 		}
 
-		cut = CutFinderIMConcurrent.findCut(dfg, normaliser, null);
+		cut = CutFinderIMConcurrent.findCut(dfg, null);
 
 		if (cut != null) {
 			return cut;
@@ -37,7 +36,7 @@ public class DfgCutFinderSimple implements DfgCutFinder {
 			return null;
 		}
 
-		return CutFinderIMLoop.findCut(dfg, normaliser);
+		return CutFinderIMLoop.findCut(dfg);
 	}
 
 }

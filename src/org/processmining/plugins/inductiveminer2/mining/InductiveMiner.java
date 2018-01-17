@@ -18,7 +18,6 @@ import org.processmining.plugins.inductiveminer2.framework.postprocessor.PostPro
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 
-import cern.colt.Arrays;
 import gnu.trove.procedure.TIntProcedure;
 import gnu.trove.set.TIntSet;
 
@@ -81,7 +80,7 @@ public class InductiveMiner {
 
 		//output information about the log
 		debug("\nMine epsilon=" + logInfo.getDfg().getNumberOfEmptyTraces() + ", "
-				+ Arrays.toString(logInfo.getActivities()), minerState);
+				+ logInfo.getDfg().getActivities().toString(), minerState);
 		debug(log, minerState);
 
 		//find base cases

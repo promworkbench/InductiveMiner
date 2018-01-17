@@ -47,7 +47,7 @@ public class FallThroughActivityConcurrent implements FallThrough {
 
 	public EfficientTree fallThrough(final IMLog log, final IMLogInfo logInfo, final MinerState minerState) {
 
-		if (logInfo.getActivities().length < 3) {
+		if (logInfo.getDfg().getActivities().setSize() < 3) {
 			return null;
 		}
 
@@ -58,7 +58,7 @@ public class FallThroughActivityConcurrent implements FallThrough {
 
 		JobList jobList = new JobListConcurrent(minerState.getMinerPool());
 
-		for (int leaveOutActivity : logInfo.getActivities()) {
+		for (int leaveOutActivity : logInfo.getDfg().getActivities()) {
 			//leave out a single activity and try whether that gives a valid cut
 
 			final int leaveOutActivity2 = leaveOutActivity;
@@ -76,13 +76,13 @@ public class FallThroughActivityConcurrent implements FallThrough {
 						leaveOutSet.add(leaveOutActivity2);
 						List<TIntSet> partition = new ArrayList<>();
 						partition.add(leaveOutSet);
-						partition.add(Sets.complement(leaveOutSet, logInfo.getActivities()));
+						partition.add(Sets.complement(leaveOutSet, logInfo.getDfg().getActivities().toSet().toArray()));
 
 						InductiveMiner.debug("  try cut " + partition, minerState);
 
 						//see if a cut applies
 						//for performance reasons, only on the directly follows graph
-						Cut cut2 = dfgCutFinder.findCut(logInfo.getDfg(), logInfo.getNormaliser(), minerState);
+						Cut cut2 = dfgCutFinder.findCut(logInfo.getDfg(), minerState);
 
 						if (minerState.isCancelled()) {
 							return;

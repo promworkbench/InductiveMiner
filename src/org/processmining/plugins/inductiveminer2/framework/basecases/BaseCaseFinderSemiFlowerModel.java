@@ -11,12 +11,13 @@ public class BaseCaseFinderSemiFlowerModel implements BaseCaseFinder {
 
 	public EfficientTree findBaseCases(IMLog log, IMLogInfo logInfo, MinerState minerState) {
 
-		if (logInfo.getActivities().length == 1 && logInfo.getDfg().getNumberOfEmptyTraces() == 0) {
+		if (logInfo.getDfg().getNumberOfActivities() == 1 && logInfo.getDfg().getNumberOfEmptyTraces() == 0) {
 			//single activity in semi-flower model
 
 			InductiveMiner.debug(" base case: single activity semi-flower model", minerState);
 
-			EfficientTree activity = InlineTree.leaf(log.getActivity(logInfo.getActivities()[0]));
+			EfficientTree activity = InlineTree
+					.leaf(log.getActivity(logInfo.getDfg().getActivities().iterator().next()));
 			return InlineTree.loop(activity, InlineTree.tau(), InlineTree.tau());
 		}
 

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinder;
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderEmptyLog;
 import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFinderEmptyTraces;
@@ -13,12 +14,15 @@ import org.processmining.plugins.inductiveminer2.framework.basecases.BaseCaseFin
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.CutFinder;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.Filter;
+import org.processmining.plugins.inductiveminer2.framework.fallthroughs.FallThrough;
+import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfo;
+import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfoLifeCycle;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.InductiveMiner;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
 
-public class MiningParametersIMInfrequent extends MiningParametersIM {
+public class MiningParametersIMInfrequentLifeCycle extends MiningParametersIM {
 
 	public static final List<BaseCaseFinder> filteringBaseCases = Collections
 			.unmodifiableList(Arrays.asList(new BaseCaseFinder[] { //
@@ -36,13 +40,13 @@ public class MiningParametersIMInfrequent extends MiningParametersIM {
 		}
 	};
 
-	private static final List<BaseCaseFinder> baseCaseFinders = new ArrayList<>();
+	protected static final List<BaseCaseFinder> baseCaseFinders = new ArrayList<>();
 	static {
 		baseCaseFinders.addAll(filteringBaseCases);
 		baseCaseFinders.addAll(basicBaseCaseFinders);
 	}
 
-	private static final List<CutFinder> cutFinders = new ArrayList<>();
+	protected static final List<CutFinder> cutFinders = new ArrayList<>();
 	static {
 		cutFinders.addAll(basicCutFinders);
 		cutFinders.add(filteringCutFinders);
@@ -57,10 +61,30 @@ public class MiningParametersIMInfrequent extends MiningParametersIM {
 	public List<CutFinder> getCutFinders() {
 		return cutFinders;
 	}
+	
+	@Override
+	public XLifeCycleClassifier getLifeCycleClassifier() {
+		return MiningParametersIMLifeCycle.lifeCycleClassifier;
+	}
+
+	@Override
+	public boolean isRepairLifeCycles() {
+		return true;
+	}
+
+	@Override
+	public List<FallThrough> getFallThroughs() {
+		return MiningParametersIMLifeCycle.lifeCycleFallthroughs;
+	}
+
+	@Override
+	public IMLog2IMLogInfo getLog2LogInfo() {
+		return new IMLog2IMLogInfoLifeCycle();
+	}
 
 	@Override
 	public String toString() {
-		return "Inductive Miner - infrequent   (IMf)";
+		return "Inductive Miner - infrequent & life cycle   (IMflc)";
 	}
 
 	@Override
@@ -80,6 +104,6 @@ public class MiningParametersIMInfrequent extends MiningParametersIM {
 
 	@Override
 	public String getDoi() {
-		return "http://dx.doi.org/10.1007/978-3-319-06257-0_6";
+		return "https://doi.org/10.1007/978-3-319-42887-1_17";
 	}
 }

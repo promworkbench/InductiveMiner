@@ -1,9 +1,8 @@
 package org.processmining.plugins.inductiveminer2.loginfo;
 
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfgImpl;
 import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfgImpl;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserIntImpl;
 import org.processmining.plugins.inductiveminer2.logs.IMEventIterator;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.logs.IMLogImplPartialTraces;
@@ -25,9 +24,7 @@ public class IMLog2IMLogInfoPartialTraces implements IMLog2IMLogInfo {
 		assert (log instanceof IMLogImplPartialTraces);
 
 		//initialise, read the log
-		NormaliserIntImpl normaliser = new NormaliserIntImpl();
-		NormalisedIntDfg dfg = new NormalisedIntDfgImpl();
-		MultiIntSet activities = new MultiIntSet();
+		IntDfg dfg = new IntDfgImpl();
 		TIntIntHashMap minimumSelfDistances = IMLogInfo.createEmptyMinimumSelfDistancesMap();
 		TIntObjectMap<MultiIntSet> minimumSelfDistancesBetween = IMLogInfo.createEmptyMinimumSelfDistancesBetweenMap();
 		long numberOfEvents = 0;
@@ -51,9 +48,8 @@ public class IMLog2IMLogInfoPartialTraces implements IMLog2IMLogInfo {
 
 			for (IMEventIterator it = trace.iterator(); it.hasNext();) {
 				it.nextFast();
-				int ec = normaliser.add(it.getActivityIndex());
+				int ec = it.getActivityIndex();
 
-				activities.add(ec);
 				dfg.addActivity(ec);
 
 				fromEventClass = toEventClass;
@@ -89,12 +85,12 @@ public class IMLog2IMLogInfoPartialTraces implements IMLog2IMLogInfo {
 				{
 					if (fromEventClass >= 0) {
 						//add edge to directly follows graph
-						dfg.addDirectlyFollowsEdge(fromEventClass, toEventClass, 1);
+						dfg.getDirectlyFollowsGraph().addEdge(fromEventClass, toEventClass, 1);
 					} else {
 						//add edge to start activities
 
 						if (((IMLogImplPartialTraces) log).isStartReliable(trace.getTraceIndex())) {
-							dfg.addStartActivity(toEventClass, 1);
+							dfg.getStartActivities().add(toEventClass, 1);
 						}
 					}
 				}
@@ -108,7 +104,7 @@ public class IMLog2IMLogInfoPartialTraces implements IMLog2IMLogInfo {
 			//process end activities
 			if (toEventClass >= 0) {
 				if (((IMLogImplPartialTraces) log).isEndReliable(trace.getTraceIndex())) {
-					dfg.addEndActivity(toEventClass, 1);
+					dfg.getEndActivities().add(toEventClass, 1);
 				}
 			}
 
@@ -123,7 +119,7 @@ public class IMLog2IMLogInfoPartialTraces implements IMLog2IMLogInfo {
 			}
 		}
 
-		return new IMLogInfo(normaliser, dfg, activities, minimumSelfDistancesBetween, minimumSelfDistances, numberOfEvents,
+		return new IMLogInfo(dfg, minimumSelfDistancesBetween, minimumSelfDistances, numberOfEvents,
 				numberOfActivityInstances, log.size() - removedEmptyTraces);
 	}
 

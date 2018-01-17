@@ -11,4 +11,8 @@ public class Arrays {
 		}
 		throw new ArrayIndexOutOfBoundsException();
 	}
+
+	public static boolean containsSorted(int[] array, int value) {
+		return java.util.Arrays.binarySearch(array, value) >= 0;
+	}
 }

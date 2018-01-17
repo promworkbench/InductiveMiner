@@ -1,26 +1,16 @@
 package org.processmining.plugins.inductiveminer2.loginfo;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
 import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormalisedIntDfg;
-import org.processmining.plugins.inductiveminer2.helperclasses.normalised.NormaliserInt;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 
-import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.procedure.TIntProcedure;
-import gnu.trove.set.TIntSet;
 
 public class IMLogInfo {
 
-	private NormaliserInt normaliser;
-
-	protected final NormalisedIntDfg dfg;
-
-	protected final MultiIntSet activities;
+	protected final IntDfg dfg;
 
 	protected final TIntObjectMap<MultiIntSet> minimumSelfDistancesBetween; //index -> (index^2)
 	protected final TIntIntHashMap minimumSelfDistances; //index -> minimum self distance
@@ -51,12 +41,10 @@ public class IMLogInfo {
 	 * @param numberOfActivityInstances
 	 * @param numberOfTraces
 	 */
-	public IMLogInfo(NormaliserInt normaliser, NormalisedIntDfg directlyFollowsGraph, MultiIntSet activities,
-			TIntObjectMap<MultiIntSet> minimumSelfDistancesBetween, TIntIntHashMap minimumSelfDistances,
-			long numberOfEvents, long numberOfActivityInstances, long numberOfTraces) {
-		this.normaliser = normaliser;
+	public IMLogInfo(IntDfg directlyFollowsGraph, TIntObjectMap<MultiIntSet> minimumSelfDistancesBetween,
+			TIntIntHashMap minimumSelfDistances, long numberOfEvents, long numberOfActivityInstances,
+			long numberOfTraces) {
 		this.dfg = directlyFollowsGraph;
-		this.activities = activities;
 		this.minimumSelfDistancesBetween = minimumSelfDistancesBetween;
 		this.minimumSelfDistances = minimumSelfDistances;
 		this.numberOfEvents = numberOfEvents;
@@ -64,33 +52,8 @@ public class IMLogInfo {
 		this.numberOfTraces = numberOfTraces;
 	}
 
-	public NormaliserInt getNormaliser() {
-		return normaliser;
-	}
-
-	public NormalisedIntDfg getDfg() {
+	public IntDfg getDfg() {
 		return dfg;
-	}
-
-	public MultiIntSet getNormalisedActivities() {
-		return activities;
-	}
-
-	public int[] getActivities() {
-		int[] result = new int[activities.toSet().size()];
-		TIntIterator it = activities.toSet().iterator();
-		for (int i = 0; i < activities.toSet().size(); i++) {
-			result[i] = normaliser.deNormalise(it.next());
-		}
-		return result;
-	}
-	
-	public MultiIntSet getActivityMultiSet() {
-		return activities;
-	}
-
-	public int getNumberOfActivities() {
-		return activities.toSet().size();
 	}
 
 	public TIntObjectMap<MultiIntSet> getMinimumSelfDistancesBetween() {
@@ -137,16 +100,12 @@ public class IMLogInfo {
 		return numberOfTraces;
 	}
 
-	public String[] getActivityNames(final IMLog log, final NormaliserInt normaliser) {
-		TIntSet set = activities.toSet();
-		final String[] result = new String[set.size()];
-		final AtomicInteger i = new AtomicInteger(0);
-		set.forEach(new TIntProcedure() {
-			public boolean execute(int value) {
-				result[i.getAndIncrement()] = log.getActivity(normaliser.deNormalise(value));
-				return true;
-			}
-		});
+	public String[] getActivityNames(final IMLog log) {
+		int[] set = dfg.getActivities().toSet().toArray();
+		final String[] result = new String[set.length];
+		for (int i = 0; i < set.length; i++) {
+			result[i] = log.getActivity(set[i]);
+		}
 		return result;
 	}
 

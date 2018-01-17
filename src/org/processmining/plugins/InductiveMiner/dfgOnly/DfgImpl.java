@@ -494,4 +494,12 @@ public class DfgImpl implements Dfg {
 			addEndActivity(a, activities.getCardinalityOf(a));
 		}
 	}
+
+	public MultiIntSet getActivityMultiSet() {
+		return null;
+	}
+
+	public int[] getActivitiesIndices() {
+		return null;
+	}
 }

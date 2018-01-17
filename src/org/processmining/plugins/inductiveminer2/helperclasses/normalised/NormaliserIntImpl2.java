@@ -11,7 +11,7 @@ import gnu.trove.procedure.TIntProcedure;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-public class NormaliserIntImpl implements NormaliserInt {
+public class NormaliserIntImpl2 implements NormaliserInt2 {
 
 	private TIntIntHashMap vertex2normalIndex = new TIntIntHashMap(10, 0.5f, Integer.MIN_VALUE, Integer.MIN_VALUE);
 	private TIntArrayList normalIndex2vertex = new TIntArrayList();
@@ -57,10 +57,10 @@ public class NormaliserIntImpl implements NormaliserInt {
 		return new Cut(newCut.getOperator(), deNormalise(newCut.getPartition()));
 	}
 
-	public NormaliserIntImpl clone() {
-		NormaliserIntImpl result;
+	public NormaliserIntImpl2 clone() {
+		NormaliserIntImpl2 result;
 		try {
-			result = (NormaliserIntImpl) super.clone();
+			result = (NormaliserIntImpl2) super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
