@@ -20,12 +20,12 @@ public class EfficientTreeReducePlugin {
 	@PluginVariant(variantLabel = "Reduce Efficient Tree Language-equivalently, default", requiredParameterLabels = {
 			0 })
 	public EfficientTree reduceTree(PluginContext context, EfficientTree tree)
-			throws UnknownTreeNodeException, ReductionFailedException {
+			throws UnknownTreeNodeException, ReductionFailedException, CloneNotSupportedException {
 		return reduceTree(tree, new EfficientTreeReduceParametersForPetriNet(false));
 	}
 
 	public static EfficientTree reduceTree(EfficientTree tree, EfficientTreeReduceParameters reduceParameters)
-			throws UnknownTreeNodeException, ReductionFailedException {
+			throws UnknownTreeNodeException, ReductionFailedException, CloneNotSupportedException {
 		EfficientTree result = tree.clone();
 		EfficientTreeReduce.reduce(result, reduceParameters);
 		return result;
