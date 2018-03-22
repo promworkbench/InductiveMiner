@@ -60,7 +60,7 @@ public interface IMTraceIterator extends Iterator<IMTrace>, Cloneable {
 	 * value. The caller is responsible to also add the new value to the list of
 	 * activities.
 	 * 
-	 * @param replaceWith
+	 * @param activity
 	 */
 	public void itEventSetActivityIndex(int activity);
 
@@ -97,7 +97,7 @@ public interface IMTraceIterator extends Iterator<IMTrace>, Cloneable {
 	public void itEventSetLifeCycleTransition(Transition transition);
 
 	/**
-	 * @see IMLog.splitTrace()
+	 * see IMLog.splitTrace()
 	 * @return the index of the inserted trace.
 	 */
 	public int itEventSplit();

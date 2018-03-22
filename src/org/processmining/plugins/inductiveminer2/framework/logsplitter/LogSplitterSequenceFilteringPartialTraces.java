@@ -140,7 +140,7 @@ public class LogSplitterSequenceFilteringPartialTraces implements LogSplitter {
 	/**
 	 * Progress all trace iterators
 	 * 
-	 * @param mapSigma2Trace
+	 * @param mapSigma2TraceIterator
 	 * @return
 	 */
 	public static Map<TIntSet, IMTrace> progress(Map<TIntSet, IMTraceIterator> mapSigma2TraceIterator) {

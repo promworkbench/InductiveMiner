@@ -31,10 +31,7 @@ public class IMLogInfo {
 	 * Construct a log-info object. Please use the provided "createEmpty..."
 	 * functions to initialise the required hash maps.
 	 * 
-	 * @param normaliser
-	 * 
 	 * @param directlyFollowsGraph
-	 * @param activities
 	 * @param minimumSelfDistancesBetween
 	 * @param minimumSelfDistances
 	 * @param numberOfEvents
@@ -75,7 +72,7 @@ public class IMLogInfo {
 
 	/**
 	 * 
-	 * @return A map activity index -> minimum self-distance
+	 * @return A map activity index to minimum self-distance
 	 */
 	public TIntIntHashMap getMinimumSelfDistances() {
 		return minimumSelfDistances;

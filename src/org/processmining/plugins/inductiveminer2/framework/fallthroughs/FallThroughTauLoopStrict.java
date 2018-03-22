@@ -38,7 +38,7 @@ public class FallThroughTauLoopStrict implements FallThrough {
 	}
 
 	/**
-	 * Split the trace on a crossing end -> start
+	 * Split the trace on a crossing end to start
 	 * 
 	 * @param log
 	 * @param dfg

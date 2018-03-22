@@ -15,7 +15,7 @@ public interface IMEventIterator extends Iterator<IMEvent> {
 	public void remove();
 
 	/**
-	 * @see IMLog.splitTrace()
+	 * see IMLog.splitTrace()
 	 * @return the index of the inserted trace.
 	 */
 	public int split();
