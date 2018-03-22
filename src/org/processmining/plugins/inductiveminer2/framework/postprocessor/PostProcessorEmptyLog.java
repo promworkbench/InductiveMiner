@@ -1,6 +1,8 @@
 package org.processmining.plugins.inductiveminer2.framework.postprocessor;
 
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeInt.NodeType;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeUtils;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
@@ -21,7 +23,7 @@ public class PostProcessorEmptyLog implements PostProcessor {
 		//part one: the log is empty
 		if (log.size() == 0) {
 			if (tree.isTau(tree.getRoot())) {
-				tree.getTree()[0] = EfficientTree.skip;
+				tree.setNodeType(0, NodeType.skip);
 			}
 		} else {
 			//part two: the tree is an xor and one child is a skip
@@ -31,7 +33,7 @@ public class PostProcessorEmptyLog implements PostProcessor {
 				while (childNr < tree.getNumberOfChildren(root)) {
 					int childIndex = tree.getChild(root, childNr);
 					if (tree.isSkip(childIndex)) {
-						tree.removeChild(root, childIndex);
+						EfficientTreeUtils.removeChild(tree, root, childIndex);
 					} else {
 						childNr++;
 					}
