@@ -1,7 +1,7 @@
 package org.processmining.plugins.inductiveminer2.framework.postprocessor;
 
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeInt.NodeType;
+import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree.NodeType;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeUtils;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
