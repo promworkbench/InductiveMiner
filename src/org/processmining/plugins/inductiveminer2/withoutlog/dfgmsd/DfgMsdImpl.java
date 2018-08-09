@@ -22,4 +22,12 @@ public class DfgMsdImpl extends DfgImpl implements DfgMsd {
 	public XEventClass getMinimumSelfDistanceEdgeTarget(long edgeIndex) {
 		return minimumSelfDistanceGraph.getEdgeTarget(edgeIndex);
 	}
+
+	public Iterable<Long> getMinimumSelfDistanceEdges() {
+		return minimumSelfDistanceGraph.getEdges();
+	}
+
+	public double getMinimumSelfDistanceEdgeWeight(long edgeIndex) {
+		return minimumSelfDistanceGraph.getEdgeWeight(edgeIndex);
+	}
 }

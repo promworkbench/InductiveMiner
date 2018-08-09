@@ -4,6 +4,9 @@ import org.deckfour.xes.classification.XEventClass;
 import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 
 public interface DfgMsd extends Dfg {
+
+	public Iterable<Long> getMinimumSelfDistanceEdges();
+
 	public void addMinimumSelfDistanceEdge(final XEventClass source, final XEventClass target, final long cardinality);
 
 	public boolean containsMinimumSelfDistanceEdge(XEventClass source, XEventClass target);
@@ -11,4 +14,6 @@ public interface DfgMsd extends Dfg {
 	public XEventClass getMinimumSelfDistanceEdgeSource(long edgeIndex);
 
 	public XEventClass getMinimumSelfDistanceEdgeTarget(long edgeIndex);
+
+	public double getMinimumSelfDistanceEdgeWeight(long edgeIndex);
 }
