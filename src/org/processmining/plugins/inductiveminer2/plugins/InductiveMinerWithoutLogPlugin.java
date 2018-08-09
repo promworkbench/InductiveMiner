@@ -3,7 +3,6 @@ package org.processmining.plugins.inductiveminer2.plugins;
 import javax.swing.JOptionPane;
 
 import org.deckfour.uitopia.api.event.TaskListener.InteractionResult;
-import org.deckfour.xes.model.XLog;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
@@ -12,25 +11,21 @@ import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginLevel;
 import org.processmining.framework.plugin.annotations.PluginVariant;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree2AcceptingPetriNet;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduce;
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduce.ReductionFailedException;
-import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParametersForPetriNet;
 import org.processmining.plugins.InductiveMiner.efficienttree.UnknownTreeNodeException;
 import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
-import org.processmining.plugins.InductiveMiner.reduceacceptingpetrinet.ReduceAcceptingPetriNetKeepLanguage;
-import org.processmining.plugins.inductiveminer2.logs.IMLog;
-import org.processmining.plugins.inductiveminer2.mining.InductiveMiner;
-import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
+import org.processmining.plugins.inductiveminer2.withoutlog.InductiveMinerWithoutLog;
+import org.processmining.plugins.inductiveminer2.withoutlog.MiningParametersWithoutLog;
+import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 
-public class InductiveMinerPlugin {
+public class InductiveMinerWithoutLogPlugin {
 	@Plugin(name = "Mine efficient tree with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
-			"Efficient Tree" }, returnTypes = {
-					EfficientTree.class }, parameterLabels = { "Log" }, userAccessible = false)
+			"Efficient Tree" }, returnTypes = { EfficientTree.class }, parameterLabels = {
+					"Directly follows graph + minimum self-distance graph" }, userAccessible = true)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
-	public EfficientTree mineGuiProcessTree(final UIPluginContext context, XLog xLog) {
-		InductiveMinerDialog dialog = new InductiveMinerDialog(xLog);
+	public EfficientTree mineGuiProcessTree(final UIPluginContext context, DfgMsd graph) {
+		InductiveMinerWithoutLogDialog dialog = new InductiveMinerWithoutLogDialog(graph);
 		InteractionResult result = context.showWizard("Mine using Inductive Miner", true, true, dialog);
 
 		if (result != InteractionResult.FINISHED) {
@@ -38,18 +33,17 @@ public class InductiveMinerPlugin {
 			return null;
 		}
 
-		MiningParameters parameters = dialog.getMiningParameters();
-		IMLog log = parameters.getIMLog(xLog);
+		MiningParametersWithoutLog parameters = dialog.getMiningParameters();
 
 		//check that the log is not too big and mining might take a long time
-		if (!confirmLargeLogs(context, log, dialog)) {
+		if (!confirmLargeLogs(context, graph, dialog)) {
 			context.getFutureResult(0).cancel(false);
 			return null;
 		}
 
 		context.log("Mining...");
 
-		return InductiveMiner.mineEfficientTree(log, parameters, new Canceller() {
+		return InductiveMinerWithoutLog.mineEfficientTree(graph, parameters, new Canceller() {
 			public boolean isCancelled() {
 				return context.getProgress().isCancelled();
 			}
@@ -57,54 +51,37 @@ public class InductiveMinerPlugin {
 	}
 
 	@Plugin(name = "Mine accepting Petri net with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
-			"Accepting Petri net" }, returnTypes = {
-					AcceptingPetriNet.class }, parameterLabels = { "Log" }, userAccessible = false)
+			"Accepting Petri net" }, returnTypes = { AcceptingPetriNet.class }, parameterLabels = {
+					"Directly follows graph + minimum self-distance graph" }, userAccessible = true)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email, uiHelp = "Running this plug-in equals running:<br>1) \"Mine efficient tree with Inductive Miner\", <br>2) \"Reduce efficient tree language-equivalently for size\"<br>3) \"Convert efficient tree to Accepting Petri Net and reduce\" ")
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
-	public AcceptingPetriNet mineGuiAcceptingPetriNet(final UIPluginContext context, XLog xLog)
+	public AcceptingPetriNet mineGuiAcceptingPetriNet(final UIPluginContext context, DfgMsd graph)
 			throws UnknownTreeNodeException, ReductionFailedException {
-		EfficientTree tree = mineGuiProcessTree(context, xLog);
-		return postProcessTree2PetriNet(tree, new Canceller() {
+		EfficientTree tree = mineGuiProcessTree(context, graph);
+		return InductiveMinerPlugin.postProcessTree2PetriNet(tree, new Canceller() {
 			public boolean isCancelled() {
 				return context.getProgress().isCancelled();
 			}
 		});
 	}
 
-	public static EfficientTree mineTree(IMLog log, MiningParameters parameters, Canceller canceller) {
-		return InductiveMiner.mineEfficientTree(log, parameters, canceller);
+	public static EfficientTree mineTree(DfgMsd graph, MiningParametersWithoutLog parameters, Canceller canceller) {
+		return InductiveMinerWithoutLog.mineEfficientTree(graph, parameters, canceller);
 	}
 
-	public static AcceptingPetriNet minePetriNet(IMLog log, MiningParameters parameters, Canceller canceller)
-			throws UnknownTreeNodeException, ReductionFailedException {
-		EfficientTree tree = mineTree(log, parameters, canceller);
-		return postProcessTree2PetriNet(tree, canceller);
+	public static AcceptingPetriNet minePetriNet(DfgMsd graph, MiningParametersWithoutLog parameters,
+			Canceller canceller) throws UnknownTreeNodeException, ReductionFailedException {
+		EfficientTree tree = mineTree(graph, parameters, canceller);
+		return InductiveMinerPlugin.postProcessTree2PetriNet(tree, canceller);
 	}
 
-	public static AcceptingPetriNet postProcessTree2PetriNet(EfficientTree tree, Canceller canceller)
-			throws UnknownTreeNodeException, ReductionFailedException {
-		if (tree == null || canceller.isCancelled()) {
-			return null;
-		}
-
-		EfficientTreeReduce.reduce(tree, new EfficientTreeReduceParametersForPetriNet(false));
-
-		AcceptingPetriNet net = EfficientTree2AcceptingPetriNet.convert(tree);
-
-		if (net == null || canceller.isCancelled()) {
-			return null;
-		}
-
-		ReduceAcceptingPetriNetKeepLanguage.reduce(net, canceller);
-		return net;
-	}
-
-	public static boolean confirmLargeLogs(final UIPluginContext context, IMLog log, InductiveMinerDialog dialog) {
+	public static boolean confirmLargeLogs(final UIPluginContext context, DfgMsd graph,
+			InductiveMinerWithoutLogDialog dialog) {
 		if (dialog.getVariant().getWarningThreshold() > 0) {
-			int numberOfActivities = log.getNumberOfActivities();
+			int numberOfActivities = graph.getNumberOfActivities();
 			if (numberOfActivities > dialog.getVariant().getWarningThreshold()) {
 				int cResult = JOptionPane.showConfirmDialog(null,
-						dialog.getVariant().toString() + " might take a long time, as the event log contains "
+						dialog.getVariant().toString() + " might take a long time, as the graph contains "
 								+ numberOfActivities
 								+ " activities.\nThe chosen variant of Inductive Miner is exponential in the number of activities.\nAre you sure you want to continue?",
 						"Inductive Miner might take a while", JOptionPane.YES_NO_OPTION);

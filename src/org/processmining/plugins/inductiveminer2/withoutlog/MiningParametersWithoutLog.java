@@ -40,8 +40,6 @@ public interface MiningParametersWithoutLog {
 
 	public List<FallThroughWithoutLog> getFallThroughs();
 
-	public boolean isRepairLifeCycles();
-
 	public List<PostProcessorWithoutLog> getPostProcessors();
 
 	public EfficientTreeReduceParameters getReduceParameters();
