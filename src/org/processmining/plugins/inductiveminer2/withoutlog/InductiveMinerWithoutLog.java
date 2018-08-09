@@ -103,7 +103,7 @@ public class InductiveMinerWithoutLog {
 				final List<String> s = new ArrayList<>();
 				part.forEach(new TIntProcedure() {
 					public boolean execute(int value) {
-						s.add(graph.getActivityOfIndex(value).getId());
+						s.add(graph.getActivityOfIndex(value));
 						return true;
 					}
 				});

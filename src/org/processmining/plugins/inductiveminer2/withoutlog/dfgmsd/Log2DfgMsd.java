@@ -1,23 +1,19 @@
 package org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
-import org.processmining.plugins.InductiveMiner.MultiSet;
-import org.processmining.plugins.InductiveMiner.mining.logs.IMLog;
-import org.processmining.plugins.InductiveMiner.mining.logs.IMLogImpl;
-import org.processmining.plugins.InductiveMiner.mining.logs.IMTrace;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
+import org.processmining.plugins.inductiveminer2.helperclasses.MultiIntSet;
+import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
+import org.processmining.plugins.inductiveminer2.logs.IMEventIterator;
+import org.processmining.plugins.inductiveminer2.logs.IMLog;
+import org.processmining.plugins.inductiveminer2.logs.IMLogImpl;
+import org.processmining.plugins.inductiveminer2.logs.IMTrace;
 
-import gnu.trove.map.hash.THashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntIntHashMap;
 
 public class Log2DfgMsd {
 	public static DfgMsd convert(XLog xLog, XEventClassifier activityClassifier,
@@ -25,35 +21,28 @@ public class Log2DfgMsd {
 
 		IMLog log = new IMLogImpl(xLog, activityClassifier, lifeCycleClassifier);
 
-		//initialise, read the log
-		DfgMsdImpl dfg = new DfgMsdImpl();
-		MultiSet<XEventClass> activities = new MultiSet<XEventClass>();
-		TObjectIntHashMap<XEventClass> minimumSelfDistances = new TObjectIntHashMap<>();
-		THashMap<XEventClass, MultiSet<XEventClass>> minimumSelfDistancesBetween = new THashMap<XEventClass, MultiSet<XEventClass>>();
-
-		XEventClass fromEventClass;
-		XEventClass toEventClass;
+		DfgMsdImpl dfg = new DfgMsdImpl(log.getActivities());
+		TIntIntHashMap minimumSelfDistances = IMLogInfo.createEmptyMinimumSelfDistancesMap();
+		TIntObjectMap<MultiIntSet> minimumSelfDistancesBetween = IMLogInfo.createEmptyMinimumSelfDistancesBetweenMap();
 
 		//walk trough the log
-		Map<XEventClass, Integer> eventSeenAt;
-		List<XEventClass> readTrace;
-
 		for (IMTrace trace : log) {
 
-			toEventClass = null;
-			fromEventClass = null;
+			int toEventClass = -1;
+			int fromEventClass = -1;
 
 			int traceSize = 0;
-			eventSeenAt = new THashMap<XEventClass, Integer>();
-			readTrace = new ArrayList<XEventClass>();
+			TIntIntHashMap eventSeenAt = new TIntIntHashMap();
+			TIntList readTrace = new TIntArrayList();
 
-			for (XEvent e : trace) {
-				XEventClass ec = log.classify(trace, e);
-				activities.add(ec);
-				dfg.addActivity(ec);
+			for (IMEventIterator it = trace.iterator(); it.hasNext();) {
+				it.nextFast();
+				int eventClass = it.getActivityIndex();
+
+				dfg.addActivity(eventClass);
 
 				fromEventClass = toEventClass;
-				toEventClass = ec;
+				toEventClass = eventClass;
 
 				readTrace.add(toEventClass);
 
@@ -73,43 +62,34 @@ public class Log2DfgMsd {
 							//we found a shorter minimum self distance, record and restart with a new multiset
 							minimumSelfDistances.put(toEventClass, newDistance);
 
-							minimumSelfDistancesBetween.put(toEventClass, new MultiSet<XEventClass>());
+							minimumSelfDistancesBetween.put(toEventClass, new MultiIntSet());
 						}
 
 						//store the minimum self-distance activities
-						MultiSet<XEventClass> mb = minimumSelfDistancesBetween.get(toEventClass);
+						MultiIntSet mb = minimumSelfDistancesBetween.get(toEventClass);
 						mb.addAll(readTrace.subList(eventSeenAt.get(toEventClass) + 1, traceSize));
 					}
 				}
 				eventSeenAt.put(toEventClass, traceSize);
 				{
-					if (fromEventClass != null) {
+					if (fromEventClass != -1) {
 						//add edge to directly follows graph
-						dfg.addDirectlyFollowsEdge(fromEventClass, toEventClass, 1);
+						dfg.getDirectlyFollowsGraph().addEdge(fromEventClass, toEventClass, 1);
 					} else {
 						//add edge to start activities
-						dfg.addStartActivity(toEventClass, 1);
+						dfg.getStartActivities().add(toEventClass, 1);
 					}
 				}
 
 				traceSize += 1;
 			}
 
-			if (toEventClass != null) {
-				dfg.addEndActivity(toEventClass, 1);
+			if (toEventClass != -1) {
+				dfg.getEndActivities().add(toEventClass, 1);
 			}
 
 			if (traceSize == 0) {
 				dfg.addEmptyTraces(1);
-			}
-		}
-
-		//transfer the minimum self-distances
-		for (Entry<XEventClass, MultiSet<XEventClass>> entry : minimumSelfDistancesBetween.entrySet()) {
-			MultiSet<XEventClass> t = entry.getValue();
-			for (Iterator<XEventClass> it = t.iterator(); it.hasNext();) {
-				XEventClass target = it.next();
-				dfg.addMinimumSelfDistanceEdge(entry.getKey(), target, t.getCardinalityOf(target));
 			}
 		}
 
