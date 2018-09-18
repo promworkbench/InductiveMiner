@@ -1,5 +1,7 @@
 package org.processmining.plugins.inductiveminer2.withoutlog.variants;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParameters;
@@ -8,6 +10,10 @@ import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfo;
 import org.processmining.plugins.inductiveminer2.withoutlog.MinerStateWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.MiningParametersWithoutLogAbstract;
 import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLog;
+import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLogEmptyLog;
+import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLogEmptyTraces;
+import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLogSemiFlowerModel;
+import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLogSingleActivity;
 import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.fallthroughs.FallThroughWithoutLog;
@@ -16,6 +22,13 @@ import org.processmining.plugins.inductiveminer2.withoutlog.postprocessors.PostP
 import gnu.trove.set.TIntSet;
 
 public class MiningParametersIMw extends MiningParametersWithoutLogAbstract implements InductiveMinerWithoutLogVariant {
+
+	public static final List<BaseCaseFinderWithoutLog> basicBaseCaseFinders = Collections
+			.unmodifiableList(Arrays.asList(new BaseCaseFinderWithoutLog[] { //
+					new BaseCaseFinderWithoutLogSingleActivity(), //
+					new BaseCaseFinderWithoutLogSemiFlowerModel(), //
+					new BaseCaseFinderWithoutLogEmptyLog(), //
+					new BaseCaseFinderWithoutLogEmptyTraces() }));
 
 	public boolean hasNoise() {
 		return false;
@@ -32,8 +45,7 @@ public class MiningParametersIMw extends MiningParametersWithoutLogAbstract impl
 	}
 
 	public List<BaseCaseFinderWithoutLog> getBaseCaseFinders() {
-		// TODO Auto-generated method stub
-		return null;
+		return basicBaseCaseFinders;
 	}
 
 	public List<CutFinderWithoutLog> getCutFinders() {

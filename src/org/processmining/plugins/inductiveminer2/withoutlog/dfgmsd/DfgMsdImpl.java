@@ -30,4 +30,13 @@ public class DfgMsdImpl extends IntDfgImpl implements DfgMsd {
 		return activities[value];
 	}
 
+	public DfgMsdImpl clone() {
+		DfgMsdImpl result = (DfgMsdImpl) super.clone();
+
+		result.minimumSelfDistanceGraph = this.minimumSelfDistanceGraph.clone();
+		result.activities = this.activities.clone();
+
+		return result;
+	}
+
 }

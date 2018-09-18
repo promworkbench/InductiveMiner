@@ -143,6 +143,11 @@ public class MultiIntSet implements Iterable<Integer> {
 		size = 0;
 	}
 
+	/**
+	 * 
+	 * @return The total number of elements in the multiset. Use setSize() for
+	 *         the number of distinct elements in the multiset.
+	 */
 	public long size() {
 		return size;
 	}
