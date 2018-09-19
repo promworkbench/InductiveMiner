@@ -15,8 +15,13 @@ import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFi
 import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLogSemiFlowerModel;
 import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLogSingleActivity;
 import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLog;
+import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMConcurrentWithMinimumSelfDistance;
+import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMExclusiveChoice;
+import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMLoop;
+import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMSequence;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.fallthroughs.FallThroughWithoutLog;
+import org.processmining.plugins.inductiveminer2.withoutlog.fallthroughs.FallThroughWithoutLogFlowerWithoutEpsilon;
 import org.processmining.plugins.inductiveminer2.withoutlog.postprocessors.PostProcessorWithoutLog;
 
 import gnu.trove.set.TIntSet;
@@ -29,6 +34,19 @@ public class MiningParametersIMw extends MiningParametersWithoutLogAbstract impl
 					new BaseCaseFinderWithoutLogSemiFlowerModel(), //
 					new BaseCaseFinderWithoutLogEmptyLog(), //
 					new BaseCaseFinderWithoutLogEmptyTraces() }));
+
+	public static final List<CutFinderWithoutLog> basicCutFinders = Collections
+			.unmodifiableList(Arrays.asList(new CutFinderWithoutLog[] { //
+					new CutFinderWithoutLogIMExclusiveChoice(), //
+					new CutFinderWithoutLogIMSequence(), //
+					new CutFinderWithoutLogIMConcurrentWithMinimumSelfDistance(), // 
+					new CutFinderWithoutLogIMLoop() }));
+	
+	public static final List<FallThroughWithoutLog> basicFallThroughs = Collections
+			.unmodifiableList(Arrays.asList(new FallThroughWithoutLog[] { //
+					new FallThroughWithoutLogFlowerWithoutEpsilon(), //
+					//TODO: finish
+	}));
 
 	public boolean hasNoise() {
 		return false;
@@ -49,13 +67,11 @@ public class MiningParametersIMw extends MiningParametersWithoutLogAbstract impl
 	}
 
 	public List<CutFinderWithoutLog> getCutFinders() {
-		// TODO Auto-generated method stub
-		return null;
+		return basicCutFinders;
 	}
 
 	public List<FallThroughWithoutLog> getFallThroughs() {
-		// TODO Auto-generated method stub
-		return null;
+		return basicFallThroughs;
 	}
 
 	public List<PostProcessorWithoutLog> getPostProcessors() {

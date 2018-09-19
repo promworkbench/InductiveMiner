@@ -15,7 +15,7 @@ import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 
-public class CutFinderIMConcurrent implements CutFinderWithoutLog {
+public class CutFinderWithoutLogIMConcurrentWithMinimumSelfDistance implements CutFinderWithoutLog {
 	public Cut findCut(DfgMsd graph, MinerStateWithoutLog minerState) {
 		return findCut(graph);
 	}

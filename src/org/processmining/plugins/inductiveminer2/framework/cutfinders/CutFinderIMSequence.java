@@ -29,10 +29,10 @@ import gnu.trove.set.TIntSet;
 public class CutFinderIMSequence implements CutFinder {
 
 	public Cut findCut(IMLog log, IMLogInfo logInfo, MinerState minerState) {
-		return findCut(logInfo.getDfg(), minerState);
+		return findCut(logInfo.getDfg());
 	}
 
-	public static Cut findCut(IntDfg dfg, MinerState minerState) {
+	public static Cut findCut(IntDfg dfg) {
 
 		//compute and merge the strongly connected components of the directly follows graph
 		Set<TIntSet> SCCs = IntStronglyConnectedComponents.compute(dfg.getDirectlyFollowsGraph());
@@ -105,7 +105,7 @@ public class CutFinderIMSequence implements CutFinder {
 		 * 
 		 * Correction 11-7-2016: identify optional sub sequences and merge them.
 		 */
-		Cut newCut = new Cut(Operator.sequence, CutFinderIMSequenceStrict.merge(dfg, result, minerState));
+		Cut newCut = new Cut(Operator.sequence, CutFinderIMSequenceStrict.merge(dfg, result));
 
 		//InductiveMiner.debug("  sccs after pivot merge " + newCut.getPartition().toString(), minerState);
 

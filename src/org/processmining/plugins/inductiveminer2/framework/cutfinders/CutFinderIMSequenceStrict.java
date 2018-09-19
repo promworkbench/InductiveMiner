@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
 import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntComponents;
-import org.processmining.plugins.inductiveminer2.mining.MinerState;
 
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.TObjectIntMap;
@@ -15,7 +14,7 @@ import gnu.trove.set.TIntSet;
 
 public class CutFinderIMSequenceStrict {
 
-	public static List<TIntSet> merge(IntDfg dfg, List<TIntSet> partition, MinerState minerState) {
+	public static List<TIntSet> merge(IntDfg dfg, List<TIntSet> partition) {
 
 		if (partition.size() == 2) {
 			return partition;

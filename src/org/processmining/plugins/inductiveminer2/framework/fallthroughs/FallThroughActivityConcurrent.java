@@ -11,7 +11,6 @@ import org.processmining.plugins.InductiveMiner.efficienttree.InlineTree;
 import org.processmining.plugins.InductiveMiner.jobList.JobList;
 import org.processmining.plugins.InductiveMiner.jobList.JobListConcurrent;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
-import org.processmining.plugins.inductiveminer2.framework.cutfinders.DfgCutFinder;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.DfgCutFinderSimple;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
@@ -52,7 +51,7 @@ public class FallThroughActivityConcurrent implements FallThrough {
 		}
 
 		//leave out an activity
-		final DfgCutFinder dfgCutFinder = new DfgCutFinderSimple();
+		final DfgCutFinderSimple dfgCutFinder = new DfgCutFinderSimple();
 		final AtomicBoolean found = new AtomicBoolean(false);
 		final CutWrapper cutWrapper = new CutWrapper();
 
