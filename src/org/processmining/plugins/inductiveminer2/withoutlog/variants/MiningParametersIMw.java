@@ -1,5 +1,6 @@
 package org.processmining.plugins.inductiveminer2.withoutlog.variants;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -49,6 +50,11 @@ public class MiningParametersIMw extends MiningParametersWithoutLogAbstract impl
 					new FallThroughWithoutLogFlowerWithoutEpsilon(), //
 			//TODO: finish
 	}));
+	
+	@Override
+	public String toString() {
+		return "Inductive Miner - without log";
+	}
 
 	public boolean hasNoise() {
 		return false;
@@ -77,8 +83,7 @@ public class MiningParametersIMw extends MiningParametersWithoutLogAbstract impl
 	}
 
 	public List<PostProcessorWithoutLog> getPostProcessors() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<>();
 	}
 
 	public EfficientTreeReduceParameters getReduceParameters() {

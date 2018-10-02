@@ -10,7 +10,6 @@ import gnu.trove.list.array.TIntArrayList;
 
 public class IntGraphImplQuadratic implements IntGraph {
 	private TIntArrayList internal2external;
-	//private TIntIntMap external2internal;
 	private int[] external2internalArray;
 	private long[][] edges; //matrix of weights of edges
 
@@ -20,7 +19,6 @@ public class IntGraphImplQuadratic implements IntGraph {
 
 	public IntGraphImplQuadratic(int initialSize) {
 		internal2external = new TIntArrayList();
-		//external2internal = new TIntIntHashMap(10, 0.5f, -1, -1);
 		external2internalArray = new int[] { -1 };
 		edges = new long[initialSize][initialSize];
 	}
@@ -30,7 +28,6 @@ public class IntGraphImplQuadratic implements IntGraph {
 	}
 
 	private int toInternal(int external) {
-		//return external2internal.get(external);
 		if (external >= external2internalArray.length) {
 			return -1;
 		}
@@ -383,7 +380,6 @@ public class IntGraphImplQuadratic implements IntGraph {
 	}
 
 	public int[] getNodes() {
-		//return external2internal.keys();
 		return internal2external.toArray();
 	}
 

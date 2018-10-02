@@ -52,7 +52,7 @@ public class InductiveMinerWithoutLogDialog extends JPanel {
 			layout.putConstraint(SpringLayout.EAST, variantLabel, leftColumnWidth, SpringLayout.WEST, this);
 
 			variantCombobox = factory.createComboBox(variants);
-			variantCombobox.setSelectedIndex(1);
+			//TODO variantCombobox.setSelectedIndex(1);
 			variantCombobox.setPreferredSize(variantCombobox.getMaximumSize());
 			add(variantCombobox);
 			layout.putConstraint(SpringLayout.WEST, variantCombobox, columnMargin, SpringLayout.EAST, variantLabel);

@@ -14,6 +14,7 @@ import org.processmining.plugins.InductiveMiner.mining.cuts.Cut.Operator;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.DfgCutFinderSimple;
 import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfgImpl;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.InductiveMiner;
@@ -83,7 +84,7 @@ public class FallThroughActivityConcurrent implements FallThrough {
 						InductiveMiner.debug("  try cut " + partition, minerState);
 
 						//split the dfg
-						IntDfg subDfg = logInfo.getDfg().clone();
+						IntDfg subDfg = new IntDfgImpl();
 						SimpleDfgMsdSplitter.filterDfg(logInfo.getDfg(), subDfg, partition.get(1), Operator.concurrent,
 								partition, 1);
 

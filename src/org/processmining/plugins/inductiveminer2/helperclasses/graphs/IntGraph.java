@@ -132,6 +132,6 @@ public interface IntGraph extends Cloneable {
 	public int getEdgeSourceIndex(long edgeIndex);
 
 	public EdgeIterable getOutgoingEdgesOfIndex(int v);
-	
+
 	public EdgeIterable getIncomingEdgesOfIndex(int v);
 }

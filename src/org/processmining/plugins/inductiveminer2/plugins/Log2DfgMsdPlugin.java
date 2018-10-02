@@ -6,7 +6,6 @@ import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.contexts.uitopia.annotations.UITopiaVariant;
 import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginVariant;
-import org.processmining.plugins.InductiveMiner.dfgOnly.Dfg;
 import org.processmining.plugins.InductiveMiner.mining.MiningParameters;
 import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
@@ -14,7 +13,7 @@ import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.Log2DfgMsd;
 
 public class Log2DfgMsdPlugin {
 	@Plugin(name = "Convert log to directly follows graph + minimum self-distance graph", returnLabels = {
-			"Directly follows + minimum self-distance graph" }, returnTypes = { Dfg.class }, parameterLabels = {
+			"Directly follows + minimum self-distance graph" }, returnTypes = { DfgMsd.class }, parameterLabels = {
 					"Log" }, userAccessible = true, help = "Convert a log into a directly follows + minimum self-distance graph.")
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })

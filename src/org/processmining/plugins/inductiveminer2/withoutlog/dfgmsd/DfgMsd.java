@@ -10,4 +10,6 @@ public interface DfgMsd extends IntDfg {
 	public String getActivityOfIndex(int value);
 
 	public DfgMsd clone();
+
+	public String[] getAllActivities();
 }

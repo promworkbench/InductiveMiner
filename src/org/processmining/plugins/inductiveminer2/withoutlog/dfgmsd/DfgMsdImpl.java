@@ -39,4 +39,8 @@ public class DfgMsdImpl extends IntDfgImpl implements DfgMsd {
 		return result;
 	}
 
+	public String[] getAllActivities() {
+		return activities.clone();
+	}
+
 }

@@ -8,6 +8,7 @@ import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
 import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
 import org.processmining.plugins.inductiveminer2.withoutlog.MinerStateWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
+import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsdImpl;
 
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.hash.TIntIntHashMap;
@@ -23,49 +24,52 @@ public class SimpleDfgMsdSplitter implements DfgMsdSplitter {
 			int sigmaN) {
 		TIntIntHashMap node2sigma = getNode2Sigma(partition);
 
-		//remove activities
+		//add activities
 		{
-			Iterator<Integer> it = subDfg.getActivities().iterator();
-			while (it.hasNext()) {
-				if (!sigma.contains(it.next())) {
-					it.remove();
+			for (Iterator<Integer> it = graph.getActivities().iterator(); it.hasNext();) {
+				int activity = it.next();
+				if (sigma.contains(activity)) {
+					long cardinality = graph.getActivities().getCardinalityOf(activity);
+					subDfg.addActivity(activity);
+					subDfg.getActivities().add(activity, cardinality - 1);
 				}
 			}
 		}
 
-		//remove start activities
+		//add start activities
 		{
-			Iterator<Integer> it = subDfg.getStartActivities().iterator();
-			while (it.hasNext()) {
-				if (!sigma.contains(it.next())) {
-					it.remove();
+			for (Iterator<Integer> it = graph.getStartActivities().iterator(); it.hasNext();) {
+				int activity = it.next();
+				if (sigma.contains(activity)) {
+					long cardinality = graph.getStartActivities().getCardinalityOf(activity);
+					subDfg.getStartActivities().add(activity, cardinality);
 				}
 			}
 		}
 
-		//remove end activities
+		//add end activities
 		{
-			Iterator<Integer> it = subDfg.getEndActivities().iterator();
-			while (it.hasNext()) {
-				if (!sigma.contains(it.next())) {
-					it.remove();
+			for (Iterator<Integer> it = graph.getEndActivities().iterator(); it.hasNext();) {
+				int activity = it.next();
+				if (sigma.contains(activity)) {
+					long cardinality = graph.getEndActivities().getCardinalityOf(activity);
+					subDfg.getEndActivities().add(activity, cardinality);
 				}
 			}
 		}
 
 		//walk through the edges (dfg)
 		{
-			Iterator<Long> it = subDfg.getDirectlyFollowsGraph().getEdges().iterator();
+			Iterator<Long> it = graph.getDirectlyFollowsGraph().getEdges().iterator();
 			while (it.hasNext()) {
 				long edge = it.next();
-				int cardinality = (int) subDfg.getDirectlyFollowsGraph().getEdgeWeight(edge);
-				int source = subDfg.getDirectlyFollowsGraph().getEdgeSource(edge);
-				int target = subDfg.getDirectlyFollowsGraph().getEdgeTarget(edge);
+				long cardinality = graph.getDirectlyFollowsGraph().getEdgeWeight(edge);
+				int source = graph.getDirectlyFollowsGraph().getEdgeSource(edge);
+				int target = graph.getDirectlyFollowsGraph().getEdgeTarget(edge);
 
 				if (!sigma.contains(source)) {
 					if (!sigma.contains(target)) {
 						//edge not in sigma
-						it.remove();
 
 						if (operator == Operator.sequence) {
 							//add as empty trace
@@ -75,7 +79,6 @@ public class SimpleDfgMsdSplitter implements DfgMsdSplitter {
 						}
 					} else {
 						//edge going into sigma
-						it.remove();
 						if (operator == Operator.sequence || operator == Operator.loop) {
 							//add as start activity
 							subDfg.getStartActivities().add(target, cardinality);
@@ -84,13 +87,13 @@ public class SimpleDfgMsdSplitter implements DfgMsdSplitter {
 				} else { //source in sigma
 					if (!sigma.contains(target)) {
 						//edge going out of sigma
-						it.remove();
 						if (operator == Operator.sequence || operator == Operator.loop) {
 							//source is an end activity
 							subDfg.getEndActivities().add(source, cardinality);
 						}
 					} else {
 						//edge within sigma
+						subDfg.getDirectlyFollowsGraph().addEdge(source, target, cardinality);
 					}
 				}
 			}
@@ -121,21 +124,21 @@ public class SimpleDfgMsdSplitter implements DfgMsdSplitter {
 
 		int sigmaN = 0;
 		for (TIntSet sigma : partition) {
-			DfgMsd subDfg = graph.clone();
+			DfgMsd subDfg = new DfgMsdImpl(graph.getAllActivities().clone());
 			subDfgs[sigmaN] = subDfg;
 
 			filterDfg(graph, subDfg, sigma, operator, partition, sigmaN);
 
 			//walk through the edges (msd)
 			{
-				Iterator<Long> it = subDfg.getMinimumSelfDistanceGraph().getEdges().iterator();
-				while (it.hasNext()) {
+				for (Iterator<Long> it = graph.getMinimumSelfDistanceGraph().getEdges().iterator(); it.hasNext();) {
 					long edge = it.next();
-					int source = subDfg.getMinimumSelfDistanceGraph().getEdgeSource(edge);
-					int target = subDfg.getMinimumSelfDistanceGraph().getEdgeTarget(edge);
+					int source = graph.getMinimumSelfDistanceGraph().getEdgeSource(edge);
+					int target = graph.getMinimumSelfDistanceGraph().getEdgeTarget(edge);
+					long cardinality = graph.getMinimumSelfDistanceGraph().getEdgeWeight(edge);
 
-					if (!sigma.contains(source) || !sigma.contains(target)) {
-						it.remove();
+					if (sigma.contains(source) && sigma.contains(target)) {
+						subDfg.getMinimumSelfDistanceGraph().addEdge(source, target, cardinality);
 					}
 				}
 			}
