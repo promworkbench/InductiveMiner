@@ -10,12 +10,15 @@ import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTree;
 import org.processmining.plugins.InductiveMiner.efficienttree.InlineTree;
 import org.processmining.plugins.InductiveMiner.jobList.JobList;
 import org.processmining.plugins.InductiveMiner.jobList.JobListConcurrent;
+import org.processmining.plugins.InductiveMiner.mining.cuts.Cut.Operator;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.Cut;
 import org.processmining.plugins.inductiveminer2.framework.cutfinders.DfgCutFinderSimple;
+import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLogInfo;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.mining.InductiveMiner;
 import org.processmining.plugins.inductiveminer2.mining.MinerState;
+import org.processmining.plugins.inductiveminer2.withoutlog.graphsplitters.SimpleDfgMsdSplitter;
 
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
@@ -79,9 +82,15 @@ public class FallThroughActivityConcurrent implements FallThrough {
 
 						InductiveMiner.debug("  try cut " + partition, minerState);
 
+						//split the dfg
+						IntDfg subDfg = logInfo.getDfg().clone();
+						SimpleDfgMsdSplitter.filterDfg(logInfo.getDfg(), subDfg, partition.get(1), Operator.concurrent,
+								partition, 1);
+
 						//see if a cut applies
 						//for performance reasons, only on the directly follows graph
-						Cut cut2 = dfgCutFinder.findCut(logInfo.getDfg(), minerState);
+
+						Cut cut2 = dfgCutFinder.findCut(subDfg, minerState);
 
 						if (minerState.isCancelled()) {
 							return;

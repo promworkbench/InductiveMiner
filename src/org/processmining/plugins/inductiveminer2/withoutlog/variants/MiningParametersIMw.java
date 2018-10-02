@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParameters;
+import org.processmining.plugins.InductiveMiner.mining.cuts.Cut.Operator;
 import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
 import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfo;
 import org.processmining.plugins.inductiveminer2.withoutlog.MinerStateWithoutLog;
@@ -22,6 +23,7 @@ import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinder
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.fallthroughs.FallThroughWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.fallthroughs.FallThroughWithoutLogFlowerWithoutEpsilon;
+import org.processmining.plugins.inductiveminer2.withoutlog.graphsplitters.SimpleDfgMsdSplitter;
 import org.processmining.plugins.inductiveminer2.withoutlog.postprocessors.PostProcessorWithoutLog;
 
 import gnu.trove.set.TIntSet;
@@ -41,11 +43,11 @@ public class MiningParametersIMw extends MiningParametersWithoutLogAbstract impl
 					new CutFinderWithoutLogIMSequence(), //
 					new CutFinderWithoutLogIMConcurrentWithMinimumSelfDistance(), // 
 					new CutFinderWithoutLogIMLoop() }));
-	
+
 	public static final List<FallThroughWithoutLog> basicFallThroughs = Collections
 			.unmodifiableList(Arrays.asList(new FallThroughWithoutLog[] { //
 					new FallThroughWithoutLogFlowerWithoutEpsilon(), //
-					//TODO: finish
+			//TODO: finish
 	}));
 
 	public boolean hasNoise() {
@@ -85,33 +87,27 @@ public class MiningParametersIMw extends MiningParametersWithoutLogAbstract impl
 	}
 
 	public DfgMsd[] splitGraphConcurrent(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		// TODO Auto-generated method stub
-		return null;
+		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.concurrent, minerState);
 	}
 
 	public DfgMsd[] splitGraphInterleaved(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		// TODO Auto-generated method stub
-		return null;
+		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.interleaved, minerState);
 	}
 
 	public DfgMsd[] splitGraphLoop(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		// TODO Auto-generated method stub
-		return null;
+		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.loop, minerState);
 	}
 
 	public DfgMsd[] splitGraphOr(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		// TODO Auto-generated method stub
-		return null;
+		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.or, minerState);
 	}
 
 	public DfgMsd[] splitGraphSequence(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		// TODO Auto-generated method stub
-		return null;
+		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.sequence, minerState);
 	}
 
 	public DfgMsd[] splitGraphXor(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		// TODO Auto-generated method stub
-		return null;
+		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.xor, minerState);
 	}
 
 	public boolean hasFitness() {
