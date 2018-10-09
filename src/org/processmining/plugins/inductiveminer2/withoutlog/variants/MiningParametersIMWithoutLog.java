@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParameters;
 import org.processmining.plugins.InductiveMiner.mining.cuts.Cut.Operator;
-import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
-import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfo;
 import org.processmining.plugins.inductiveminer2.withoutlog.MinerStateWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.MiningParametersWithoutLogAbstract;
 import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLog;
@@ -30,7 +28,8 @@ import org.processmining.plugins.inductiveminer2.withoutlog.postprocessors.PostP
 
 import gnu.trove.set.TIntSet;
 
-public class MiningParametersIMw extends MiningParametersWithoutLogAbstract implements InductiveMinerWithoutLogVariant {
+public class MiningParametersIMWithoutLog extends MiningParametersWithoutLogAbstract
+		implements InductiveMinerWithoutLogVariant {
 
 	public static final List<BaseCaseFinderWithoutLog> basicBaseCaseFinders = Collections
 			.unmodifiableList(Arrays.asList(new BaseCaseFinderWithoutLog[] { //
@@ -54,86 +53,93 @@ public class MiningParametersIMw extends MiningParametersWithoutLogAbstract impl
 
 	@Override
 	public String toString() {
-		return "Inductive Miner - without log";
+		return "Inductive Miner - without log (IMw)";
 	}
 
+	@Override
 	public boolean hasNoise() {
 		return false;
 	}
 
-	public Probabilities getSatProbabilities() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public IMLog2IMLogInfo getLog2LogInfo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	@Override
 	public List<BaseCaseFinderWithoutLog> getBaseCaseFinders() {
 		return basicBaseCaseFinders;
 	}
 
+	@Override
 	public List<CutFinderWithoutLog> getCutFinders() {
 		return basicCutFinders;
 	}
 
+	@Override
 	public List<FallThroughWithoutLog> getFallThroughs() {
 		return basicFallThroughs;
 	}
 
+	@Override
 	public List<PostProcessorWithoutLog> getPostProcessors() {
 		return new ArrayList<>();
 	}
 
+	@Override
 	public EfficientTreeReduceParameters getReduceParameters() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public DfgMsd[] splitGraphConcurrent(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.concurrent, minerState);
+		return SimpleDfgMsdSplitter.split(graph, partition, Operator.concurrent);
 	}
 
+	@Override
 	public DfgMsd[] splitGraphInterleaved(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.interleaved, minerState);
+		return SimpleDfgMsdSplitter.split(graph, partition, Operator.interleaved);
 	}
 
+	@Override
 	public DfgMsd[] splitGraphLoop(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.loop, minerState);
+		return SimpleDfgMsdSplitter.split(graph, partition, Operator.loop);
 	}
 
+	@Override
 	public DfgMsd[] splitGraphOr(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.or, minerState);
+		return SimpleDfgMsdSplitter.split(graph, partition, Operator.or);
 	}
 
+	@Override
 	public DfgMsd[] splitGraphSequence(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.sequence, minerState);
+		return SimpleDfgMsdSplitter.split(graph, partition, Operator.sequence);
 	}
 
+	@Override
 	public DfgMsd[] splitGraphXor(DfgMsd graph, List<TIntSet> partition, MinerStateWithoutLog minerState) {
-		return SimpleDfgMsdSplitter.split2(graph, partition, Operator.xor, minerState);
+		return SimpleDfgMsdSplitter.split(graph, partition, Operator.xor);
 	}
 
+	@Override
 	public boolean hasFitness() {
 		return false;
 	}
 
+	@Override
 	public boolean noNoiseImpliesFitness() {
 		return false;
 	}
 
+	@Override
 	public MiningParametersWithoutLogAbstract getMiningParameters() {
 		return this;
 	}
 
+	@Override
 	public int getWarningThreshold() {
 		return -1;
 	}
 
+	@Override
 	public String getDoi() {
-		return "https://doi.org/10.1007/s10270-016-0545-x";
+		return null;
 	}
 
 }

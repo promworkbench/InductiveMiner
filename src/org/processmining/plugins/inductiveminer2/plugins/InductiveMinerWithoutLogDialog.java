@@ -19,7 +19,7 @@ import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
 import org.processmining.plugins.inductiveminer2.withoutlog.MiningParametersWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.variants.InductiveMinerWithoutLogVariant;
-import org.processmining.plugins.inductiveminer2.withoutlog.variants.MiningParametersIMw;
+import org.processmining.plugins.inductiveminer2.withoutlog.variants.MiningParametersIMWithoutLog;
 
 import com.fluxicon.slickerbox.factory.SlickerFactory;
 
@@ -27,7 +27,7 @@ public class InductiveMinerWithoutLogDialog extends JPanel {
 
 	private static final long serialVersionUID = 1441839136397807436L;
 	public InductiveMinerWithoutLogVariant[] variants = new InductiveMinerWithoutLogVariant[] { //
-			new MiningParametersIMw() //
+			new MiningParametersIMWithoutLog() //
 	};
 	protected JComboBox<InductiveMinerWithoutLogVariant> variantCombobox;
 

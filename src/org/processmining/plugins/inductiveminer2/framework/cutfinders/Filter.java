@@ -31,7 +31,7 @@ public class Filter {
 	 * @param threshold
 	 * @return
 	 */
-	private static void filterDirectlyFollowsGraph(IntDfg dfg, float threshold) {
+	public static void filterDirectlyFollowsGraph(IntDfg dfg, float threshold) {
 		IntGraph graph = dfg.getDirectlyFollowsGraph();
 
 		for (int activity = 0; activity < dfg.getNumberOfActivities(); activity++) {
@@ -60,7 +60,7 @@ public class Filter {
 	 * @param threshold
 	 * @return
 	 */
-	private static void filterConcurrencyGraph(IntDfg dfg, float threshold) {
+	public static void filterConcurrencyGraph(IntDfg dfg, float threshold) {
 		IntGraph graph = dfg.getConcurrencyGraph();
 
 		for (int activity = 0; activity < dfg.getNumberOfActivities(); activity++) {
@@ -89,7 +89,7 @@ public class Filter {
 	 * @param threshold
 	 * @return
 	 */
-	private static void filterStartActivities(IntDfg dfg, float threshold) {
+	public static void filterStartActivities(IntDfg dfg, float threshold) {
 		long max = dfg.getStartActivities()
 				.getCardinalityOf(dfg.getStartActivities().getElementWithHighestCardinality());
 
@@ -109,7 +109,7 @@ public class Filter {
 	 * @param threshold
 	 * @return
 	 */
-	private static void filterEndActivities(IntDfg dfg, float threshold) {
+	public static void filterEndActivities(IntDfg dfg, float threshold) {
 		long max = dfg.getEndActivities().getCardinalityOf(dfg.getEndActivities().getElementWithHighestCardinality());
 		for (Iterator<Integer> it = dfg.getEndActivities().iterator(); it.hasNext();) {
 			int activity = it.next();

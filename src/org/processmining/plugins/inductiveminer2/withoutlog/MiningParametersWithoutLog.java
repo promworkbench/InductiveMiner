@@ -3,8 +3,6 @@ package org.processmining.plugins.inductiveminer2.withoutlog;
 import java.util.List;
 
 import org.processmining.plugins.InductiveMiner.efficienttree.EfficientTreeReduceParameters;
-import org.processmining.plugins.InductiveMiner.mining.cuts.IMc.probabilities.Probabilities;
-import org.processmining.plugins.inductiveminer2.loginfo.IMLog2IMLogInfo;
 import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
@@ -28,11 +26,7 @@ public interface MiningParametersWithoutLog {
 
 	public boolean isDebug();
 
-	public Probabilities getSatProbabilities();
-
 	public boolean isUseMultithreading();
-
-	public IMLog2IMLogInfo getLog2LogInfo();
 
 	public List<BaseCaseFinderWithoutLog> getBaseCaseFinders();
 

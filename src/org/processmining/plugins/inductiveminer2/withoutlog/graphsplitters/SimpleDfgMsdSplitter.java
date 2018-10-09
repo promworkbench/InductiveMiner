@@ -17,7 +17,7 @@ import gnu.trove.set.TIntSet;
 public class SimpleDfgMsdSplitter implements DfgMsdSplitter {
 
 	public DfgMsd[] split(DfgMsd graph, Cut cut, MinerStateWithoutLog minerState) {
-		return split2(graph, cut.getPartition(), cut.getOperator(), minerState);
+		return split(graph, cut.getPartition(), cut.getOperator());
 	}
 
 	public static void filterDfg(IntDfg graph, IntDfg subDfg, TIntSet sigma, Operator operator, List<TIntSet> partition,
@@ -118,8 +118,7 @@ public class SimpleDfgMsdSplitter implements DfgMsdSplitter {
 		}
 	}
 
-	public static DfgMsd[] split2(DfgMsd graph, List<TIntSet> partition, Operator operator,
-			MinerStateWithoutLog minerState) {
+	public static DfgMsd[] split(DfgMsd graph, List<TIntSet> partition, Operator operator) {
 		DfgMsd[] subDfgs = new DfgMsd[partition.size()];
 
 		int sigmaN = 0;
