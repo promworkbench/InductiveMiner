@@ -24,6 +24,7 @@ import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinder
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.fallthroughs.FallThroughWithoutLog;
 import org.processmining.plugins.inductiveminer2.withoutlog.fallthroughs.FallThroughWithoutLogFlowerWithoutEpsilon;
+import org.processmining.plugins.inductiveminer2.withoutlog.fallthroughs.FallThroughWithoutLogTauLoopStrict;
 import org.processmining.plugins.inductiveminer2.withoutlog.graphsplitters.SimpleDfgMsdSplitter;
 import org.processmining.plugins.inductiveminer2.withoutlog.postprocessors.PostProcessorWithoutLog;
 
@@ -47,10 +48,10 @@ public class MiningParametersIMw extends MiningParametersWithoutLogAbstract impl
 
 	public static final List<FallThroughWithoutLog> basicFallThroughs = Collections
 			.unmodifiableList(Arrays.asList(new FallThroughWithoutLog[] { //
+					new FallThroughWithoutLogTauLoopStrict(), //
 					new FallThroughWithoutLogFlowerWithoutEpsilon(), //
-			//TODO: finish
 	}));
-	
+
 	@Override
 	public String toString() {
 		return "Inductive Miner - without log";
