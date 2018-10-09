@@ -1,5 +1,7 @@
 package org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd;
 
+import java.util.Iterator;
+
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.InductiveMiner.mining.logs.XLifeCycleClassifier;
@@ -10,6 +12,7 @@ import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.logs.IMLogImpl;
 import org.processmining.plugins.inductiveminer2.logs.IMTrace;
 
+import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntObjectMap;
@@ -90,6 +93,16 @@ public class Log2DfgMsd {
 
 			if (traceSize == 0) {
 				dfg.addEmptyTraces(1);
+			}
+		}
+		
+		for (TIntObjectIterator<MultiIntSet> it = minimumSelfDistancesBetween.iterator(); it.hasNext();) {
+			it.advance();
+			MultiIntSet tos = it.value();
+			for (Iterator<Integer> it2 = tos.iterator(); it2.hasNext(); ) {
+				int to = it2.next();
+				long cardinality = tos.getCardinalityOf(to);
+				dfg.getMinimumSelfDistanceGraph().addEdge(it.key(), to, cardinality);
 			}
 		}
 
