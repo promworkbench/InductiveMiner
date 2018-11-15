@@ -15,9 +15,11 @@ import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFi
 import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLogSemiFlowerModel;
 import org.processmining.plugins.inductiveminer2.withoutlog.basecases.BaseCaseFinderWithoutLogSingleActivity;
 import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLog;
+import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMConcurrent;
 import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMConcurrentWithMinimumSelfDistance;
 import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMExclusiveChoice;
 import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMLoop;
+import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMLoopWithMinimumSelfDistance;
 import org.processmining.plugins.inductiveminer2.withoutlog.cutfinders.CutFinderWithoutLogIMSequence;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.fallthroughs.FallThroughWithoutLog;
@@ -43,6 +45,8 @@ public class MiningParametersIMWithoutLog extends MiningParametersWithoutLogAbst
 					new CutFinderWithoutLogIMExclusiveChoice(), //
 					new CutFinderWithoutLogIMSequence(), //
 					new CutFinderWithoutLogIMConcurrentWithMinimumSelfDistance(), // 
+					new CutFinderWithoutLogIMLoopWithMinimumSelfDistance(), //
+					new CutFinderWithoutLogIMConcurrent(), //
 					new CutFinderWithoutLogIMLoop() }));
 
 	public static final List<FallThroughWithoutLog> basicFallThroughs = Collections

@@ -21,7 +21,13 @@ public class DfgMsdVisualisationPlugin {
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Visualise process tree", requiredParameterLabels = { 0 })
 	public DotPanel fancy(PluginContext context, DfgMsd dfgMsd) throws UnknownTreeNodeException {
-		Dot dot = DfgMsd2Dot.visualise(dfgMsd);
+		Dot dot;
+		if (dfgMsd.getNumberOfActivities() > 50) {
+			dot = new Dot();
+			dot.addNode("Graphs with more than 50 nodes are not visualised to prevent hanging...");
+		} else {
+			dot = DfgMsd2Dot.visualise(dfgMsd);
+		}
 		return new DotPanel(dot);
 	}
 }

@@ -17,10 +17,10 @@ import gnu.trove.set.hash.TIntHashSet;
 
 public class CutFinderWithoutLogIMConcurrentWithMinimumSelfDistance implements CutFinderWithoutLog {
 	public Cut findCut(DfgMsd graph, MinerStateWithoutLog minerState) {
-		return findCut(graph);
+		return findCut(graph, true);
 	}
 
-	public static Cut findCut(DfgMsd dfg) {
+	public static Cut findCut(DfgMsd dfg, boolean considerMsd) {
 		//noise filtering can have removed all start and end activities.
 		//if that is the case, return
 		if (!dfg.hasStartActivities() || !dfg.hasEndActivities()) {
@@ -44,12 +44,14 @@ public class CutFinderWithoutLogIMConcurrentWithMinimumSelfDistance implements C
 			}
 		}
 
-		//if wanted, apply an extension to the IM algorithm to account for loops that have the same directly follows graph as a parallel operator would have
-		//make sure that activities on the minimum-self-distance-path are not separated by a parallel operator
-		for (long edgeIndex : dfg.getMinimumSelfDistanceGraph().getEdges()) {
-			int activity = dfg.getMinimumSelfDistanceGraph().getEdgeSource(edgeIndex);
-			int activity2 = dfg.getMinimumSelfDistanceGraph().getEdgeTarget(edgeIndex);
-			components.mergeComponentsOf(activity, activity2);
+		if (considerMsd) {
+			//if wanted, apply an extension to the IM algorithm to account for loops that have the same directly follows graph as a parallel operator would have
+			//make sure that activities on the minimum-self-distance-path are not separated by a parallel operator
+			for (long edgeIndex : dfg.getMinimumSelfDistanceGraph().getEdges()) {
+				int activity = dfg.getMinimumSelfDistanceGraph().getEdgeSource(edgeIndex);
+				int activity2 = dfg.getMinimumSelfDistanceGraph().getEdgeTarget(edgeIndex);
+				components.mergeComponentsOf(activity, activity2);
+			}
 		}
 
 		//construct the components
