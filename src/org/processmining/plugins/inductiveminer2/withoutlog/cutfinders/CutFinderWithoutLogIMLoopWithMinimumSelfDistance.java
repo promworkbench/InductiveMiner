@@ -10,6 +10,8 @@ public class CutFinderWithoutLogIMLoopWithMinimumSelfDistance implements CutFind
 
 	public Cut findCut(DfgMsd graph, MinerStateWithoutLog minerState) {
 
+		System.out.println("test");
+		
 		/*
 		 * 1: all activities should have an outgoing msd-edge
 		 */
