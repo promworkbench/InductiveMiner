@@ -11,7 +11,7 @@ public class BaseCaseFinderWithoutLogSingleActivity implements BaseCaseFinderWit
 	public EfficientTree findBaseCases(DfgMsd graph, MinerStateWithoutLog minerState) {
 
 		if (graph.getNumberOfActivities() == 1 && graph.getNumberOfEmptyTraces() == 0
-				&& graph.getActivities().size() == graph.getStartActivities().size()) {
+				&& !graph.getDirectlyFollowsGraph().getEdges().iterator().hasNext()) {
 			//single activity
 
 			InductiveMinerWithoutLog.debug(" base case: IM single activity", minerState);
@@ -20,6 +20,14 @@ public class BaseCaseFinderWithoutLogSingleActivity implements BaseCaseFinderWit
 		}
 
 		return null;
+	}
+
+	public long getEdges(DfgMsd graph) {
+		long edges = 0;
+		for (long edge : graph.getDirectlyFollowsGraph().getEdges()) {
+			edges += graph.getDirectlyFollowsGraph().getEdgeWeight(edge);
+		}
+		return edges;
 	}
 
 }
