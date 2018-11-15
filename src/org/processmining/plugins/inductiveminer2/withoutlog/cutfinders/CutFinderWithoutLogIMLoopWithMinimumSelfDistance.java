@@ -9,8 +9,6 @@ import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 public class CutFinderWithoutLogIMLoopWithMinimumSelfDistance implements CutFinderWithoutLog {
 
 	public Cut findCut(DfgMsd graph, MinerStateWithoutLog minerState) {
-
-		System.out.println("test");
 		
 		/*
 		 * 1: all activities should have an outgoing msd-edge
