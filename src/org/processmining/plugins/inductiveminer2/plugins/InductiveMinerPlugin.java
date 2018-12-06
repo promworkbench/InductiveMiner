@@ -26,7 +26,7 @@ import org.processmining.plugins.inductiveminer2.mining.MiningParameters;
 public class InductiveMinerPlugin {
 	@Plugin(name = "Mine efficient tree with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
 			"Efficient Tree" }, returnTypes = {
-					EfficientTree.class }, parameterLabels = { "Log" }, userAccessible = false)
+					EfficientTree.class }, parameterLabels = { "Log" }, userAccessible = true)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
 	public EfficientTree mineGuiProcessTree(final UIPluginContext context, XLog xLog) {
@@ -58,7 +58,7 @@ public class InductiveMinerPlugin {
 
 	@Plugin(name = "Mine accepting Petri net with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
 			"Accepting Petri net" }, returnTypes = {
-					AcceptingPetriNet.class }, parameterLabels = { "Log" }, userAccessible = false)
+					AcceptingPetriNet.class }, parameterLabels = { "Log" }, userAccessible = true)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email, uiHelp = "Running this plug-in equals running:<br>1) \"Mine efficient tree with Inductive Miner\", <br>2) \"Reduce efficient tree language-equivalently for size\"<br>3) \"Convert efficient tree to Accepting Petri Net and reduce\" ")
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
 	public AcceptingPetriNet mineGuiAcceptingPetriNet(final UIPluginContext context, XLog xLog)

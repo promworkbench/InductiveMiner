@@ -3,6 +3,7 @@ package org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd;
 import java.util.Iterator;
 
 import org.processmining.plugins.InductiveMiner.Quadruple;
+import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
 import org.processmining.plugins.graphviz.colourMaps.ColourMap;
 import org.processmining.plugins.graphviz.colourMaps.ColourMaps;
 import org.processmining.plugins.graphviz.dot.Dot;
@@ -15,7 +16,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class DfgMsd2Dot {
 
-	public static Dot visualise(DfgMsd dfgMsd) {
+	public static Dot visualise(DirectlyFollowsModel dfgMsd) {
 
 		Quadruple<Long, Long, Long, Long> q = getExtremes(dfgMsd);
 		long startMax = q.getB();
@@ -28,27 +29,30 @@ public class DfgMsd2Dot {
 			int activityIndex = it.next();
 			DotNode node = result.addNode(dfgMsd.getActivityOfIndex(activityIndex));
 			activity2dotNode.put(activityIndex, node);
-			
+
 			node.setOption("shape", "box");
-			
+
 			//determine node colour using start and end activities
-			if (dfgMsd.getStartActivities().contains(activityIndex) && dfgMsd.getEndActivities().contains(activityIndex)) {
+			if (dfgMsd.getStartActivities().contains(activityIndex)
+					&& dfgMsd.getEndActivities().contains(activityIndex)) {
 				node.setOption("style", "filled");
 				node.setOption("fillcolor",
-						ColourMap.toHexString(
-								ColourMaps.colourMapGreen(dfgMsd.getStartActivities().getCardinalityOf(activityIndex), startMax)) + ":"
-								+ ColourMap.toHexString(
-										ColourMaps.colourMapRed(dfgMsd.getEndActivities().getCardinalityOf(activityIndex), endMax)));
+						ColourMap
+								.toHexString(ColourMaps.colourMapGreen(
+										dfgMsd.getStartActivities().getCardinalityOf(activityIndex), startMax))
+								+ ":" + ColourMap.toHexString(ColourMaps.colourMapRed(
+										dfgMsd.getEndActivities().getCardinalityOf(activityIndex), endMax)));
 			} else if (dfgMsd.getStartActivities().contains(activityIndex)) {
 				node.setOption("style", "filled");
 				node.setOption("fillcolor",
-						ColourMap.toHexString(
-								ColourMaps.colourMapGreen(dfgMsd.getStartActivities().getCardinalityOf(activityIndex), startMax))
+						ColourMap
+								.toHexString(ColourMaps.colourMapGreen(
+										dfgMsd.getStartActivities().getCardinalityOf(activityIndex), startMax))
 								+ ":white");
 			} else if (dfgMsd.getEndActivities().contains(activityIndex)) {
 				node.setOption("style", "filled");
-				node.setOption("fillcolor", "white:" + ColourMap
-						.toHexString(ColourMaps.colourMapRed(dfgMsd.getEndActivities().getCardinalityOf(activityIndex), endMax)));
+				node.setOption("fillcolor", "white:" + ColourMap.toHexString(
+						ColourMaps.colourMapRed(dfgMsd.getEndActivities().getCardinalityOf(activityIndex), endMax)));
 			}
 		}
 
@@ -60,20 +64,22 @@ public class DfgMsd2Dot {
 			result.addEdge(activity2dotNode.get(source), activity2dotNode.get(target), weight + "");
 		}
 
-		IntGraph msd = dfgMsd.getMinimumSelfDistanceGraph();
-		for (long edgeIndex : msd.getEdges()) {
-			int source = msd.getEdgeSource(edgeIndex);
-			int target = msd.getEdgeTarget(edgeIndex);
-			long weight = msd.getEdgeWeight(edgeIndex);
-			DotEdge edge = result.addEdge(activity2dotNode.get(source), activity2dotNode.get(target), weight + "");
-			edge.setOption("style", "dashed");
+		if (dfgMsd instanceof DfgMsd) {
+			IntGraph msd = ((DfgMsd) dfgMsd).getMinimumSelfDistanceGraph();
+			for (long edgeIndex : msd.getEdges()) {
+				int source = msd.getEdgeSource(edgeIndex);
+				int target = msd.getEdgeTarget(edgeIndex);
+				long weight = msd.getEdgeWeight(edgeIndex);
+				DotEdge edge = result.addEdge(activity2dotNode.get(source), activity2dotNode.get(target), weight + "");
+				edge.setOption("style", "dashed");
+			}
 		}
 
 		return result;
 
 	}
 
-	public static Quadruple<Long, Long, Long, Long> getExtremes(DfgMsd dfg) {
+	public static Quadruple<Long, Long, Long, Long> getExtremes(DirectlyFollowsModel dfg) {
 		long startMin = Long.MAX_VALUE;
 		long startMax = Long.MIN_VALUE;
 		for (int activityIndex : dfg.getStartActivities()) {

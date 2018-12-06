@@ -9,9 +9,9 @@ import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginVariant;
 import org.processmining.plugins.InductiveMiner.efficienttree.UnknownTreeNodeException;
 import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
+import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
 import org.processmining.plugins.graphviz.dot.Dot;
 import org.processmining.plugins.graphviz.visualisation.DotPanel;
-import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd2Dot;
 
 public class DfgMsdVisualisationPlugin {
@@ -20,7 +20,7 @@ public class DfgMsdVisualisationPlugin {
 	@Visualizer
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Visualise process tree", requiredParameterLabels = { 0 })
-	public DotPanel fancy(PluginContext context, DfgMsd dfgMsd) throws UnknownTreeNodeException {
+	public DotPanel fancy(PluginContext context, DirectlyFollowsModel dfgMsd) throws UnknownTreeNodeException {
 		Dot dot;
 		if (dfgMsd.getNumberOfActivities() > 50) {
 			dot = new Dot();

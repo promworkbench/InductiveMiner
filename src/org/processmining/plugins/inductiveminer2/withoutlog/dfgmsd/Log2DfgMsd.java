@@ -23,7 +23,10 @@ public class Log2DfgMsd {
 			XLifeCycleClassifier lifeCycleClassifier) {
 
 		IMLog log = new IMLogImpl(xLog, activityClassifier, lifeCycleClassifier);
+		return convert(log);
+	}
 
+	public static DfgMsd convert(IMLog log) {
 		DfgMsdImpl dfg = new DfgMsdImpl(log.getActivities());
 		TIntIntHashMap minimumSelfDistances = IMLogInfo.createEmptyMinimumSelfDistancesMap();
 		TIntObjectMap<MultiIntSet> minimumSelfDistancesBetween = IMLogInfo.createEmptyMinimumSelfDistancesBetweenMap();
@@ -95,11 +98,11 @@ public class Log2DfgMsd {
 				dfg.addEmptyTraces(1);
 			}
 		}
-		
+
 		for (TIntObjectIterator<MultiIntSet> it = minimumSelfDistancesBetween.iterator(); it.hasNext();) {
 			it.advance();
 			MultiIntSet tos = it.value();
-			for (Iterator<Integer> it2 = tos.iterator(); it2.hasNext(); ) {
+			for (Iterator<Integer> it2 = tos.iterator(); it2.hasNext();) {
 				int to = it2.next();
 				long cardinality = tos.getCardinalityOf(to);
 				dfg.getMinimumSelfDistanceGraph().addEdge(it.key(), to, cardinality);
