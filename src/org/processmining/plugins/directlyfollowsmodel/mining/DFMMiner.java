@@ -13,7 +13,7 @@ import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
 public class DFMMiner {
-	public static DirectlyFollowsModel mineX(XLog xLog, DFMMiningParameters parameters, Canceller canceller) {
+	public static DirectlyFollowsModel mine(XLog xLog, DFMMiningParameters parameters, Canceller canceller) {
 		IMLog log = new IMLogImpl(xLog, parameters.getClassifier(), parameters.getLifeCycleClassifier());
 		return mine(log, parameters, canceller);
 	}

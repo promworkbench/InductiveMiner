@@ -24,7 +24,7 @@ public class DfgMsdVisualisationPlugin {
 		return fancy(dfgMsd);
 	}
 
-	public DotPanel fancy(DirectlyFollowsModel dfgMsd) {
+	public static DotPanel fancy(DirectlyFollowsModel dfgMsd) {
 		Dot dot;
 		if (dfgMsd.getNumberOfActivities() > 50) {
 			dot = new Dot();

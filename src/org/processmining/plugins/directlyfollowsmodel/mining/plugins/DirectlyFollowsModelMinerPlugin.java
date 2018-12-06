@@ -32,7 +32,7 @@ public class DirectlyFollowsModelMinerPlugin {
 
 		context.log("Mining...");
 
-		return DFMMiner.mineX(xLog, parameters, new Canceller() {
+		return DFMMiner.mine(xLog, parameters, new Canceller() {
 			public boolean isCancelled() {
 				return context.getProgress().isCancelled();
 			}
