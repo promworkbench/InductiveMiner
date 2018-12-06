@@ -15,12 +15,16 @@ import org.processmining.plugins.graphviz.visualisation.DotPanel;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd2Dot;
 
 public class DfgMsdVisualisationPlugin {
-	@Plugin(name = "dfg+msd visualisation", returnLabels = { "Dot visualization" }, returnTypes = {
-			JComponent.class }, parameterLabels = { "dfg+msd graph" }, userAccessible = true)
+	@Plugin(name = "Directly follows model visualisation", returnLabels = { "Dot visualization" }, returnTypes = {
+			JComponent.class }, parameterLabels = { "Directly follows model" }, userAccessible = true)
 	@Visualizer
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Visualise process tree", requiredParameterLabels = { 0 })
 	public DotPanel fancy(PluginContext context, DirectlyFollowsModel dfgMsd) throws UnknownTreeNodeException {
+		return fancy(dfgMsd);
+	}
+
+	public DotPanel fancy(DirectlyFollowsModel dfgMsd) {
 		Dot dot;
 		if (dfgMsd.getNumberOfActivities() > 50) {
 			dot = new Dot();

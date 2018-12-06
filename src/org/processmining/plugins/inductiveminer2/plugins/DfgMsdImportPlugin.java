@@ -20,7 +20,7 @@ import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsdImpl;
 
 @Plugin(name = "Import a minimum self-distance graph", parameterLabels = { "Filename" }, returnLabels = {
 		"Minimum self-distance graph" }, returnTypes = { DfgMsd.class })
-@UIImportPlugin(description = "Minimum self-distance graph", extensions = { "msd" })
+@UIImportPlugin(description = "Directly follows model files", extensions = { "dfm" })
 public class DfgMsdImportPlugin extends AbstractImportPlugin {
 
 	private static final int BUFFER_SIZE = 8192 * 4;
@@ -47,8 +47,8 @@ public class DfgMsdImportPlugin extends AbstractImportPlugin {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JOptionPane.showMessageDialog(null, "Invalid minimum self-distance graph file", "Invalid file",
-						JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Invalid directly follows model/minimum self-distance graph file",
+						"Invalid file", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		context.getFutureResult(0).cancel(false);
@@ -112,8 +112,9 @@ public class DfgMsdImportPlugin extends AbstractImportPlugin {
 		}
 
 		//read msd-edges
-		{
-			int nrOfEdges = Integer.parseInt(r.readLine());
+		String msdNrOfEdges = r.readLine();
+		if (msdNrOfEdges != null) {
+			int nrOfEdges = Integer.parseInt(msdNrOfEdges);
 			for (int i = 0; i < nrOfEdges; i++) {
 				String line = r.readLine();
 				int eAt = line.indexOf('>');
