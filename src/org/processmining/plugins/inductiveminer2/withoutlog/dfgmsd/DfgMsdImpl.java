@@ -1,5 +1,8 @@
 package org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd;
 
+import java.util.Arrays;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.processmining.plugins.inductiveminer2.helperclasses.IntDfgImpl;
 import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntGraph;
 import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntGraphImplQuadratic;
@@ -10,6 +13,22 @@ public class DfgMsdImpl extends IntDfgImpl implements DfgMsd {
 
 	public DfgMsdImpl(String[] activities) {
 		this.activities = activities;
+	}
+
+	public DfgMsdImpl() {
+		this.activities = new String[0];
+	}
+
+	@Override
+	public int addActivity(String activity) {
+		int index = ArrayUtils.indexOf(activities, activity);
+		if (index < 0) {
+			activities = Arrays.copyOf(activities, activities.length + 1);
+			index = activities.length - 1;
+			activities[index] = activity;
+		}
+		addActivity(index);
+		return index;
 	}
 
 	public IntGraph getMinimumSelfDistanceGraph() {

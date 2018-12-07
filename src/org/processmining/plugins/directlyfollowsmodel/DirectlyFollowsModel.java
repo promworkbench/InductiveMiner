@@ -8,4 +8,12 @@ public interface DirectlyFollowsModel extends IntDfg {
 	public String[] getAllActivities();
 
 	public DirectlyFollowsModel clone();
+
+	/**
+	 * Adds an activity.
+	 * 
+	 * @param activity
+	 * @return the index of the activity.
+	 */
+	public int addActivity(String activity);
 }
