@@ -19,6 +19,15 @@ public class DFMMiner {
 	}
 
 	public static DirectlyFollowsModel mine(IMLog log, DFMMiningParameters parameters, Canceller canceller) {
+		DirectlyFollowsModel result = mine2(log, parameters, canceller);
+		//if the log was empty, we return an empty trace.
+		if (!result.getDirectlyFollowsGraph().getEdges().iterator().hasNext() && result.getNumberOfEmptyTraces() == 0) {
+			result.addEmptyTraces(1);
+		}
+		return result;
+	}
+
+	private static DirectlyFollowsModel mine2(IMLog log, DFMMiningParameters parameters, Canceller canceller) {
 		int initialSize = log.size();
 		DirectlyFollowsModel dfg = Log2DfgMsd.convert(log);
 
