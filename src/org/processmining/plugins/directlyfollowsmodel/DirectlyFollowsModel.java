@@ -16,4 +16,8 @@ public interface DirectlyFollowsModel extends IntDfg {
 	 * @return the index of the activity.
 	 */
 	public int addActivity(String activity);
+	
+	public int hashCode();
+	
+	public boolean equals(Object obj);
 }

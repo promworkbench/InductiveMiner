@@ -18,7 +18,7 @@ import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 
 @Plugin(name = "DfgMsd export (minimum self-distance graph)", returnLabels = {}, returnTypes = {}, parameterLabels = {
 		"Minimum self-distance graph", "File" }, userAccessible = true)
-@UIExportPlugin(description = "Directly follows model files", extension = "dfm")
+@UIExportPlugin(description = "Directly follows model files", extension = "dfg")
 public class DfgMsdExportPlugin {
 	@PluginVariant(variantLabel = "Dfg export (Directly follows graph)", requiredParameterLabels = { 0, 1 })
 	public void exportDefault(UIPluginContext context, DirectlyFollowsModel dfg, File file) throws IOException {
