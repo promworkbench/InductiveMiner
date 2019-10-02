@@ -29,7 +29,7 @@ public interface MiningParameters {
 	 */
 	public static final XLifeCycleClassifier defaultLifeCycleClassifier = new XLifeCycleClassifierIgnore();
 	public static final float defaultNoiseThreshold = 0.2f;
-	public static final boolean defaultIsDebug = true;
+	public static final boolean defaultIsDebug = false;
 	public static final boolean defaultIsUseMultiThreading = true;
 	public static final boolean defaultIsRepairLifeCycles = false;
 	//public static final EfficientTreeReduceParameters defaultReduceParameters = new EfficientTreeReduceParameters(false,
