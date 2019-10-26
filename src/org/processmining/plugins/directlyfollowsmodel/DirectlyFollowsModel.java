@@ -2,6 +2,12 @@ package org.processmining.plugins.directlyfollowsmodel;
 
 import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
 
+/**
+ * Moved to the DirectlyFollowsModelMiner package
+ * @author sander
+ *
+ */
+@Deprecated
 public interface DirectlyFollowsModel extends IntDfg {
 	public String getActivityOfIndex(int value);
 

@@ -12,6 +12,12 @@ import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.Log2DfgMsd;
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 
+/**
+ * Moved to the DirectlyFollowsModelMiner package
+ * @author sander
+ *
+ */
+@Deprecated
 public class DFMMiner {
 	public static DirectlyFollowsModel mine(XLog xLog, DFMMiningParameters parameters, Canceller canceller) {
 		IMLog log = new IMLogImpl(xLog, parameters.getClassifier(), parameters.getLifeCycleClassifier());

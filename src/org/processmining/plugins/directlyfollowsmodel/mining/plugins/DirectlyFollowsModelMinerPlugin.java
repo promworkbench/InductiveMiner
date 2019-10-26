@@ -13,10 +13,17 @@ import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
 import org.processmining.plugins.directlyfollowsmodel.mining.DFMMiner;
 import org.processmining.plugins.directlyfollowsmodel.mining.DFMMiningParameters;
 
+/**
+ * Moved to the DirectlyFollowsModelMiner package
+ * 
+ * @author sander
+ *
+ */
+@Deprecated
 public class DirectlyFollowsModelMinerPlugin {
 	@Plugin(name = "Mine directly follows model using DFMM", level = PluginLevel.Regular, returnLabels = {
 			"Directly follows model" }, returnTypes = {
-					DirectlyFollowsModel.class }, parameterLabels = { "Log" }, userAccessible = true)
+					DirectlyFollowsModel.class }, parameterLabels = { "Log" }, userAccessible = false)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
 	public DirectlyFollowsModel mineGuiProcessTree(final UIPluginContext context, XLog xLog) {
