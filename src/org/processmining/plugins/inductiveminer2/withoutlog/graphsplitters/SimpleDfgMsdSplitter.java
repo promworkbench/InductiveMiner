@@ -123,7 +123,7 @@ public class SimpleDfgMsdSplitter implements DfgMsdSplitter {
 
 		int sigmaN = 0;
 		for (TIntSet sigma : partition) {
-			DfgMsd subDfg = new DfgMsdImpl(graph.getAllActivities().clone());
+			DfgMsd subDfg = new DfgMsdImpl();
 			subDfgs[sigmaN] = subDfg;
 
 			filterDfg(graph, subDfg, sigma, operator, partition, sigmaN);
