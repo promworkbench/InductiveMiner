@@ -12,24 +12,24 @@ import org.processmining.contexts.uitopia.annotations.UIExportPlugin;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginVariant;
-import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
+import org.processmining.plugins.directlyfollowsgraph.DirectlyFollowsGraph;
 import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntGraph;
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 
 @Plugin(name = "DfgMsd export (minimum self-distance graph)", returnLabels = {}, returnTypes = {}, parameterLabels = {
 		"Minimum self-distance graph", "File" }, userAccessible = true)
-@UIExportPlugin(description = "Directly follows model files", extension = "dfg")
+@UIExportPlugin(description = "Directly follows model files", extension = "dfgmsd")
 public class DfgMsdExportPlugin {
 	@PluginVariant(variantLabel = "Dfg export (Directly follows graph)", requiredParameterLabels = { 0, 1 })
-	public void exportDefault(UIPluginContext context, DirectlyFollowsModel dfg, File file) throws IOException {
+	public void exportDefault(UIPluginContext context, DirectlyFollowsGraph dfg, File file) throws IOException {
 		export(dfg, file);
 	}
 
-	public void exportDefault(PluginContext context, DirectlyFollowsModel dfg, File file) throws IOException {
+	public void exportDefault(PluginContext context, DirectlyFollowsGraph dfg, File file) throws IOException {
 		export(dfg, file);
 	}
 
-	public static void export(DirectlyFollowsModel dfg, File file) throws IOException {
+	public static void export(DirectlyFollowsGraph dfg, File file) throws IOException {
 		BufferedWriter result = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
 		result.append(dfg.getNumberOfActivities() + "\n");
 		for (String e : dfg.getAllActivities()) {

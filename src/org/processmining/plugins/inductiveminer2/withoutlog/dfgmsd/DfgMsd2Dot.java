@@ -3,7 +3,7 @@ package org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd;
 import java.util.Iterator;
 
 import org.processmining.plugins.InductiveMiner.Quadruple;
-import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
+import org.processmining.plugins.directlyfollowsgraph.DirectlyFollowsGraph;
 import org.processmining.plugins.graphviz.colourMaps.ColourMap;
 import org.processmining.plugins.graphviz.colourMaps.ColourMaps;
 import org.processmining.plugins.graphviz.dot.Dot;
@@ -16,7 +16,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class DfgMsd2Dot {
 
-	public static Dot visualise(DirectlyFollowsModel dfgMsd) {
+	public static Dot visualise(DirectlyFollowsGraph dfgMsd) {
 
 		Quadruple<Long, Long, Long, Long> q = getExtremes(dfgMsd);
 		long startMax = q.getB();
@@ -79,7 +79,7 @@ public class DfgMsd2Dot {
 
 	}
 
-	public static Quadruple<Long, Long, Long, Long> getExtremes(DirectlyFollowsModel dfg) {
+	public static Quadruple<Long, Long, Long, Long> getExtremes(DirectlyFollowsGraph dfg) {
 		long startMin = Long.MAX_VALUE;
 		long startMax = Long.MIN_VALUE;
 		for (int activityIndex : dfg.getStartActivities()) {

@@ -20,7 +20,7 @@ import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsdImpl;
 
 @Plugin(name = "Import a minimum self-distance graph", parameterLabels = { "Filename" }, returnLabels = {
 		"Minimum self-distance graph" }, returnTypes = { DfgMsd.class })
-@UIImportPlugin(description = "Directly follows model files", extensions = { "dfg" })
+@UIImportPlugin(description = "Directly follows + minimum self distance files", extensions = { "dfgmsd" })
 public class DfgMsdImportPlugin extends AbstractImportPlugin {
 
 	private static final int BUFFER_SIZE = 8192 * 4;

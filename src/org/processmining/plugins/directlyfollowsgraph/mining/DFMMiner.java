@@ -1,8 +1,8 @@
-package org.processmining.plugins.directlyfollowsmodel.mining;
+package org.processmining.plugins.directlyfollowsgraph.mining;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.packages.PackageManager.Canceller;
-import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
+import org.processmining.plugins.directlyfollowsgraph.DirectlyFollowsGraph;
 import org.processmining.plugins.inductiveminer2.helperclasses.IntDfg;
 import org.processmining.plugins.inductiveminer2.logs.IMLog;
 import org.processmining.plugins.inductiveminer2.logs.IMLogImpl;
@@ -19,13 +19,13 @@ import gnu.trove.set.hash.TLongHashSet;
  */
 @Deprecated
 public class DFMMiner {
-	public static DirectlyFollowsModel mine(XLog xLog, DFMMiningParameters parameters, Canceller canceller) {
+	public static DirectlyFollowsGraph mine(XLog xLog, DFMMiningParameters parameters, Canceller canceller) {
 		IMLog log = new IMLogImpl(xLog, parameters.getClassifier(), parameters.getLifeCycleClassifier());
 		return mine(log, parameters, canceller);
 	}
 
-	public static DirectlyFollowsModel mine(IMLog log, DFMMiningParameters parameters, Canceller canceller) {
-		DirectlyFollowsModel result = mine2(log, parameters, canceller);
+	public static DirectlyFollowsGraph mine(IMLog log, DFMMiningParameters parameters, Canceller canceller) {
+		DirectlyFollowsGraph result = mine2(log, parameters, canceller);
 		//if the log was empty, we return an empty trace.
 		if (!result.getDirectlyFollowsGraph().getEdges().iterator().hasNext() && result.getNumberOfEmptyTraces() == 0) {
 			result.addEmptyTraces(1);
@@ -33,9 +33,9 @@ public class DFMMiner {
 		return result;
 	}
 
-	private static DirectlyFollowsModel mine2(IMLog log, DFMMiningParameters parameters, Canceller canceller) {
+	private static DirectlyFollowsGraph mine2(IMLog log, DFMMiningParameters parameters, Canceller canceller) {
 		int initialSize = log.size();
-		DirectlyFollowsModel dfg = Log2DfgMsd.convert(log);
+		DirectlyFollowsGraph dfg = Log2DfgMsd.convert(log);
 
 		//copy the log
 		log = log.clone();

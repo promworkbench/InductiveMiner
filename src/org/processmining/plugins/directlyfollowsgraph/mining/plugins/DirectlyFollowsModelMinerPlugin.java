@@ -1,4 +1,4 @@
-package org.processmining.plugins.directlyfollowsmodel.mining.plugins;
+package org.processmining.plugins.directlyfollowsgraph.mining.plugins;
 
 import org.deckfour.uitopia.api.event.TaskListener.InteractionResult;
 import org.deckfour.xes.model.XLog;
@@ -9,9 +9,9 @@ import org.processmining.framework.plugin.annotations.Plugin;
 import org.processmining.framework.plugin.annotations.PluginLevel;
 import org.processmining.framework.plugin.annotations.PluginVariant;
 import org.processmining.plugins.InductiveMiner.plugins.dialogs.IMMiningDialog;
-import org.processmining.plugins.directlyfollowsmodel.DirectlyFollowsModel;
-import org.processmining.plugins.directlyfollowsmodel.mining.DFMMiner;
-import org.processmining.plugins.directlyfollowsmodel.mining.DFMMiningParameters;
+import org.processmining.plugins.directlyfollowsgraph.DirectlyFollowsGraph;
+import org.processmining.plugins.directlyfollowsgraph.mining.DFMMiner;
+import org.processmining.plugins.directlyfollowsgraph.mining.DFMMiningParameters;
 
 /**
  * Moved to the DirectlyFollowsModelMiner package
@@ -23,10 +23,10 @@ import org.processmining.plugins.directlyfollowsmodel.mining.DFMMiningParameters
 public class DirectlyFollowsModelMinerPlugin {
 	@Plugin(name = "Mine directly follows model using DFMM", level = PluginLevel.Regular, returnLabels = {
 			"Directly follows model" }, returnTypes = {
-					DirectlyFollowsModel.class }, parameterLabels = { "Log" }, userAccessible = false)
+					DirectlyFollowsGraph.class }, parameterLabels = { "Log" }, userAccessible = false)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
 	@PluginVariant(variantLabel = "Mine a Process Tree, dialog", requiredParameterLabels = { 0 })
-	public DirectlyFollowsModel mineGuiProcessTree(final UIPluginContext context, XLog xLog) {
+	public DirectlyFollowsGraph mineGuiProcessTree(final UIPluginContext context, XLog xLog) {
 		DirectlyFollowsModelMinerDialog dialog = new DirectlyFollowsModelMinerDialog(xLog);
 		InteractionResult result = context.showWizard("Mine using Directly Follows Model Miner", true, true, dialog);
 

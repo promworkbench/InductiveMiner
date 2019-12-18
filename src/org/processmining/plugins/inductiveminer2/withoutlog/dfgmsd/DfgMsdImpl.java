@@ -1,37 +1,23 @@
 package org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd;
 
-import java.util.Arrays;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.processmining.plugins.inductiveminer2.helperclasses.IntDfgImpl;
 import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntGraph;
 import org.processmining.plugins.inductiveminer2.helperclasses.graphs.IntGraphImplQuadratic;
 
+/**
+ * Keeps a directly follows graph (int) and a minimum self-distance graph (int),
+ * and a map activity index (int) -> activity name (string). Not every activity
+ * in the map needs to be used.
+ * 
+ * @author sander
+ *
+ */
 public class DfgMsdImpl extends IntDfgImpl implements DfgMsd {
 	private IntGraph minimumSelfDistanceGraph = new IntGraphImplQuadratic();
 	private String[] activities;
 
 	public DfgMsdImpl(String[] activities) {
 		this.activities = activities;
-		for (int index = 0; index < activities.length; index++) {
-			addActivity(index);
-		}
-	}
-
-	public DfgMsdImpl() {
-		this.activities = new String[0];
-	}
-
-	@Override
-	public int addActivity(String activity) {
-		int index = ArrayUtils.indexOf(activities, activity);
-		if (index < 0) {
-			activities = Arrays.copyOf(activities, activities.length + 1);
-			index = activities.length - 1;
-			activities[index] = activity;
-		}
-		addActivity(index);
-		return index;
 	}
 
 	public IntGraph getMinimumSelfDistanceGraph() {

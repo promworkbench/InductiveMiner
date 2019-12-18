@@ -1,4 +1,4 @@
-package org.processmining.plugins.directlyfollowsmodel.mining;
+package org.processmining.plugins.directlyfollowsgraph.mining;
 
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.classification.XEventNameClassifier;

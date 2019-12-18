@@ -1,4 +1,4 @@
-package org.processmining.plugins.directlyfollowsmodel.mining.plugins;
+package org.processmining.plugins.directlyfollowsgraph.mining.plugins;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,9 +16,9 @@ import javax.swing.event.ChangeListener;
 import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.InductiveMiner.ClassifierChooser;
 import org.processmining.plugins.InductiveMiner.mining.logs.LifeCycleClassifier;
-import org.processmining.plugins.directlyfollowsmodel.mining.DFMMiningParameters;
-import org.processmining.plugins.directlyfollowsmodel.mining.DFMMiningParametersAbstract;
-import org.processmining.plugins.directlyfollowsmodel.mining.variants.DFMMiningParametersDefault;
+import org.processmining.plugins.directlyfollowsgraph.mining.DFMMiningParameters;
+import org.processmining.plugins.directlyfollowsgraph.mining.DFMMiningParametersAbstract;
+import org.processmining.plugins.directlyfollowsgraph.mining.variants.DFMMiningParametersDefault;
 import org.processmining.plugins.inductiveminer2.helperclasses.XLifeCycleClassifierIgnore;
 
 import com.fluxicon.slickerbox.factory.SlickerFactory;
