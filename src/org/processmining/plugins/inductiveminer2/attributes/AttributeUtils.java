@@ -3,12 +3,25 @@ package org.processmining.plugins.inductiveminer2.attributes;
 import java.text.DecimalFormatSymbols;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.deckfour.xes.model.XAttributable;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XAttributeContinuous;
 import org.deckfour.xes.model.XAttributeDiscrete;
 import org.deckfour.xes.model.XAttributeTimestamp;
 
 public class AttributeUtils {
+
+	public static double valueDouble(Attribute attribute, XAttributable x) {
+		if (attribute.isDuration()) {
+			return attribute.getDuration(x);
+		} else if (attribute.isNumeric()) {
+			return attribute.getNumeric(x);
+		} else if (attribute.isTime()) {
+			return attribute.getTime(x);
+		}
+		return -Double.MAX_VALUE;
+	}
+
 	public static long parseTimeFast(XAttribute attribute) {
 		if (attribute instanceof XAttributeTimestamp) {
 			return ((XAttributeTimestamp) attribute).getValueMillis();
