@@ -137,18 +137,6 @@ public class AttributeImpl extends AttributeAbstract {
 		return type == Type.time;
 	}
 
-	@Deprecated
-	public boolean isTraceDuration() {
-		//TODO: remove
-		return false;
-	}
-
-	@Deprecated
-	public boolean isTraceNumberofEvents() {
-		//TODO: remove
-		return false;
-	}
-
 	@Override
 	public boolean isVirtual() {
 		return false;
@@ -161,11 +149,13 @@ public class AttributeImpl extends AttributeAbstract {
 
 	@Override
 	public long getDurationMin() {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 
 	@Override
 	public long getDurationMax() {
+		assert false;
 		return Long.MAX_VALUE;
 	}
 
