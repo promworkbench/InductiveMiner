@@ -22,6 +22,28 @@ public class AttributeUtils {
 		return -Double.MAX_VALUE;
 	}
 
+	public static String valueString(Attribute attribute, XAttributable x) {
+		if (attribute.isDuration()) {
+			long value = attribute.getDuration(x);
+			if (value != Long.MIN_VALUE) {
+				return value + "";
+			}
+		} else if (attribute.isNumeric()) {
+			double value = attribute.getNumeric(x);
+			if (value != -Double.MAX_VALUE) {
+				return value + "";
+			}
+		} else if (attribute.isTime()) {
+			long value = attribute.getTime(x);
+			if (value != Long.MIN_VALUE) {
+				return value + "";
+			}
+		} else if (attribute.isLiteral()) {
+			return attribute.getLiteral(x);
+		}
+		return null;
+	}
+
 	public static long parseTimeFast(XAttribute attribute) {
 		if (attribute instanceof XAttributeTimestamp) {
 			return ((XAttributeTimestamp) attribute).getValueMillis();
