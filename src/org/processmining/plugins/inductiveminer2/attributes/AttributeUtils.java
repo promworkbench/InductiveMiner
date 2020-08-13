@@ -11,6 +11,17 @@ import org.deckfour.xes.model.XAttributeTimestamp;
 
 public class AttributeUtils {
 
+	public static long valueLong(Attribute attribute, XAttributable x) {
+		if (attribute.isDuration()) {
+			return attribute.getDuration(x);
+		} else if (attribute.isNumeric()) {
+			return (long) attribute.getNumeric(x);
+		} else if (attribute.isTime()) {
+			return attribute.getTime(x);
+		}
+		return Long.MIN_VALUE;
+	}
+
 	public static double valueDouble(Attribute attribute, XAttributable x) {
 		if (attribute.isDuration()) {
 			return attribute.getDuration(x);
