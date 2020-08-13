@@ -1,16 +1,15 @@
 package org.processmining.plugins.inductiveminer2.attributes;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map.Entry;
 import java.util.TreeSet;
 
-import org.deckfour.xes.extension.std.XTimeExtension;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
+import org.processmining.plugins.InductiveMiner.Pair;
 
 import gnu.trove.map.hash.THashMap;
 
@@ -20,54 +19,82 @@ public class AttributesInfo {
 	private final THashMap<String, Attribute> eventAttributes;
 
 	public AttributesInfo(XLog log) {
+		//real attributes
+		Pair<THashMap<String, AttributeImpl>, THashMap<String, AttributeImpl>> p = getRealAttributes(log);
+		THashMap<String, AttributeImpl> traceAttributesReal = p.getA();
 		traceAttributes = new THashMap<>();
-		Attribute traceDuration = new Attribute("duration", Attribute.Type.traceDuration);
-		Attribute traceNumberOfEvents = new Attribute("number of events", Attribute.Type.traceNumberOfEvents);
+		traceAttributes.putAll(traceAttributesReal);
+		THashMap<String, AttributeImpl> eventAttributesReal = p.getA();
 		eventAttributes = new THashMap<>();
+		eventAttributes.putAll(eventAttributesReal);
+	}
 
-		for (XTrace trace : log) {
-			add(traceAttributes, trace.getAttributes());
+	public AttributesInfo(XLog log, AttributeVirtualFactory factory) {
+		Pair<THashMap<String, AttributeImpl>, THashMap<String, AttributeImpl>> p = getRealAttributes(log);
+		THashMap<String, AttributeImpl> traceAttributesReal = p.getA();
+		traceAttributes = new THashMap<>();
+		traceAttributes.putAll(traceAttributesReal);
+		THashMap<String, AttributeImpl> eventAttributesReal = p.getA();
+		eventAttributes = new THashMap<>();
+		eventAttributes.putAll(eventAttributesReal);
 
-			long durationStart = Long.MAX_VALUE;
-			long durationEnd = Long.MIN_VALUE;
+		//virtual attributes
+		{
+			THashMap<String, AttributeVirtual> traceAttributesVirtual = new THashMap<>();
+			for (AttributeVirtual attribute : factory.createVirtualTraceAttributes(traceAttributesReal,
+					eventAttributesReal)) {
+				traceAttributesVirtual.put(attribute.getName(), attribute);
+			}
 
-			for (XEvent event : trace) {
-				add(eventAttributes, event.getAttributes());
-				Long timestamp = getTimestamp(event);
-				if (timestamp != null) {
-					durationStart = Math.min(durationStart, timestamp);
-					durationEnd = Math.max(durationEnd, timestamp);
+			THashMap<String, AttributeVirtual> eventAttributesVirtual = new THashMap<>();
+			for (AttributeVirtual attribute : factory.createVirtualEventAttributes(traceAttributesReal,
+					eventAttributesReal)) {
+				eventAttributesVirtual.put(attribute.getName(), attribute);
+			}
+
+			for (XTrace trace : log) {
+				for (AttributeVirtual traceAttribute : traceAttributesVirtual.values()) {
+					traceAttribute.add(trace);
+				}
+
+				for (XEvent event : trace) {
+					for (AttributeVirtual eventAttribute : eventAttributesVirtual.values()) {
+						eventAttribute.add(event);
+					}
 				}
 			}
 
-			if (durationStart != Long.MAX_VALUE) {
-				traceDuration.addTime(durationEnd - durationStart);
+			traceAttributes.putAll(traceAttributesVirtual);
+			eventAttributes.putAll(eventAttributesVirtual);
+		}
+	}
+
+	public static Pair<THashMap<String, AttributeImpl>, THashMap<String, AttributeImpl>> getRealAttributes(XLog log) {
+		THashMap<String, AttributeImpl> traceAttributesReal = new THashMap<>();
+		THashMap<String, AttributeImpl> eventAttributesReal = new THashMap<>();
+
+		for (XTrace trace : log) {
+			addReal(traceAttributesReal, trace.getAttributes());
+			for (XEvent event : trace) {
+				addReal(eventAttributesReal, event.getAttributes());
 			}
-			traceNumberOfEvents.addTime(trace.size());
 		}
 
 		//finalise
-		for (Attribute attribute : traceAttributes.values()) {
+		for (AttributeImpl attribute : traceAttributesReal.values()) {
 			attribute.finalise();
 		}
-		for (Attribute attribute : eventAttributes.values()) {
+		for (AttributeImpl attribute : eventAttributesReal.values()) {
 			attribute.finalise();
 		}
-		while (traceAttributes.containsKey(traceDuration.getName())) {
-			traceDuration.setName(traceDuration.getName() + " ");
-		}
-		traceAttributes.put(traceDuration.getName(), traceDuration);
-		while (traceAttributes.containsKey(traceNumberOfEvents.getName())) {
-			traceNumberOfEvents.setName(traceNumberOfEvents.getName() + " ");
-		}
-		traceAttributes.put(traceNumberOfEvents.getName(), traceNumberOfEvents);
+		return Pair.of(traceAttributesReal, eventAttributesReal);
 	}
 
-	private static void add(THashMap<String, Attribute> attributes, XAttributeMap add) {
+	private static void addReal(THashMap<String, AttributeImpl> attributes, XAttributeMap add) {
 		for (Entry<String, XAttribute> e : add.entrySet()) {
-			Attribute old = attributes.get(e.getKey());
+			AttributeImpl old = attributes.get(e.getKey());
 			if (old == null) {
-				Attribute empty = new Attribute(e.getKey());
+				AttributeImpl empty = new AttributeImpl(e.getKey());
 				empty.addValue(e.getValue());
 				attributes.put(e.getKey(), empty);
 			} else {
@@ -90,19 +117,11 @@ public class AttributesInfo {
 	}
 
 	public Collection<Attribute> getTraceAttributes() {
-		return new TreeSet<Attribute>(traceAttributes.values());
+		return new TreeSet<>(traceAttributes.values());
 	}
 
 	public Attribute getTraceAttributeValues(String attribute) {
 		return traceAttributes.get(attribute);
-	}
-
-	private static Long getTimestamp(XEvent event) {
-		Date date = XTimeExtension.instance().extractTimestamp(event);
-		if (date != null) {
-			return date.getTime();
-		}
-		return null;
 	}
 
 }
