@@ -40,16 +40,19 @@ public abstract class AttributeVirtualTraceTimeAbstract extends AttributeVirtual
 
 	@Override
 	public final Collection<String> getStringValues() {
+		assert false;
 		return null;
 	}
 
 	@Override
 	public final double getNumericMin() {
+		assert false;
 		return -Double.MAX_VALUE;
 	}
 
 	@Override
 	public final double getNumericMax() {
+		assert false;
 		return -Double.MAX_VALUE;
 	}
 
@@ -65,26 +68,31 @@ public abstract class AttributeVirtualTraceTimeAbstract extends AttributeVirtual
 
 	@Override
 	public final long getDurationMin() {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 
 	@Override
 	public final long getDurationMax() {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 
 	@Override
 	public final String getLiteral(XAttributable trace) {
+		assert false;
 		return null;
 	}
 
 	@Override
 	public final double getNumeric(XAttributable trace) {
+		assert false;
 		return -Double.MAX_VALUE;
 	}
 
 	@Override
 	public final long getDuration(XAttributable trace) {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 }

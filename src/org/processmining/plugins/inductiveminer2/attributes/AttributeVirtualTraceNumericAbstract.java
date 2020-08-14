@@ -40,6 +40,7 @@ public abstract class AttributeVirtualTraceNumericAbstract extends AttributeVirt
 
 	@Override
 	public final Collection<String> getStringValues() {
+		assert false;
 		return null;
 	}
 
@@ -55,36 +56,43 @@ public abstract class AttributeVirtualTraceNumericAbstract extends AttributeVirt
 
 	@Override
 	public final long getTimeMin() {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 
 	@Override
 	public final long getTimeMax() {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 
 	@Override
 	public final long getDurationMin() {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 
 	@Override
 	public final long getDurationMax() {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 
 	@Override
 	public final String getLiteral(XAttributable x) {
+		assert false;
 		return null;
 	}
 
 	@Override
 	public final long getTime(XAttributable x) {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 
 	@Override
 	public final long getDuration(XAttributable x) {
+		assert false;
 		return Long.MIN_VALUE;
 	}
 
