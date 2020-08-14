@@ -11,7 +11,7 @@ public abstract class AttributeVirtualTraceDurationAbstract extends AttributeVir
 
 	@Override
 	public final void add(XAttributable x) {
-		long value = getTime(x);
+		long value = getDuration(x);
 		if (value != Long.MIN_VALUE) {
 			min = Math.min(value, min);
 			max = Math.max(value, max);
