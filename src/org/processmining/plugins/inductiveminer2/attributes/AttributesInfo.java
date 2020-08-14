@@ -24,7 +24,7 @@ public class AttributesInfo {
 		THashMap<String, AttributeImpl> traceAttributesReal = p.getA();
 		traceAttributes = new THashMap<>();
 		traceAttributes.putAll(traceAttributesReal);
-		THashMap<String, AttributeImpl> eventAttributesReal = p.getA();
+		THashMap<String, AttributeImpl> eventAttributesReal = p.getB();
 		eventAttributes = new THashMap<>();
 		eventAttributes.putAll(eventAttributesReal);
 	}
@@ -34,7 +34,7 @@ public class AttributesInfo {
 		THashMap<String, AttributeImpl> traceAttributesReal = p.getA();
 		traceAttributes = new THashMap<>();
 		traceAttributes.putAll(traceAttributesReal);
-		THashMap<String, AttributeImpl> eventAttributesReal = p.getA();
+		THashMap<String, AttributeImpl> eventAttributesReal = p.getB();
 		eventAttributes = new THashMap<>();
 		eventAttributes.putAll(eventAttributesReal);
 
