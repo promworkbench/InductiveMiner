@@ -6,12 +6,12 @@ import org.deckfour.xes.model.XAttributable;
 
 public abstract class AttributeVirtualTraceDurationAbstract extends AttributeVirtual {
 
-	protected double min = Double.MAX_VALUE;
-	protected double max = -Double.MAX_VALUE;
+	protected long min = Long.MAX_VALUE;
+	protected long max = Long.MIN_VALUE;
 
 	@Override
 	public final void add(XAttributable x) {
-		double value = getDuration(x);
+		long value = getDuration(x);
 		if (value != Long.MIN_VALUE) {
 			min = Math.min(value, min);
 			max = Math.max(value, max);
@@ -57,12 +57,12 @@ public abstract class AttributeVirtualTraceDurationAbstract extends AttributeVir
 	}
 
 	@Override
-	public final double getDurationMin() {
+	public final long getDurationMin() {
 		return min;
 	}
 
 	@Override
-	public final double getDurationMax() {
+	public final long getDurationMax() {
 		return max;
 	}
 
