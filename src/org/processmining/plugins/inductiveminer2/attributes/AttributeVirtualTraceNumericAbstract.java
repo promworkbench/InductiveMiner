@@ -67,15 +67,15 @@ public abstract class AttributeVirtualTraceNumericAbstract extends AttributeVirt
 	}
 
 	@Override
-	public final long getDurationMin() {
+	public final double getDurationMin() {
 		assert false;
-		return Long.MIN_VALUE;
+		return -Double.MAX_VALUE;
 	}
 
 	@Override
-	public final long getDurationMax() {
+	public final double getDurationMax() {
 		assert false;
-		return Long.MIN_VALUE;
+		return -Double.MAX_VALUE;
 	}
 
 	@Override
@@ -91,9 +91,9 @@ public abstract class AttributeVirtualTraceNumericAbstract extends AttributeVirt
 	}
 
 	@Override
-	public final long getDuration(XAttributable x) {
+	public final double getDuration(XAttributable x) {
 		assert false;
-		return Long.MIN_VALUE;
+		return -Double.MAX_VALUE;
 	}
 
 }

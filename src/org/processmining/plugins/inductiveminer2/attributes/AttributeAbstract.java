@@ -16,24 +16,33 @@ public abstract class AttributeAbstract implements Attribute {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getName() == null) ? 0 : getName().toLowerCase().hashCode());
+		result = prime * result + (isVirtual() ? 1231 : 1237);
+		result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		AttributeImpl other = (AttributeImpl) obj;
+		}
+		AttributeAbstract other = (AttributeAbstract) obj;
+		if (isVirtual() != other.isVirtual()) {
+			return false;
+		}
 		if (getName() == null) {
-			if (other.getName() != null)
+			if (other.getName() != null) {
 				return false;
-		} else if (!getName().toLowerCase().equals(other.getName().toLowerCase()))
+			}
+		} else if (!getName().equals(other.getName())) {
 			return false;
+		}
 		return true;
 	}
 

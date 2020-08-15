@@ -13,7 +13,7 @@ public class AttributeUtils {
 
 	public static long valueLong(Attribute attribute, XAttributable x) {
 		if (attribute.isDuration()) {
-			return attribute.getDuration(x);
+			return (long) attribute.getDuration(x);
 		} else if (attribute.isNumeric()) {
 			return (long) attribute.getNumeric(x);
 		} else if (attribute.isTime()) {
@@ -35,8 +35,8 @@ public class AttributeUtils {
 
 	public static String valueString(Attribute attribute, XAttributable x) {
 		if (attribute.isDuration()) {
-			long value = attribute.getDuration(x);
-			if (value != Long.MIN_VALUE) {
+			double value = attribute.getDuration(x);
+			if (value != -Double.MAX_VALUE) {
 				return value + "";
 			}
 		} else if (attribute.isNumeric()) {

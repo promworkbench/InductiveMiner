@@ -148,15 +148,15 @@ public class AttributeImpl extends AttributeAbstract {
 	}
 
 	@Override
-	public long getDurationMin() {
+	public double getDurationMin() {
 		assert false;
-		return Long.MIN_VALUE;
+		return -Double.MAX_VALUE;
 	}
 
 	@Override
-	public long getDurationMax() {
+	public double getDurationMax() {
 		assert false;
-		return Long.MAX_VALUE;
+		return -Double.MAX_VALUE;
 	}
 
 	@Override
@@ -221,8 +221,8 @@ public class AttributeImpl extends AttributeAbstract {
 		return Long.MIN_VALUE;
 	}
 
-	public long getDuration(XAttributable x) {
+	public double getDuration(XAttributable x) {
 		assert false;
-		return Long.MIN_VALUE;
+		return -Double.MAX_VALUE;
 	}
 }

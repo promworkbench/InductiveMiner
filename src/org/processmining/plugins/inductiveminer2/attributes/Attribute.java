@@ -53,17 +53,17 @@ public interface Attribute extends Comparable<Attribute> {
 	 */
 	public long getTime(XAttributable x);
 
-	public long getDurationMin();
+	public double getDurationMin();
 
-	public long getDurationMax();
+	public double getDurationMax();
 
 	/**
-	 * The time value, or Long.MIN_VALUE if it does not exist.
+	 * The duration value, or -Double.MAX_VALUE if it does not exist.
 	 * 
 	 * @param x
 	 * @return
 	 */
-	public long getDuration(XAttributable x);
+	public double getDuration(XAttributable x);
 
 	public int compareTo(Attribute arg0);
 
