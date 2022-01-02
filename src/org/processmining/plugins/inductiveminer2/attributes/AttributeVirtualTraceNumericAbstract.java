@@ -29,6 +29,11 @@ public abstract class AttributeVirtualTraceNumericAbstract extends AttributeVirt
 	}
 
 	@Override
+	public boolean isBoolean() {
+		return true;
+	}
+
+	@Override
 	public final boolean isTime() {
 		return false;
 	}
@@ -55,6 +60,18 @@ public abstract class AttributeVirtualTraceNumericAbstract extends AttributeVirt
 	}
 
 	@Override
+	public boolean getBooleanHasTrue() {
+		assert false;
+		return false;
+	}
+
+	@Override
+	public boolean getBooleanHasFalse() {
+		assert false;
+		return false;
+	}
+
+	@Override
 	public final long getTimeMin() {
 		assert false;
 		return Long.MIN_VALUE;
@@ -76,6 +93,12 @@ public abstract class AttributeVirtualTraceNumericAbstract extends AttributeVirt
 	public final long getDurationMax() {
 		assert false;
 		return Long.MIN_VALUE;
+	}
+
+	@Override
+	public final Boolean getBoolean(XAttributable x) {
+		assert false;
+		return null;
 	}
 
 	@Override

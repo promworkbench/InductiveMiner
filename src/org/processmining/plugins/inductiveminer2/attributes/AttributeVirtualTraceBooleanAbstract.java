@@ -4,17 +4,20 @@ import java.util.Collection;
 
 import org.deckfour.xes.model.XAttributable;
 
-public abstract class AttributeVirtualTraceTimeAbstract extends AttributeVirtual {
+public abstract class AttributeVirtualTraceBooleanAbstract extends AttributeVirtual {
 
-	protected long min = Long.MAX_VALUE;
-	protected long max = Long.MIN_VALUE;
+	protected boolean hasTrue = false;
+	protected boolean hasFalse = false;
 
 	@Override
 	public final void add(XAttributable x) {
-		long value = getTime(x);
-		if (value != Long.MIN_VALUE) {
-			min = Math.min(value, min);
-			max = Math.max(value, max);
+		Boolean value = getBoolean(x);
+		if (value != null) {
+			if (value) {
+				hasTrue = true;
+			} else {
+				hasFalse = true;
+			}
 		}
 	}
 
@@ -25,7 +28,7 @@ public abstract class AttributeVirtualTraceTimeAbstract extends AttributeVirtual
 
 	@Override
 	public boolean isBoolean() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -35,7 +38,7 @@ public abstract class AttributeVirtualTraceTimeAbstract extends AttributeVirtual
 
 	@Override
 	public final boolean isTime() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -47,18 +50,6 @@ public abstract class AttributeVirtualTraceTimeAbstract extends AttributeVirtual
 	public final Collection<String> getStringValues() {
 		assert false;
 		return null;
-	}
-
-	@Override
-	public final boolean getBooleanHasTrue() {
-		assert false;
-		return false;
-	}
-
-	@Override
-	public final boolean getBooleanHasFalse() {
-		assert false;
-		return false;
 	}
 
 	@Override
@@ -74,13 +65,25 @@ public abstract class AttributeVirtualTraceTimeAbstract extends AttributeVirtual
 	}
 
 	@Override
+	public final boolean getBooleanHasTrue() {
+		return hasTrue;
+	}
+
+	@Override
+	public final boolean getBooleanHasFalse() {
+		return hasFalse;
+	}
+
+	@Override
 	public final long getTimeMin() {
-		return min;
+		assert false;
+		return Long.MIN_VALUE;
 	}
 
 	@Override
 	public final long getTimeMax() {
-		return max;
+		assert false;
+		return Long.MIN_VALUE;
 	}
 
 	@Override
@@ -96,26 +99,27 @@ public abstract class AttributeVirtualTraceTimeAbstract extends AttributeVirtual
 	}
 
 	@Override
-	public final String getLiteral(XAttributable trace) {
-		assert false;
-		return null;
-	}
-
-	@Override
-	public final Boolean getBoolean(XAttributable x) {
-		assert false;
-		return null;
-	}
-
-	@Override
-	public final double getNumeric(XAttributable trace) {
+	public final double getNumeric(XAttributable x) {
 		assert false;
 		return -Double.MAX_VALUE;
 	}
 
 	@Override
-	public final long getDuration(XAttributable trace) {
+	public final String getLiteral(XAttributable x) {
+		assert false;
+		return null;
+	}
+
+	@Override
+	public final long getTime(XAttributable x) {
 		assert false;
 		return Long.MIN_VALUE;
 	}
+
+	@Override
+	public final long getDuration(XAttributable x) {
+		assert false;
+		return Long.MIN_VALUE;
+	}
+
 }

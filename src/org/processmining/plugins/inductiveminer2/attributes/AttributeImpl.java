@@ -12,7 +12,7 @@ import gnu.trove.set.hash.THashSet;
 public class AttributeImpl extends AttributeAbstract {
 
 	public enum Type {
-		undecided, literal, numeric, time;
+		undecided, literal, numeric, time, bool;
 	}
 
 	private String name;
@@ -22,6 +22,8 @@ public class AttributeImpl extends AttributeAbstract {
 	private double valuesNumericMax;
 	private long valuesTimeMin;
 	private long valuesTimeMax;
+	private boolean hasFalse;
+	private boolean hasTrue;
 
 	public AttributeImpl(String name) {
 		this.name = name;
@@ -30,6 +32,8 @@ public class AttributeImpl extends AttributeAbstract {
 		this.valuesNumericMax = -Double.MAX_VALUE;
 		this.valuesTimeMin = Long.MAX_VALUE;
 		this.valuesTimeMax = Long.MIN_VALUE;
+		this.hasFalse = false;
+		this.hasTrue = false;
 	}
 
 	public AttributeImpl(String name, Type type) {
@@ -47,6 +51,10 @@ public class AttributeImpl extends AttributeAbstract {
 				valuesTimeMin = Long.MAX_VALUE;
 				valuesTimeMax = Long.MIN_VALUE;
 				break;
+			case bool :
+				hasFalse = false;
+				hasTrue = false;
+				break;
 			case undecided :
 				break;
 			default :
@@ -57,16 +65,36 @@ public class AttributeImpl extends AttributeAbstract {
 	public void addValue(XAttribute attribute) {
 		valuesLiteral.add(attribute.toString());
 		if (type == type.undecided) {
-			double numeric = AttributeUtils.parseDoubleFast(attribute);
-			if (numeric != -Double.MAX_VALUE) {
-				type = type.numeric;
+			Boolean bool = AttributeUtils.parseBooleanFast(attribute);
+			if (bool != null) {
+				type = type.bool;
 			} else {
-				long time = AttributeUtils.parseTimeFast(attribute);
-				if (time != Long.MIN_VALUE) {
-					type = type.time;
+				double numeric = AttributeUtils.parseDoubleFast(attribute);
+				if (numeric != -Double.MAX_VALUE) {
+					type = type.numeric;
 				} else {
-					type = type.literal;
+					long time = AttributeUtils.parseTimeFast(attribute);
+					if (time != Long.MIN_VALUE) {
+						type = type.time;
+					} else {
+						type = type.literal;
+					}
 				}
+			}
+		}
+		//process boolean
+		if (type == type.bool) {
+			Boolean bool = AttributeUtils.parseBooleanFast(attribute);
+			if (bool != null) {
+				//this is a boolean
+				if (bool) {
+					hasTrue = true;
+				} else {
+					hasFalse = true;
+				}
+			} else {
+				//this is a string, remove the boolean storage
+				type = Type.literal;
 			}
 		}
 		//process numeric
@@ -107,6 +135,15 @@ public class AttributeImpl extends AttributeAbstract {
 		valuesTimeMax = Math.max(valuesTimeMax, time);
 	}
 
+	public void addBoolean(boolean bool) {
+		assert type == Type.bool;
+		if (bool) {
+			hasTrue = true;
+		} else {
+			hasFalse = true;
+		}
+	}
+
 	public void finalise() {
 		switch (type) {
 			case literal :
@@ -135,6 +172,11 @@ public class AttributeImpl extends AttributeAbstract {
 	@Override
 	public boolean isTime() {
 		return type == Type.time;
+	}
+
+	@Override
+	public boolean isBoolean() {
+		return type == Type.bool;
 	}
 
 	@Override
@@ -197,6 +239,17 @@ public class AttributeImpl extends AttributeAbstract {
 		return valuesTimeMax;
 	}
 
+	@Override
+	public boolean getBooleanHasTrue() {
+		return hasTrue;
+	}
+
+	@Override
+	public boolean getBooleanHasFalse() {
+		return hasFalse;
+	}
+
+	@Override
 	public String getLiteral(XAttributable x) {
 		assert type == Type.literal;
 		if (x.hasAttributes() && x.getAttributes().containsKey(name)) {
@@ -205,6 +258,7 @@ public class AttributeImpl extends AttributeAbstract {
 		return null;
 	}
 
+	@Override
 	public double getNumeric(XAttributable x) {
 		assert type == Type.numeric;
 		if (x.hasAttributes() && x.getAttributes().containsKey(name)) {
@@ -213,12 +267,22 @@ public class AttributeImpl extends AttributeAbstract {
 		return -Double.MAX_VALUE;
 	}
 
+	@Override
 	public long getTime(XAttributable x) {
 		assert type == Type.time;
 		if (x.hasAttributes() && x.getAttributes().containsKey(name)) {
 			return AttributeUtils.parseTimeFast(x.getAttributes().get(name));
 		}
 		return Long.MIN_VALUE;
+	}
+
+	@Override
+	public Boolean getBoolean(XAttributable x) {
+		assert type == Type.bool;
+		if (x.hasAttributes() && x.getAttributes().containsKey(name)) {
+			return AttributeUtils.parseBooleanFast(x.getAttributes().get(name));
+		}
+		return null;
 	}
 
 	public long getDuration(XAttributable x) {

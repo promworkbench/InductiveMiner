@@ -18,6 +18,8 @@ public interface Attribute extends Comparable<Attribute> {
 
 	public boolean isDuration();
 
+	public boolean isBoolean();
+
 	public Collection<String> getStringValues();
 
 	/**
@@ -58,12 +60,24 @@ public interface Attribute extends Comparable<Attribute> {
 	public long getDurationMax();
 
 	/**
-	 * The duration value, or -Double.MAX_VALUE if it does not exist.
+	 * The duration value, or Long.MIN_VALUE if it does not exist.
 	 * 
 	 * @param x
 	 * @return
 	 */
 	public long getDuration(XAttributable x);
+
+	public boolean getBooleanHasTrue();
+
+	public boolean getBooleanHasFalse();
+
+	/**
+	 * The boolean value, or NULL if it does not exist.
+	 * 
+	 * @param x
+	 * @return
+	 */
+	public Boolean getBoolean(XAttributable x);
 
 	public int compareTo(Attribute arg0);
 

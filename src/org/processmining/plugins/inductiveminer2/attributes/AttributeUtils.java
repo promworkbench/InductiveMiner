@@ -5,9 +5,11 @@ import java.text.DecimalFormatSymbols;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.deckfour.xes.model.XAttributable;
 import org.deckfour.xes.model.XAttribute;
+import org.deckfour.xes.model.XAttributeBoolean;
 import org.deckfour.xes.model.XAttributeContinuous;
 import org.deckfour.xes.model.XAttributeDiscrete;
 import org.deckfour.xes.model.XAttributeTimestamp;
+import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 
 public class AttributeUtils {
 
@@ -33,8 +35,17 @@ public class AttributeUtils {
 		return -Double.MAX_VALUE;
 	}
 
+	public static Boolean valueBoolean(Attribute attribute, XAttributable x) {
+		if (attribute.isBoolean()) {
+			return attribute.getBoolean(x);
+		}
+		return null;
+	}
+
 	public static String valueString(Attribute attribute, XAttributable x) {
-		if (attribute.isDuration()) {
+		if (attribute.isBoolean()) {
+			return attribute.getBoolean(x).toString();
+		} else if (attribute.isDuration()) {
 			double value = attribute.getDuration(x);
 			if (value != -Double.MAX_VALUE) {
 				return value + "";
@@ -60,6 +71,27 @@ public class AttributeUtils {
 			return ((XAttributeTimestamp) attribute).getValueMillis();
 		}
 		return Long.MIN_VALUE;
+	}
+
+	/**
+	 * See if the given attribute has a numeric value. Returns null if not.
+	 * 
+	 * @param attribute
+	 * @return
+	 */
+	public static Boolean parseBooleanFast(XAttribute attribute) {
+		if (attribute instanceof XAttributeBoolean) {
+			return ((XAttributeBoolean) attribute).getValue();
+		}
+		if (attribute instanceof XAttributeLiteralImpl) {
+			switch (attribute.toString().toLowerCase()) {
+				case "true" :
+					return true;
+				case "false" :
+					return false;
+			}
+		}
+		return null;
 	}
 
 	/**
