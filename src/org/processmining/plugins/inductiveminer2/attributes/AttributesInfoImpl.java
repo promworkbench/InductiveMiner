@@ -7,7 +7,6 @@ import java.util.TreeSet;
 import org.deckfour.xes.model.XAttribute;
 import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
-import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.plugins.InductiveMiner.Pair;
 
@@ -18,7 +17,7 @@ public class AttributesInfoImpl implements AttributesInfo {
 	private final THashMap<String, Attribute> traceAttributes;
 	private final THashMap<String, Attribute> eventAttributes;
 
-	public AttributesInfoImpl(XLog log) {
+	public AttributesInfoImpl(Iterable<XTrace> log) {
 		//real attributes
 		Pair<THashMap<String, AttributeImpl>, THashMap<String, AttributeImpl>> p = getRealAttributes(log);
 		THashMap<String, AttributeImpl> traceAttributesReal = p.getA();
@@ -29,7 +28,7 @@ public class AttributesInfoImpl implements AttributesInfo {
 		eventAttributes.putAll(eventAttributesReal);
 	}
 
-	public AttributesInfoImpl(XLog log, AttributeVirtualFactory factory) {
+	public AttributesInfoImpl(Iterable<XTrace> log, AttributeVirtualFactory factory) {
 		Pair<THashMap<String, AttributeImpl>, THashMap<String, AttributeImpl>> p = getRealAttributes(log);
 		THashMap<String, AttributeImpl> traceAttributesReal = p.getA();
 		traceAttributes = new THashMap<>();
@@ -69,7 +68,8 @@ public class AttributesInfoImpl implements AttributesInfo {
 		}
 	}
 
-	public static Pair<THashMap<String, AttributeImpl>, THashMap<String, AttributeImpl>> getRealAttributes(XLog log) {
+	public static Pair<THashMap<String, AttributeImpl>, THashMap<String, AttributeImpl>> getRealAttributes(
+			Iterable<XTrace> log) {
 		THashMap<String, AttributeImpl> traceAttributesReal = new THashMap<>();
 		THashMap<String, AttributeImpl> eventAttributesReal = new THashMap<>();
 
