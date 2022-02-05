@@ -30,7 +30,7 @@ public abstract class AttributeVirtualTraceNumericAbstract extends AttributeVirt
 
 	@Override
 	public boolean isBoolean() {
-		return true;
+		return false;
 	}
 
 	@Override
