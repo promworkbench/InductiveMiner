@@ -19,7 +19,7 @@ import org.processmining.plugins.inductiveminer2.withoutlog.MiningParametersWith
 import org.processmining.plugins.inductiveminer2.withoutlog.dfgmsd.DfgMsd;
 
 public class InductiveMinerWithoutLogPlugin {
-	@Plugin(name = "Mine efficient tree with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
+	@Plugin(name = "Mine efficient tree with Inductive Miner - directly follows", level = PluginLevel.Regular, returnLabels = {
 			"Efficient Tree" }, returnTypes = { EfficientTree.class }, parameterLabels = {
 					"Directly follows graph + minimum self-distance graph" }, userAccessible = true)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email)
@@ -50,7 +50,7 @@ public class InductiveMinerWithoutLogPlugin {
 		});
 	}
 
-	@Plugin(name = "Mine accepting Petri net with Inductive Miner", level = PluginLevel.Regular, returnLabels = {
+	@Plugin(name = "Mine accepting Petri net with Inductive Miner - directly follows", level = PluginLevel.Regular, returnLabels = {
 			"Accepting Petri net" }, returnTypes = { AcceptingPetriNet.class }, parameterLabels = {
 					"Directly follows graph + minimum self-distance graph" }, userAccessible = true)
 	@UITopiaVariant(affiliation = IMMiningDialog.affiliation, author = IMMiningDialog.author, email = IMMiningDialog.email, uiHelp = "Running this plug-in equals running:<br>1) \"Mine efficient tree with Inductive Miner\", <br>2) \"Reduce efficient tree language-equivalently for size\"<br>3) \"Convert efficient tree to Accepting Petri Net and reduce\" ")
