@@ -1,0 +1,18 @@
+
+					<packages>
+						<package name="InductiveMiner" version="6.14.3" os="all" url="InductiveMiner/InductiveMiner-6.14.3-all.zip" desc="${description}" org="${organization}" license="${license}" author="${author}" auto="false" hasPlugins="true" logo="${logo}">
+				    	<dependency org="prom" name="InductiveMinerDeprecated" rev="latest" changing="true" transitive="true" />
+    	<dependency org="prom" name="ProM-Plugins" rev="latest" changing="true" transitive="true" />	
+    	<dependency org="prom" name="ProcessTree" rev="latest" changing="true" transitive="true" />	
+    	<dependency org="prom" name="Properties" rev="latest" changing="true" transitive="true" />
+        <dependency org="prom" name="PetriNets" rev="latest" changing="true" transitive="true" />
+        <dependency org="prom" name="PNetReplayer" rev="latest" changing="true" transitive="true" />
+        <dependency org="prom" name="Sat4j" rev="latest" changing="true" transitive="true" />
+        <dependency org="prom" name="GraphViz" rev="latest" changing="true" transitive="true" />
+        <dependency org="prom" name="AcceptingPetriNet" rev="latest" changing="true" transitive="true" />
+        <dependency org="prom" name="Murata" rev="latest" changing="true" transitive="true" />
+        <dependency org="prom" name="JAXB" rev="latest" changing="true" transitive="true" />
+
+						</package>
+					</packages>
+				
